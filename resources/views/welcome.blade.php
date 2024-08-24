@@ -10,6 +10,7 @@
     <body class="antialiased">
         hellow
     <div id="libur-container">
+        <button type="button" onclick="showReverse()">Reverse</button>
 
     </div>
     </body>
@@ -25,5 +26,15 @@
                 });
             }
         });
+
+        function showReverse(){
+            $.ajax({
+                url: 'https://maps.googleapis.com/maps/api/geocode/json?latlng=-6.1304791,106.7770845&key=AIzaSyD0B9tz9Dlg8juh3uBzaJnsUvd1TgsfgOo',
+                type: 'GET',
+                success: function(data) {
+                    console.log(data);
+                }
+            })
+        }
     </script>
 </html>
