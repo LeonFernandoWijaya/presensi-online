@@ -146,7 +146,7 @@
         const video = document.getElementById('video');
         const constraints = {
             video: {
-                facingMode: 'user' // Menggunakan kamera depan
+                facingMode: 'user' // Using front camera
             }
         };
         navigator.mediaDevices.getUserMedia(constraints)
@@ -155,8 +155,15 @@
             })
             .catch((err) => {
                 console.error("Error accessing camera: ", err);
-            });
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please go to your browser settings and allow camera access for this site.',
+                });
+                hideFlowBytesModal('camera-modal');
+                return false;
 
+            });
     }
 
     function closeCameraModal() {

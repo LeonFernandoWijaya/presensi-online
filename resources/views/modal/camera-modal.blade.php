@@ -16,7 +16,7 @@
             </div>
             <!-- Modal body -->
             <form class="p-4 md:p-5">
-                <video class="w-full h-96 rounded-xl mb-5" id="video" autoplay>
+                <video class="w-full h-[31rem] rounded-xl mb-5" id="video" autoplay>
 
                 </video>
 
