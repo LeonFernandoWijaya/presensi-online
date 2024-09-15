@@ -5,24 +5,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{{ url('javascripts/app.js') }}"></script>
+
+    <script src="{{ asset('javascripts/sweetalert2@11.js') }}"></script>
     <title>Laravel</title>
-    <style>
-        #mapid {
-            height: 180px;
-        }
-    </style>
+
 </head>
 
 <body class="bg-blue-50">
-
-    @auth
     <nav class="bg-white border-gray-200 dark:bg-gray-900">
-        <div class="flex flex-wrap items-center justify-between mx-auto p-4 border-b border-gray-300">
+        <div class="flex flex-wrap items-center md:justify-center justify-start md:gap-20 gap-0 mx-auto p-4 border-b border-gray-300">
             {{-- <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
             <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
             <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
@@ -116,9 +114,6 @@
             </div>
         </div>
     </nav>
-    @endauth
-
-
 
     @yield('content')
 </body>

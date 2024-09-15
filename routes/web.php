@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('presence');
+    return redirect('/presence');
 });
 
 Route::get('/login', function () {
@@ -24,4 +24,8 @@ Route::get('/login', function () {
 
 Route::get('/signup', function () {
     return view('signup');
+});
+
+Route::get('/presence', function () {
+    return view('presence');
 });
