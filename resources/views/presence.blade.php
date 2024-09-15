@@ -140,6 +140,37 @@
         $('#locationAndPhotoModalSubmit').text(type + ' Now');
         mapMaker();
     }
+
+    function openCameraModal() {
+        showFlowBytesModal('camera-modal');
+        const video = document.getElementById('video');
+        const constraints = {
+            video: {
+                facingMode: 'user' // Menggunakan kamera depan
+            }
+        };
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then((stream) => {
+                video.srcObject = stream;
+            })
+            .catch((err) => {
+                console.error("Error accessing camera: ", err);
+            });
+
+    }
+
+    function closeCameraModal() {
+        const video = document.getElementById('video');
+        const stream = video.srcObject;
+        const tracks = stream.getTracks();
+
+        tracks.forEach(function(track) {
+            track.stop();
+        });
+
+        video.srcObject = null;
+        hideFlowBytesModal('camera-modal');
+    }
     // $.ajax({
     //     url: 'https://us1.locationiq.com/v1/reverse?key=pk.460d675996d878661445851022dd0fc9&lat=-6.1304363&lon=106.7770966&format=json',
     //     type: 'GET',
