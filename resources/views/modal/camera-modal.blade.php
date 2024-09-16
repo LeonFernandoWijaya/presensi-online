@@ -21,7 +21,7 @@
                 </video>
 
                 <div class="flex items-center justify-center">
-                    <button type="button" class="hover:bg-white hover:border hover:border-gray-200 w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                    <button type="button" onclick="takePhoto()" class="hover:bg-white hover:border hover:border-gray-200 w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
                         <span class="bg-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200">
 
                         </span>

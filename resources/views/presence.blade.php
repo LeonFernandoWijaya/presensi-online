@@ -16,7 +16,7 @@
 
             </div>
             <div class="flex justify-center mt-10">
-                <button type="button" class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-8 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">Check Schedule</button>
+                <button type="button" onclick="checkSchedule()" class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-8 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">Check Schedule</button>
             </div>
             <div class="text-6xl flex justify-center font-medium" id="nowClock">
 
@@ -35,6 +35,7 @@
 
 @include('modal.location-and-photo-modal')
 @include('modal.camera-modal')
+@include('modal.check-schedule-modal')
 <script>
     let latitude = null;
     let longitude = null;
@@ -178,6 +179,25 @@
         video.srcObject = null;
         hideFlowBytesModal('camera-modal');
     }
+
+    function takePhoto() {
+        const video = document.getElementById('video');
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        const photo = canvas.toDataURL('image/png');
+        const previewPhoto = document.getElementById('previewPhoto');
+        previewPhoto.innerHTML = ``;
+        previewPhoto.innerHTML = `<img src="${photo}" class="h-full w-full object-cover rounded-lg">`;
+        closeCameraModal();
+    }
+
+    function checkSchedule() {
+        showFlowBytesModal('check-schedule-modal');
+    }
+
     // $.ajax({
     //     url: 'https://us1.locationiq.com/v1/reverse?key=pk.460d675996d878661445851022dd0fc9&lat=-6.1304363&lon=106.7770966&format=json',
     //     type: 'GET',
