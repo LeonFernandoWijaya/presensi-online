@@ -7,6 +7,7 @@ use App\Http\Controllers\OvertimeHistoryController;
 use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\RejectController;
 use App\Http\Controllers\RequestController;
+use App\Http\Controllers\ShiftController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -53,6 +54,8 @@ Route::middleware(['is_active', 'auth'])->group(function () {
     Route::get('/reject', [RejectController::class, 'index']);
     Route::get('/user', [UserController::class, 'index']);
 
+    Route::get('shift', [ShiftController::class, 'index']);
+
 
     Route::get('/getInitialDataModal', [UserController::class, 'getInitialDataModal']);
 
@@ -60,4 +63,12 @@ Route::middleware(['is_active', 'auth'])->group(function () {
     Route::get('/getUserById', [UserController::class, 'getUserById']);
     Route::put('/saveChangesUser', [UserController::class, 'saveChangesUser']);
     Route::delete('/deleteUser', [UserController::class, 'deleteUser']);
+
+    Route::post('/createNewShift', [ShiftController::class, 'createNewShift']);
+    Route::get('/getShifts', [ShiftController::class, 'getShifts']);
+    Route::delete('/deleteShift', [ShiftController::class, 'deleteShift']);
+    Route::get('/getShiftById', [ShiftController::class, 'getShiftById']);
+
+    Route::post('/addShiftDay', [ShiftController::class, 'addShiftDay']);
+    Route::delete('/deleteShiftDay', [ShiftController::class, 'deleteShiftDay']);
 });
