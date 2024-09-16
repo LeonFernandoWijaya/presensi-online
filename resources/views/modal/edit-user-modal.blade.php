@@ -18,6 +18,7 @@
             <!-- Modal body -->
             <form class="p-4 md:p-5">
                 <div class="grid gap-4 mb-4 grid-cols-2">
+                    <input type="hidden" id="userId">
                     <div class="col-span-2">
                         <label for="fullName" class="block text-sm font-medium text-gray-900 dark:text-white">Full Name<span class="text-red-500">*</span></label>
                     </div>
@@ -30,21 +31,18 @@
                     <div class="col-span-2">
                         <label for="department" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Department<span class="text-red-500">*</span></label>
                         <select id="department" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">Select department</option>
-                            <option value="TV">TV/Monitors</option>
-                            <option value="PC">PC</option>
-                            <option value="GA">Gaming/Console</option>
-                            <option value="PH">Phones</option>
+                        </select>
+                    </div>
+                    <div class="col-span-2">
+                        <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Roles<span class="text-red-500">*</span></label>
+                        <select id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                         </select>
                     </div>
                     <div class="col-span-2">
                         <label for="shiftCategory" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Shift Category<span class="text-red-500">*</span></label>
                         <select id="shiftCategory" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">Select shift</option>
-                            <option value="TV">TV/Monitors</option>
-                            <option value="PC">PC</option>
-                            <option value="GA">Gaming/Console</option>
-                            <option value="PH">Phones</option>
+                            <option selected value="">No Select</option>
+
                         </select>
                     </div>
 
@@ -62,7 +60,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" class="text-white flex justify-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full w-full text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <button type="button" onclick="saveChangesUser()" class="text-white flex justify-center items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full w-full text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                     Save Changes
                 </button>
             </form>

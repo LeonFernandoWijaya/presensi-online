@@ -19,6 +19,9 @@
 </head>
 
 <body class="bg-blue-50">
+    @auth
+
+
     <nav class="bg-white border-gray-200 dark:bg-gray-900">
         <div class="flex flex-wrap items-center md:justify-center justify-start md:gap-20 gap-0 mx-auto p-4 border-b border-gray-300">
             {{-- <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
@@ -31,7 +34,7 @@
                     <span class="sr-only">Open user menu</span>
                     <div
                         class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
-                        <span class="font-medium text-gray-600 dark:text-gray-300">JL</span>
+                        <span class="font-medium text-gray-600 dark:text-gray-300">{{ strtoupper(substr(Auth::user()->first_name, 0, 1)) }}@if(isset(Auth::user()->last_name)){{ strtoupper(substr(Auth::user()->last_name, 0, 1)) }}@endif</span>
                     </div>
                 </button>
                 <!-- Dropdown menu -->
@@ -39,9 +42,12 @@
                     id="user-dropdown">
                     <ul class="py-2" aria-labelledby="user-menu-button">
                         <li>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign
-                                out</a>
+                            <form action="{{url('/logout')}}" method="POST">
+                                @csrf
+                                <button type="submit"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign
+                                    out</button>
+                            </form>
                         </li>
                     </ul>
                 </div>
@@ -114,6 +120,8 @@
             </div>
         </div>
     </nav>
+
+    @endauth
 
     @yield('content')
 </body>

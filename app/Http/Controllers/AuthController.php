@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
     // login
-    public function showSignup()
+    public function signUp()
     {
         $navbar = null;
         $departments = Department::all()->filter(function ($department) {
@@ -20,7 +20,7 @@ class AuthController extends Controller
         return view('signup', compact('navbar', 'departments'));
     }
 
-    public function showLogin()
+    public function login()
     {
         $navbar = null;
         return view('login', compact('navbar'));
@@ -54,9 +54,46 @@ class AuthController extends Controller
         $user->department_id = $request->department;
         $user->save();
 
+        // Kirim email verifikasi
+        // $user->sendEmailVerificationNotification();
+
         return response()->json([
             'success' => true,
-            'message' => 'User created successfully',
+            'message' => 'User created successfully. Wait for the admin to verify your account.',
         ]);
+    }
+
+    public function storeLogin(Request $request)
+    {
+        $request->only('email', 'password');
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'validationMessage' => $validator->errors()->toArray(),
+            ]);
+        }
+
+        if (auth()->attempt($request->only('email', 'password'))) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Login success',
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Login failed',
+        ]);
+    }
+
+    public function logout()
+    {
+        auth()->logout();
+        return redirect('/login');
     }
 }
