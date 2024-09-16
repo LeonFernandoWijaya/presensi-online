@@ -30,6 +30,8 @@ Route::get('/', function () {
 Route::get('/login', [AuthController::class, 'showLogin']);
 Route::get('/signup', [AuthController::class, 'showSignup']);
 
+Route::post('/store-sign-up', [AuthController::class, 'storeSignUp']);
+
 
 Route::get('/presence', [PresenceController::class, 'index']);
 

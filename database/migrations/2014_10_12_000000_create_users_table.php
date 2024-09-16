@@ -22,7 +22,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(false);
             $table->foreignId('role_id')->constrained('roles');
             $table->foreignId('department_id')->constrained('departments');
-            $table->foreignId('shift_id')->constrained('shifts');
+            $table->foreignId('shift_id')->nullable()->constrained('shifts')->onDelete('set null');
             $table->timestamps();
         });
     }
