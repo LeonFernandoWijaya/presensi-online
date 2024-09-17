@@ -1,72 +1,76 @@
 @extends('layouts.layout')
 
 @section('content')
-
-
-<div class="p-4">
-    <div class="mb-6">
-        <div class="flex items-center gap-2 justify-between">
-            <div>
-                <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 start-0 ps-3 flex items-center pointer-events-none">
-                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-                        </svg>
+    <div class="p-4">
+        <div class="mb-6">
+            <div class="flex items-center gap-2 justify-between">
+                <div>
+                    <label for="default-search"
+                        class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 start-0 ps-3 flex items-center pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                            </svg>
+                        </div>
+                        <input type="search" id="shiftSearch"
+                            class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Search Shift Name" required />
                     </div>
-                    <input type="search" id="shiftSearch" class="block w-full p-3 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Shift Name" required />
+                </div>
+
+                <div>
+                    <button type="button" onclick="showFlowBytesModal('create-new-shift-modal')"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Create
+                        New Shift</button>
+
                 </div>
             </div>
+        </div>
 
-            <div>
-                <button type="button" onclick="showFlowBytesModal('create-new-shift-modal')" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Create New Shift</button>
-
-            </div>
+        <div class="relative overflow-x-auto">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Shift Name
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+            <ul id="pagination-shift" class="mt-4 flex justify-center space-x-2 rtl:space-x-reverse text-sm">
+            </ul>
         </div>
     </div>
+    @include('modal.create-new-shift-modal')
+    @include('modal.edit-shift-modal')
+    @include('modal.shift-add-day-modal')
 
-    <div class="relative overflow-x-auto">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" class="px-6 py-3">
-                        Shift Name
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Action
-                    </th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-            </tbody>
-        </table>
-        <ul id="pagination-shift"
-            class="mt-4 flex justify-center space-x-2 rtl:space-x-reverse text-sm">
-        </ul>
-    </div>
-</div>
-@include('modal.create-new-shift-modal')
-@include('modal.edit-shift-modal')
-@include('modal.shift-add-day-modal')
+    <script>
+        $('#shiftSearch').on('keyup', function() {
+            getShifts();
+        });
 
-<script>
-    $('#shiftSearch').on('keyup', function() {
-        getShifts();
-    });
-
-    function getShifts(page = 1) {
-        const shiftSearch = $('#shiftSearch').val();
-        $.ajax({
-            url: "{{ url('/getShifts?page=') }}" + page,
-            type: 'GET',
-            data: {
-                shiftSearch: shiftSearch
-            },
-            success: function(response) {
-                console.log(response);
-                $('#tableBody').empty();
-                response.data.forEach(shift => {
-                    $('#tableBody').append(`
+        function getShifts(page = 1) {
+            const shiftSearch = $('#shiftSearch').val();
+            $.ajax({
+                url: "{{ url('/getShifts?page=') }}" + page,
+                type: 'GET',
+                data: {
+                    shiftSearch: shiftSearch
+                },
+                success: function(response) {
+                    console.log(response);
+                    $('#tableBody').empty();
+                    response.data.forEach(shift => {
+                        $('#tableBody').append(`
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         ${shift.shift_name}
@@ -76,102 +80,101 @@
                         <button type="button" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" onclick="deleteShift(${shift.id})">Delete</button>
                     </td>
                 </tr>
-                    
+
                     `)
-                })
-                buttonPagination('#pagination-shift', response.last_page,
-                    response
-                    .current_page, "getShifts");
-            }
-        });
-    }
-
-    function createNewShift() {
-        const shiftName = $('#shiftName').val();
-        console.log($('#shiftName').val());
-        $.ajax({
-            url: "{{ url('createNewShift') }}",
-            type: 'POST',
-            data: {
-                shiftName: shiftName,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                if (response.success == true) {
-                    hideFlowBytesModal('create-new-shift-modal');
-                    swal.fire({
-                        title: 'Success',
-                        text: response.message,
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    });
-                    getShifts();
-                } else {
-                    swal.fire({
-                        title: 'Error',
-                        text: response.message,
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
+                    })
+                    buttonPagination('#pagination-shift', response.last_page,
+                        response
+                        .current_page, "getShifts");
                 }
-            }
-        });
-    }
+            });
+        }
 
-    function deleteShift(id) {
-        swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: "{{ url('/deleteShift') }}",
-                    type: 'DELETE',
-                    data: {
-                        id: id,
-                        _token: "{{ csrf_token() }}",
-                    },
-                    success: function(response) {
-                        if (response.success == true) {
-                            getShifts();
-                            swal.fire({
-                                title: 'Success',
-                                text: response.message,
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            })
-                        } else {
-                            swal.fire({
-                                title: 'Error',
-                                text: response.message,
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            })
-                        }
+        function createNewShift() {
+            const shiftName = $('#shiftName').val();
+            console.log($('#shiftName').val());
+            $.ajax({
+                url: "{{ url('createNewShift') }}",
+                type: 'POST',
+                data: {
+                    shiftName: shiftName,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success == true) {
+                        hideFlowBytesModal('create-new-shift-modal');
+                        swal.fire({
+                            title: 'Success',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                        getShifts();
+                    } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: response.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
                     }
-                })
-            }
-        })
-    }
+                }
+            });
+        }
 
-    function getShiftDayData(id) {
-        $.ajax({
-            url: "{{ url('/getShiftById') }}",
-            type: 'GET',
-            data: {
-                id: id
-            },
-            success: function(response) {
-                console.log(response);
-                $('#editShiftName').val(response.shift_name);
-                $('#shiftDayContainer').empty();
-                response.shift_days.forEach(day => {
-                    $('#shiftDayContainer').append(`
+        function deleteShift(id) {
+            swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ url('/deleteShift') }}",
+                        type: 'DELETE',
+                        data: {
+                            id: id,
+                            _token: "{{ csrf_token() }}",
+                        },
+                        success: function(response) {
+                            if (response.success == true) {
+                                getShifts();
+                                swal.fire({
+                                    title: 'Success',
+                                    text: response.message,
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                })
+                            } else {
+                                swal.fire({
+                                    title: 'Error',
+                                    text: response.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                })
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        function getShiftDayData(id) {
+            $.ajax({
+                url: "{{ url('/getShiftById') }}",
+                type: 'GET',
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    $('#editShiftName').val(response.shift_name);
+                    $('#shiftDayContainer').empty();
+                    response.shift_days.forEach(day => {
+                        $('#shiftDayContainer').append(`
                     <div class="rounded-xl border border-gray-200 shadow-sm flex items-center justify-between px-4 py-2">
                         <div class="flex flex-col gap-2 font-medium">
                             <p>${day.dayName}</p>
@@ -193,117 +196,149 @@
                         </div>
                     </div>
                     `)
-                })
+                    })
 
-            }
-        });
-    }
-
-    function showEditShiftModal(id) {
-        $('#shiftId').val(id);
-        showFlowBytesModal('edit-shift-modal');
-        getShiftDayData(id);
-    }
-
-    showAddShiftDayModal = () => {
-        $('#startHour').val('');
-        $('#endHour').val('');
-        showFlowBytesModal('shift-add-day-modal');
-    }
-
-    function addShiftDay() {
-        const shiftId = $('#shiftId').val();
-        const dayName = $('#dayName').val();
-        const startHour = $('#startHour').val();
-        const endHour = $('#endHour').val();
-        if (startHour >= endHour) {
-            swal.fire({
-                title: 'Error',
-                text: 'Start hour must be less than end hour',
-                icon: 'error',
-                confirmButtonText: 'OK'
+                }
             });
-            return;
         }
 
-        $.ajax({
-            url: "{{ url('/addShiftDay') }}",
-            type: 'POST',
-            data: {
-                shiftId: shiftId,
-                dayName: dayName,
-                startHour: startHour,
-                endHour: endHour,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                if (response.success == true) {
-                    hideFlowBytesModal('shift-add-day-modal');
-                    swal.fire({
-                        title: 'Success',
-                        text: response.message,
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    });
-                    getShiftDayData(shiftId);
-                } else {
-                    swal.fire({
-                        title: 'Error',
-                        text: response.message,
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            }
-        });
-    }
+        function showEditShiftModal(id) {
+            $('#shiftId').val(id);
+            showFlowBytesModal('edit-shift-modal');
+            getShiftDayData(id);
+        }
 
-    function deleteShiftDay(id) {
-        swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: "{{ url('/deleteShiftDay') }}",
-                    type: 'DELETE',
-                    data: {
-                        id: id,
-                        _token: "{{ csrf_token() }}",
-                    },
-                    success: function(response) {
-                        if (response.success == true) {
-                            getShiftDayData(id);
-                            swal.fire({
-                                title: 'Success',
-                                text: response.message,
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            })
-                        } else {
-                            swal.fire({
-                                title: 'Error',
-                                text: response.message,
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            })
-                        }
+        function showAddShiftDayModal() {
+            $('#startHour').val('');
+            $('#endHour').val('');
+            showFlowBytesModal('shift-add-day-modal');
+        }
+
+        function addShiftDay() {
+            const shiftId = $('#shiftId').val();
+            const dayName = $('#dayName').val();
+            const startHour = $('#startHour').val();
+            const endHour = $('#endHour').val();
+            if (startHour >= endHour) {
+                swal.fire({
+                    title: 'Error',
+                    text: 'Start hour must be less than end hour',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            $.ajax({
+                url: "{{ url('/addShiftDay') }}",
+                type: 'POST',
+                data: {
+                    shiftId: shiftId,
+                    dayName: dayName,
+                    startHour: startHour,
+                    endHour: endHour,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success == true) {
+                        hideFlowBytesModal('shift-add-day-modal');
+                        swal.fire({
+                            title: 'Success',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                        getShiftDayData(shiftId);
+                    } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: response.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
                     }
-                })
-            }
-        })
-    }
+                }
+            });
+        }
+
+        function deleteShiftDay(id) {
+            swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ url('/deleteShiftDay') }}",
+                        type: 'DELETE',
+                        data: {
+                            id: id,
+                            _token: "{{ csrf_token() }}",
+                        },
+                        success: function(response) {
+                            if (response.success == true) {
+                                getShiftDayData(response.id);
+                                swal.fire({
+                                    title: 'Success',
+                                    text: response.message,
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                })
+                            } else {
+                                swal.fire({
+                                    title: 'Error',
+                                    text: response.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                })
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        function updateShift() {
+            const shiftId = $('#shiftId').val();
+            const shiftName = $('#editShiftName').val();
+            $.ajax({
+                url: "{{ url('/updateShift') }}",
+                type: 'PUT',
+                data: {
+                    shiftId: shiftId,
+                    shiftName: shiftName,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success == true) {
+                        hideFlowBytesModal('edit-shift-modal');
+                        swal.fire({
+                            title: 'Success',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                        getShifts();
+                    } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: response.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                }
+            });
+        }
 
 
 
-    $(document).ready(function() {
-        getShifts();
-    });
-</script>
-
+        $(document).ready(function() {
+            getShifts();
+        });
+    </script>
 @endsection

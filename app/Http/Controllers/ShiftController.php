@@ -87,7 +87,28 @@ class ShiftController extends Controller
     public function deleteShiftDay(Request $request)
     {
         $shiftDay = ShiftDay::find($request->id);
+        $shiftId = $shiftDay->shift_id;
         $shiftDay->delete();
-        return response()->json(['success' => true, 'message' => 'Shift day deleted successfully']);
+        return response()->json(['success' => true, 'message' => 'Shift day deleted successfully', 'id' => $shiftId]);
+    }
+
+    function updateShift(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'shiftName' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'validationMessage' => $validator->errors()->toArray(),
+                'message' => 'Please fill all required fields'
+            ]);
+        }
+
+        $shift = Shift::find($request->shiftId);
+        $shift->shift_name = $request->shiftName;
+        $shift->save();
+        return response()->json(['success' => true, 'message' => 'Shift updated successfully']);
     }
 }

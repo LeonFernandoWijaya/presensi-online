@@ -68,6 +68,7 @@ Route::middleware(['is_active', 'auth'])->group(function () {
     Route::get('/getShifts', [ShiftController::class, 'getShifts']);
     Route::delete('/deleteShift', [ShiftController::class, 'deleteShift']);
     Route::get('/getShiftById', [ShiftController::class, 'getShiftById']);
+    Route::put('/updateShift', [ShiftController::class, 'updateShift']);
 
     Route::post('/addShiftDay', [ShiftController::class, 'addShiftDay']);
     Route::delete('/deleteShiftDay', [ShiftController::class, 'deleteShiftDay']);
