@@ -111,4 +111,35 @@ class ShiftController extends Controller
         $shift->save();
         return response()->json(['success' => true, 'message' => 'Shift updated successfully']);
     }
+
+
+    function getShiftDayById(Request $request)
+    {
+        $shiftDay = ShiftDay::find($request->id);
+        return response()->json($shiftDay);
+    }
+
+    function updateShiftDay(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'dayName' => 'required',
+            'startHour' => 'required',
+            'endHour' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'validationMessage' => $validator->errors()->toArray(),
+                'message' => 'Please fill all required fields'
+            ]);
+        }
+
+        $shiftDay = ShiftDay::find($request->id);
+        $shiftDay->dayName = $request->dayName;
+        $shiftDay->startHour = $request->startHour;
+        $shiftDay->endHour = $request->endHour;
+        $shiftDay->save();
+        return response()->json(['success' => true, 'message' => 'Shift day updated successfully', 'id' => $shiftDay->shift_id]);
+    }
 }

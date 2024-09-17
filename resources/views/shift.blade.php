@@ -52,6 +52,7 @@
     @include('modal.create-new-shift-modal')
     @include('modal.edit-shift-modal')
     @include('modal.shift-add-day-modal')
+    @include('modal.shift-edit-day-modal')
 
     <script>
         $('#shiftSearch').on('keyup', function() {
@@ -181,7 +182,7 @@
                             <p>${day.startHour.substr(0, 5)} - ${day.endHour.substr(0, 5)}</p>
                         </div>
                         <div class="flex items-center gap-2">
-                            <button onclick="showShiftDayModal(${day.id})" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                            <button onclick="showEditShiftDayModal(${day.id})" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                 </svg>
@@ -323,6 +324,63 @@
                             confirmButtonText: 'OK'
                         });
                         getShifts();
+                    } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: response.message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                }
+            });
+        }
+
+        function showEditShiftDayModal(id) {
+            showFlowBytesModal('shift-edit-day-modal');
+            $.ajax({
+                url: "{{ url('/getShiftDayById') }}",
+                type: 'GET',
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    $('#shiftDayId').val(response.id);
+                    console.log(response);
+                    $('#editDayName option').each(function() {
+                        if ($(this).val() == response.dayName) {
+                            $(this).attr('selected', 'selected');
+                        }
+                    });
+                    let formatStartHour = response.startHour.substring(0, 5); // Extract 'HH:MM'
+                    let formatEndHour = response.endHour.substring(0, 5); // Extract 'HH:MM'
+                    $('#editStartHour').val(formatStartHour);
+                    $('#editEndHour').val(formatEndHour);
+                }
+            });
+        }
+
+        function updateShiftDay() {
+            $.ajax({
+                url: "{{ url('/updateShiftDay') }}",
+                type: 'PUT',
+                data: {
+                    id: $('#shiftDayId').val(),
+                    dayName: $('#editDayName').val(),
+                    startHour: $('#editStartHour').val(),
+                    endHour: $('#editEndHour').val(),
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success == true) {
+                        hideFlowBytesModal('shift-edit-day-modal');
+                        swal.fire({
+                            title: 'Success',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
+                        getShiftDayData(response.id);
                     } else {
                         swal.fire({
                             title: 'Error',

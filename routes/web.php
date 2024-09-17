@@ -74,6 +74,8 @@ Route::middleware(['is_active', 'auth'])->group(function () {
 
     Route::post('/addShiftDay', [ShiftController::class, 'addShiftDay']);
     Route::delete('/deleteShiftDay', [ShiftController::class, 'deleteShiftDay']);
+    Route::get('/getShiftDayById', [ShiftController::class, 'getShiftDayById']);
+    Route::put('/updateShiftDay', [ShiftController::class, 'updateShiftDay']);
 
 
     Route::post('/saveNewHoliday', [HolidayController::class, 'saveNewHoliday']);
