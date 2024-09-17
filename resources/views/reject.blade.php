@@ -70,17 +70,22 @@
 
 
             </tbody>
+
         </table>
+
+        <ul id="pagination-reject"
+            class="mt-4 flex justify-center space-x-2 rtl:space-x-reverse text-sm">
+        </ul>
     </div>
 </div>
 <script>
-    function getOvertimeForReject() {
+    function getOvertimeForReject(page = 1) {
         let staff = $('#staff').val();
         let startDate = $('#startDate').val();
         let endDate = $('#endDate').val();
 
         $.ajax({
-            url: "{{ url('getOvertimeForReject') }}",
+            url: "{{ url('getOvertimeForReject?page=') }} " + page,
             type: 'GET',
             data: {
                 staff: staff,
@@ -122,6 +127,9 @@
                         </tr>
                     `)
                 })
+                buttonPagination('#pagination-reject', response.last_page,
+                    response
+                    .current_page, "getOvertimeForReject");
             }
         });
     }
