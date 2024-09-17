@@ -79,4 +79,10 @@ Route::middleware(['is_active', 'auth'])->group(function () {
 
 
     Route::post('/saveNewHoliday', [HolidayController::class, 'saveNewHoliday']);
+    Route::get('/getHolidayById', [HolidayController::class, 'getHolidayById']);
+    Route::get('/getHolidays', [HolidayController::class, 'getHolidays']);
+    Route::put('/saveChangesHoliday', [HolidayController::class, 'saveChangesHoliday']);
+    Route::delete('/deleteHoliday', [HolidayController::class, 'deleteHoliday']);
+    Route::get('/getNationalDayOffAPI', [HolidayController::class, 'getNationalDayOffAPI']);
+    Route::post('/saveAllImportNationalDayOff', [HolidayController::class, 'saveAllImportNationalDayOff']);
 });
