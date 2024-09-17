@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\AttendanceHistoryController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\OvertimeHistoryController;
 use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\RejectController;
@@ -53,6 +54,7 @@ Route::middleware(['is_active', 'auth'])->group(function () {
     Route::get('/overtime-history', [OvertimeHistoryController::class, 'index']);
     Route::get('/reject', [RejectController::class, 'index']);
     Route::get('/user', [UserController::class, 'index']);
+    Route::get('/holiday', [HolidayController::class, 'index']);
 
     Route::get('shift', [ShiftController::class, 'index']);
 
@@ -72,4 +74,7 @@ Route::middleware(['is_active', 'auth'])->group(function () {
 
     Route::post('/addShiftDay', [ShiftController::class, 'addShiftDay']);
     Route::delete('/deleteShiftDay', [ShiftController::class, 'deleteShiftDay']);
+
+
+    Route::post('/saveNewHoliday', [HolidayController::class, 'saveNewHoliday']);
 });
