@@ -12,9 +12,10 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="{{ url('javascripts/app.js') }}"></script>
+    <link rel="icon" href="{{ url('mypassword.png') }}" type="image/x-icon">
 
     <script src="{{ asset('javascripts/sweetalert2@11.js') }}"></script>
-    <title>Laravel</title>
+    <title>Attendance App</title>
 
 </head>
 

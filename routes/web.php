@@ -85,4 +85,8 @@ Route::middleware(['is_active', 'auth'])->group(function () {
     Route::delete('/deleteHoliday', [HolidayController::class, 'deleteHoliday']);
     Route::get('/getNationalDayOffAPI', [HolidayController::class, 'getNationalDayOffAPI']);
     Route::post('/saveAllImportNationalDayOff', [HolidayController::class, 'saveAllImportNationalDayOff']);
+
+    Route::post('/saveRequest', [RequestController::class, 'saveRequest']);
+
+    Route::get('/getOvertimeForReject', [RejectController::class, 'getOvertimeForReject']);
 });

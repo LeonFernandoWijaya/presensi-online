@@ -11,50 +11,34 @@
             </div>
             <form class="p-4 md:p-5 flex flex-col gap-4">
                 <div>
-                    <label for="customer" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Customer</label>
+                    <label for="customer" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Customer<span class="text-red-500">*</span></label>
                     <input type="text" name="customer" id="customer" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Enter customer name" required="">
                 </div>
 
                 <div>
-                    <label for="projectName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Project Name</label>
+                    <label for="projectName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Project Name<span class="text-red-500">*</span></label>
                     <input type="text" name="projectName" id="projectName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Enter project name" required="">
-                </div>
-
-                <div>
-                    <label for="overtimeDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Overtime Date</label>
-                    <input type="date" name="overtimeDate" id="overtimeDate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required="">
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
                     <div class="flex flex-col">
-                        <label for="startHour" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start Hour</label>
-                        <div class="relative">
-                            <input type="time" name="startHour" id="startHour" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required="">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 absolute right-3 top-1/2 transform -translate-y-1/2" style="pointer-events: none;">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>
-                        </div>
-
+                        <label for="overtimeStart" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Overtime Start<span class="text-red-500">*</span></label>
+                        <input type="datetime-local" name="overtimeStart" id="overtimeStart" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required="">
                     </div>
                     <div class="flex flex-col">
-                        <label for="endHour" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End Hour</label>
-                        <div class="relative">
-                            <input type="time" name="endHour" id="endHour" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required="">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 absolute right-3 top-1/2 transform -translate-y-1/2" style="pointer-events: none;">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>
-                        </div>
+                        <label for="overtimeEnd" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Overtime End<span class="text-red-500">*</span></label>
+                        <input type="datetime-local" name="overtimeEnd" id="overtimeEnd" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required="">
                     </div>
 
                 </div>
 
                 <div>
-                    <label for="notes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Overtime Date</label>
+                    <label for="notes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Notes<span class="text-red-500">*</span></label>
                     <textarea name="notes" id="notes" rows="3" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required="" placeholder="Enter your notes"></textarea>
                 </div>
 
                 <div class="flex items-center justify-center">
-                    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 w-full dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Submit</button>
+                    <button type="button" onclick="saveRequest()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 w-full dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Submit</button>
 
                 </div>
             </form>
@@ -62,5 +46,83 @@
         </div>
     </div>
 </div>
+
+<script>
+    function saveRequest() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, send it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "{{ url('saveRequest') }}",
+                    type: 'POST',
+                    data: {
+                        customer: $('#customer').val(),
+                        projectName: $('#projectName').val(),
+                        overtimeStart: $('#overtimeStart').val(),
+                        overtimeEnd: $('#overtimeEnd').val(),
+                        notes: $('#notes').val(),
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        if (response.success == true) {
+                            swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message,
+                            });
+                            $('#customer').val('');
+                            $('#projectName').val('');
+                            $('#overtimeStart').val('');
+                            $('#overtimeEnd').val('');
+                            $('#notes').val('');
+                        } else {
+                            swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: response.message,
+                            });
+                        }
+                    }
+                });
+            }
+        })
+    }
+
+    $(document).ready(function() {
+        var now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        var maxDateTime = now.toISOString().slice(0, 16);
+        $('#overtimeStart').attr('max', maxDateTime);
+
+        $('#overtimeStart').change(function() {
+            var start = new Date($(this).val());
+            start.setDate(start.getDate() + 1);
+            start.setMinutes(start.getMinutes() - start.getTimezoneOffset());
+            var maxEndDateTime = start.toISOString().slice(0, 16);
+            $('#overtimeEnd').attr('max', maxEndDateTime);
+            $('#overtimeEnd').val(maxEndDateTime);
+        });
+
+        $('#overtimeEnd').change(function() {
+            var start = new Date($('#overtimeStart').val());
+            var end = new Date($(this).val());
+            if (end < start) {
+                swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'End date must be greater than start date!',
+                });
+                $(this).val($('#overtimeStart').val());
+            }
+        });
+    });
+</script>
 
 @endsection
