@@ -32,11 +32,13 @@
                 </div>
                 <div class="flex items-center mt-2">
                     <button type="button" onclick="validateLocationSetting('Clock In')"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-semibold text-md px-5 py-2.5 w-full rounded-bl-2xl dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">CLOCK
+                        class="text-white font-semibold text-md px-5 py-2.5 w-full rounded-bl-2xl {{ $isClockOut ? 'bg-gray-400' : 'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' }}"
+                        {{ $isClockOut ? 'disabled' : '' }}>CLOCK
                         IN</button>
                     <button type="button" onclick="validateLocationSetting('Clock Out')"
-                        class="text-white bg-gray-400 font-semibold text-md px-5 py-2.5 w-full rounded-br-2xl"
-                        disabled>CLOCK OUT</button>
+                        class="text-white font-semibold text-md px-5 py-2.5 w-full rounded-br-2xl {{ $isClockOut ? 'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' : 'bg-gray-400' }}"
+                        {{ $isClockOut ? '' : 'disabled' }}>CLOCK
+                        OUT</button>
                 </div>
             </div>
         </div>

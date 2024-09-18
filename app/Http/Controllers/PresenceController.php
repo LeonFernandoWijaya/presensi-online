@@ -21,7 +21,6 @@ class PresenceController extends Controller
         if ($lastPresence && $lastPresence->clockOutTime == null && $lastPresence->clockInTime != null) {
             $isClockOut = true;
         }
-
         return view('presence', compact('navbar', 'isClockOut'));
     }
 
@@ -86,8 +85,6 @@ class PresenceController extends Controller
             dd($th->getResponse()->getBody()->getContents());
         }
 
-
-
         $body = $response->getBody()->getContents();
         $data = json_decode($body, true);
         $locationName = $data['display_name'];
@@ -95,7 +92,7 @@ class PresenceController extends Controller
         $lastPresence = Attendance::where('user_id', Auth::user()->id)->latest()->first();
         if ($lastPresence && $lastPresence->clockOutTime == null && $lastPresence->clockInTime != null) {
             $lastPresence->clockOutTime = date('Y-m-d H:i:s');
-            $lastPresence->cloclOutPhoto = $filename;
+            $lastPresence->clockOutPhoto = $filename;
             $lastPresence->clockOutLocation = $locationName;
             $lastPresence->save();
         } else {
