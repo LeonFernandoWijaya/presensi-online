@@ -58,4 +58,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Shift::class);
     }
+
+    public function presences()
+    {
+        return $this->hasMany(Attendance::class);
+    }
 }

@@ -19,9 +19,9 @@ return new class extends Migration
             $table->boolean('isOvertimeClockIn')->nullable();
             $table->boolean('isOvertimeClockOut')->nullable();
             $table->string('clockInPhoto');
-            $table->string('clockOutPhoto');
+            $table->string('clockOutPhoto')->nullable();
             $table->string('clockInLocation');
-            $table->string('clockOutLocation');
+            $table->string('clockOutLocation')->nullable();
             $table->timestamps();
         });
     }

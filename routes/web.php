@@ -89,4 +89,9 @@ Route::middleware(['is_active', 'auth'])->group(function () {
     Route::post('/saveRequest', [RequestController::class, 'saveRequest']);
 
     Route::get('/getOvertimeForReject', [RejectController::class, 'getOvertimeForReject']);
+    Route::put('/rejectOvertime', [RejectController::class, 'rejectOvertime']);
+    Route::put('/rejectSelectedOvertime', [RejectController::class, 'rejectSelectedOvertime']);
+
+    Route::get('/checkSchedule', [PresenceController::class, 'checkSchedule']);
+    Route::post('/presenceNow', [PresenceController::class, 'presenceNow']);
 });
