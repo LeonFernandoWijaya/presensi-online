@@ -3,7 +3,10 @@
 @section('content')
     <div class="flex flex-col items-center justify-center lg:p-0 p-8">
         <div class="lg:w-1/2 w-full flex flex-col justify-center md:mt-20 mt-0 gap-4">
-            <p class="flex justify-start items-center">Good Morning, <span class="ms-2 font-bold">Akun Admin</span></p>
+            <div class="flex items-center">
+                <span class="flex justify-start items-center" id="greeting"></span>
+                <span class="ms-2 font-bold">{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</span>
+            </div>
             <div class="rounded-2xl shadow-2xl flex flex-col gap-4">
                 <div class="border-b border-gray-600 border-dashed p-4">
                     <div class="flex justify-center items-center gap-4">
@@ -31,11 +34,11 @@
                         class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Overtime</label>
                 </div>
                 <div class="flex items-center mt-2">
-                    <button type="button" onclick="validateLocationSetting('Clock In')"
+                    <button type="button" onclick="validateLocationSetting('Clock In')" id="clockInButton"
                         class="text-white font-semibold text-md px-5 py-2.5 w-full rounded-bl-2xl {{ $isClockOut ? 'bg-gray-400' : 'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' }}"
                         {{ $isClockOut ? 'disabled' : '' }}>CLOCK
                         IN</button>
-                    <button type="button" onclick="validateLocationSetting('Clock Out')"
+                    <button type="button" onclick="validateLocationSetting('Clock Out')" id="clockOutButton"
                         class="text-white font-semibold text-md px-5 py-2.5 w-full rounded-br-2xl {{ $isClockOut ? 'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' : 'bg-gray-400' }}"
                         {{ $isClockOut ? '' : 'disabled' }}>CLOCK
                         OUT</button>
@@ -48,6 +51,7 @@
     @include('modal.camera-modal')
     @include('modal.check-schedule-modal')
     @include('modal.finding-location-modal')
+    @include('modal.loading-modal')
 
     <script>
         let latitude = null;
@@ -79,6 +83,20 @@
             }
             updateClock(); // Update the clock immediately
             setInterval(updateClock, 1000); // Update the clock every 1000 milliseconds (1 second)
+
+             // Get the current hour
+            let hour = new Date().getHours();
+
+            // Determine whether it's morning or afternoon
+            let greeting;
+            if (hour < 12) {
+                greeting = 'Good Morning,';
+            } else {
+                greeting = 'Good Afternoon,';
+            }
+
+            // Change the text of the #greeting div
+            $('#greeting').text(greeting);
         });
 
         function refreshLocation() {
@@ -172,6 +190,11 @@
             showFlowBytesModal('location-and-photo-modal');
             $('#locationAndPhotoModalTitle').text(type);
             $('#locationAndPhotoModalSubmit').text(type + ' Now');
+            $('#previewPhoto').empty();
+            $('#previewPhoto').append(`
+                <span class="text-xs">No Photo</span>
+            `);
+            photo = null;
             mapMaker();
         }
 
@@ -263,6 +286,7 @@
         }
 
         async function presenceNow() {
+            showFlowBytesModal('loading-modal');
             let sendLatitude = null;
             let sendLongitude = null;
 
@@ -282,6 +306,7 @@
                                 _token: '{{ csrf_token() }}'
                             },
                             success: function(response) {
+                                hideFlowBytesModal('loading-modal');
                                 if (response.status == 'success') {
                                     Swal.fire({
                                         title: "Success",
@@ -289,6 +314,23 @@
                                         icon: "success"
                                     });
                                     hideFlowBytesModal('location-and-photo-modal');
+                                    if (response.statusPresence == 'clockIn') {
+                                        $('#clockInButton').attr('disabled', true);
+                                        $('#clockInButton').addClass('bg-gray-400');
+                                        $('#clockInButton').removeClass('bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800');
+
+                                        $('#clockOutButton').attr('disabled', false);
+                                        $('#clockOutButton').removeClass('bg-gray-400');
+                                        $('#clockOutButton').addClass('bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800');
+                                    } else {
+                                        $('#clockInButton').attr('disabled', false);
+                                        $('#clockInButton').removeClass('bg-gray-400');
+                                        $('#clockInButton').addClass('bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800');
+
+                                        $('#clockOutButton').attr('disabled', true);
+                                        $('#clockOutButton').addClass('bg-gray-400');
+                                        $('#clockOutButton').removeClass('bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800');
+                                    }
                                 } else {
                                     Swal.fire({
                                         title: "Error",
@@ -298,6 +340,7 @@
                                 }
                             },
                             error: function(error) {
+                                hideFlowBytesModal('loading-modal');
                                 swal.fire({
                                     title: "Error",
                                     text: "Failed to send presence data",

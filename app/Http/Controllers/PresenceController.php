@@ -32,6 +32,7 @@ class PresenceController extends Controller
 
     public function presenceNow(Request $request)
     {
+        $statusPresence = null;
         $validator = Validator::make($request->all(), [
             'photo' => 'required',
             'sendLatitude' => 'required',
@@ -42,7 +43,7 @@ class PresenceController extends Controller
             return response()->json([
                 'status' => 'error',
                 'validationMessage' => $validator->errors()->toArray(),
-                'message' => 'Please take photo and send your location',
+                'message' => 'Make sure you already take photo and allow location access',
             ]);
         }
 
@@ -76,8 +77,8 @@ class PresenceController extends Controller
                 [
                     'query' => [
                         'format' => 'json',
-                        'lat' => -6.1905956,
-                        'lon' => 106.797799,
+                        'lat' => $request->sendLatitude,
+                        'lon' => $request->sendLongitude,
                     ]
                 ]
             );
@@ -95,6 +96,8 @@ class PresenceController extends Controller
             $lastPresence->clockOutPhoto = $filename;
             $lastPresence->clockOutLocation = $locationName;
             $lastPresence->save();
+
+            $statusPresence = 'clockOut';
         } else {
             $attendance = new Attendance();
             $attendance->user_id = Auth::user()->id;
@@ -102,11 +105,14 @@ class PresenceController extends Controller
             $attendance->clockInPhoto = $filename;
             $attendance->clockInLocation = $locationName;
             $attendance->save();
+
+            $statusPresence = 'clockIn';
         }
 
         return response()->json([
             'status' => 'success',
             'message' => 'Presence recorded successfully',
+            'statusPresence' => $statusPresence,
         ]);
     }
 }
