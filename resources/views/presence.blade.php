@@ -302,6 +302,7 @@
                             data: {
                                 sendLatitude: sendLatitude,
                                 sendLongitude: sendLongitude,
+                                isOvertime: $('#default-checkbox').is(':checked'),
                                 photo: photo,
                                 _token: '{{ csrf_token() }}'
                             },
@@ -314,6 +315,7 @@
                                         icon: "success"
                                     });
                                     hideFlowBytesModal('location-and-photo-modal');
+                                    $('#default-checkbox').prop('checked', false);
                                     if (response.statusPresence == 'clockIn') {
                                         $('#clockInButton').attr('disabled', true);
                                         $('#clockInButton').addClass('bg-gray-400');

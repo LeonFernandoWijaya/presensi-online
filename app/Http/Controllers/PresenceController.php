@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attendance;
+use App\Models\Holiday;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,6 +33,10 @@ class PresenceController extends Controller
 
     public function presenceNow(Request $request)
     {
+        $isShiftDay = Auth::user()->shift->shiftDays->where('dayName', date('l'))->first();
+        dd($isShiftDay);
+
+        $isOvertime = $request->isOvertime == 'true' ? 1 : 0;
         $statusPresence = null;
         $validator = Validator::make($request->all(), [
             'photo' => 'required',
@@ -95,15 +100,24 @@ class PresenceController extends Controller
             $lastPresence->clockOutTime = date('Y-m-d H:i:s');
             $lastPresence->clockOutPhoto = $filename;
             $lastPresence->clockOutLocation = $locationName;
+            $lastPresence->isOvertimeClockOut = $isOvertime;
             $lastPresence->save();
 
             $statusPresence = 'clockOut';
+
+            // check for overtime
+            $totalOvertime = 0;
+            $isHoliday = Holiday::where('holiday_date', date('Y-m-d'))->first();
+            
+
+
         } else {
             $attendance = new Attendance();
             $attendance->user_id = Auth::user()->id;
             $attendance->clockInTime = date('Y-m-d H:i:s');
             $attendance->clockInPhoto = $filename;
             $attendance->clockInLocation = $locationName;
+            $attendance->isOvertimeClockIn = $isOvertime;
             $attendance->save();
 
             $statusPresence = 'clockIn';
