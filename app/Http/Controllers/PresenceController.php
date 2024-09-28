@@ -33,9 +33,6 @@ class PresenceController extends Controller
 
     public function presenceNow(Request $request)
     {
-        $isShiftDay = Auth::user()->shift->shiftDays->where('dayName', date('l'))->first();
-        dd($isShiftDay);
-
         $isOvertime = $request->isOvertime == 'true' ? 1 : 0;
         $statusPresence = null;
         $validator = Validator::make($request->all(), [
@@ -108,6 +105,7 @@ class PresenceController extends Controller
             // check for overtime
             $totalOvertime = 0;
             $isHoliday = Holiday::where('holiday_date', date('Y-m-d'))->first();
+            $isShiftDay = Auth::user()->shift->shiftDays->where('dayName', date('l'))->first();
             
 
 
