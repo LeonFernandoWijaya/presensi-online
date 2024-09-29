@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use App\Models\Holiday;
+use App\Models\Overtime;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -107,6 +108,7 @@ class PresenceController extends Controller
             $isHoliday = Holiday::where('holiday_date', date('Y-m-d'))->first();
             $isShiftDay = Auth::user()->shift->shiftDays->where('dayName', date('l'))->first();
             
+            if($isHoliday)
 
 
         } else {
@@ -126,5 +128,15 @@ class PresenceController extends Controller
             'message' => 'Presence recorded successfully',
             'statusPresence' => $statusPresence,
         ]);
+    }
+
+    private function makeOvertime($attendanceId, $overtimeStart, $overtimeEnd, $overtimeTotal){
+        $overtime = new Overtime();
+        $overtime->user_id = Auth::user()->id;
+        $overtime->attendance_id = $attendanceId;
+        $overtime->overtimeStart = $overtimeStart;
+        $overtime->overtimeEnd = $overtimeEnd;
+        $overtime->overtimeTotal = $overtimeTotal;
+        $overtime->save();
     }
 }
