@@ -107,9 +107,46 @@ class PresenceController extends Controller
             $totalOvertime = 0;
             $isHoliday = Holiday::where('holiday_date', date('Y-m-d'))->first();
             $isShiftDay = Auth::user()->shift->shiftDays->where('dayName', date('l'))->first();
-            
-            if($isHoliday)
 
+            $clockInTime = \Carbon\Carbon::parse($lastPresence->clockInTime);
+            $clockOutTime = \Carbon\Carbon::parse($lastPresence->clockOutTime);
+    
+            if($isShiftDay){
+                $today = \Carbon\Carbon::now()->toDateString();
+                $shiftStart = $today . ' ' . $isShiftDay->startHour;
+                $shiftEnd = $today . ' ' . $isShiftDay->endHour;   
+                $shiftStartTime = \Carbon\Carbon::parse($shiftStart);
+                $shiftEndTime = \Carbon\Carbon::parse($shiftEnd);
+            }
+            
+            if($isHoliday){
+                $totalOvertime = $clockInTime->diffInMinutes($clockOutTime);
+                $this->makeOvertime($lastPresence->id, $clockInTime, $clockOutTime, $totalOvertime);
+            } else if (!$isHoliday && ($lastPresence->isOvertimeClockIn == 1 || $lastPresence->isOvertimeClockOut == 1)){ {
+                if ($isShiftDay) {
+                    if ($clockInTime->gt($shiftEndTime) && $lastPresence->isOvertimeClockIn == 1) {
+                        $totalOvertime = $clockInTime->diffInMinutes($clockOutTime);
+                    } else {
+                        if ($clockInTime->lt($shiftStartTime) && $clockOutTime->lt($shiftStartTime)){
+                            $totalOvertime = $clockInTime->diffInMinutes($clockOutTime);
+                        } else {
+                            // If clocked in early and it's considered overtime
+                            if($clockInTime->lt($shiftStartTime) && $lastPresence->isOverTimeClockIn == 1){
+                                $totalOvertime = $totalOvertime + $shiftStartTime->diffInMinutes($clockInTime);
+                            }
+
+                            // If clocked out late and it's considered overtime
+                            if($clockOutTime->gt($shiftEndTime) && $lastPresence->isOverTimeClockOut == 1){
+                                $totalOvertime = $totalOvertime + $clockOutTime->diffInMinutes($shiftEndTime);
+                            }
+                        }
+                    }
+                    $this->makeOvertime($lastPresence->id, $clockInTime, $clockOutTime, $totalOvertime);
+                } else if (!$isShiftDay && $lastPresence->isOvertimeClockIn == 1) {
+                    $totalOvertime = $clockInTime->diffInMinutes($clockOutTime);
+                    $this->makeOvertime($lastPresence->id, $clockInTime, $clockOutTime, $totalOvertime);
+                }
+            }
 
         } else {
             $attendance = new Attendance();
@@ -140,3 +177,4 @@ class PresenceController extends Controller
         $overtime->save();
     }
 }
+
