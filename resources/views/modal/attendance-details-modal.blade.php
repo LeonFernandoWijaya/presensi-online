@@ -18,13 +18,18 @@
             <!-- Modal body -->
             <div class="p-4 md:p-5">
                 <div class="grid gap-4 mb-4 grid-cols-2">
-                    <div class="col-span-2 sm:col-span-1">
+                    <div class="col-span-2">
                         <label for="staffName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Staff Name</label>
                         <input type="text" name="staffName" id="staffName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled value="">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
-                        <label for="location" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Location</label>
-                        <input type="text" name="location" id="location" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled value="">
+                        <label for="locationIn" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Location In</label>
+                        <textarea disabled id="locationIn" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>                    
+                    </div>
+
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="locationOut" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Location Out</label>
+                        <textarea disabled id="locationOut" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>      
                     </div>
 
                     <div class="col-span-2 sm:col-span-1">
@@ -36,13 +41,19 @@
                         <input type="text" name="dateTimeOut" id="dateTimeOut" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled value="">
                     </div>
 
-                    <div class="col-span-2">
-                        <label for="photo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Photo</label>
-                        <div class="w-32 h-32 border rounded-lg border-gray-400 flex items-center justify-center">
-
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="photoIn" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Photo In</label>
+                        <div id="photoIn">
+                            
                         </div>
                     </div>
-
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="photoOut" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Photo Out</label>
+                        <div id="photoOut">
+                            
+                        </div>
+                        
+                    </div>
                 </div>
             </div>
         </div>

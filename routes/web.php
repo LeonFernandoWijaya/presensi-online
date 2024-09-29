@@ -94,4 +94,8 @@ Route::middleware(['is_active', 'auth'])->group(function () {
 
     Route::get('/checkSchedule', [PresenceController::class, 'checkSchedule']);
     Route::post('/presenceNow', [PresenceController::class, 'presenceNow']);
+    
+
+    Route::get('/getAttendanceHistory', [AttendanceHistoryController::class, 'getAttendanceHistory']);
+    Route::get('/getAttendanceDetail', [AttendanceHistoryController::class, 'getAttendanceDetail']);
 });

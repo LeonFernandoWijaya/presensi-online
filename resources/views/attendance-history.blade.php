@@ -48,86 +48,127 @@
                             Staff
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Date
+                            Date In
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Clock In
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Clock Out
+                            Date Out
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Action
                         </th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            staff A
-                        </th>
-                        <td class="px-6 py-4">
-                            10 August 2024
-                        </td>
-                        <td class="px-6 py-4">
-                            10:24
-                        </td>
-                        <td class="px-6 py-4">
-                            17:10
-                        </td>
-                        <td class="px-6 py-4 flex items-center">
-                            <button type="button"
-                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                                onclick="showAttendanceDetailsModal()">Details</button>
-                        </td>
-                    </tr>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            staff A
-                        </th>
-                        <td class="px-6 py-4">
-                            10 August 2024
-                        </td>
-                        <td class="px-6 py-4">
-                            10:24
-                        </td>
-                        <td class="px-6 py-4">
-                            17:10
-                        </td>
-                        <td class="px-6 py-4 flex items-center">
-                            <button type="button"
-                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                                onclick="showAttendanceDetailsModal()">Details</button>
-                        </td>
-                    </tr>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            staff A
-                        </th>
-                        <td class="px-6 py-4">
-                            10 August 2024
-                        </td>
-                        <td class="px-6 py-4">
-                            10:24
-                        </td>
-                        <td class="px-6 py-4">
-                            17:10
-                        </td>
-                        <td class="px-6 py-4 flex items-center">
-                            <button type="button"
-                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                                onclick="showAttendanceDetailsModal()">Details</button>
-                        </td>
-                    </tr>
+                <tbody id="table-body">
+                    
+                    
                 </tbody>
             </table>
+            <ul id="pagination-attendance" class="mt-4 flex justify-center space-x-2 rtl:space-x-reverse text-sm">
+            </ul>
         </div>
     </div>
     @include('modal.attendance-details-modal')
 
     <script>
-        function showAttendanceDetailsModal() {
-            showFlowBytesModal('attendance-details-modal');
+        function getAttendanceDetail(id) {
+            $.ajax({
+                url: "{{ url('/getAttendanceDetail') }}",
+                type: 'GET',
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    console.log(response);
+                    let photoOut = ``;
+                    if (response.clockOutPhoto != null){
+                        photoOut = `<img src="{{ asset('storage/photos/${response.clockOutPhoto}') }}" class="w-32 h-32 object-cover rounded-lg">`
+                    } else {
+                        photoOut = `<img src="{{ url('in-progress.png') }}" class="w-32 h-32 object-cover rounded-lg">`
+                    }
+                    $('#staffName').val(response.user.first_name + ' ' + (response.user.last_name != null ? response.user.last_name : ''));
+                    $('#locationIn').val(response.clockInLocation);
+                    $('#locationOut').val(response.clockOutLocation != null ? response.clockOutLocation : "In Progress");
+                    $('#dateTimeIn').val(response.clockInTime);
+                    $('#dateTimeOut').val(response.clockOutTime != null ? response.clockOutTime : "In Progress");
+                    $('#photoIn').empty();
+                    $('#photoIn').append(`
+                        <img src="{{ asset('storage/photos/${response.clockInPhoto}') }}" class="w-32 h-32 object-cover rounded-lg">
+                    `);
+                    $('#photoOut').empty();
+                    $('#photoOut').append(photoOut);
+
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
         }
+        
+        function showAttendanceDetailsModal(id) {
+            showFlowBytesModal('attendance-details-modal');
+            getAttendanceDetail(id);
+        }
+
+        function getAttendanceHistory(page = 1){
+            let staff = $('#staff').val();
+            let startDate = $('#startDate').val();
+            let endDate = $('#endDate').val();
+
+            $.ajax({
+                url: "{{ url('/getAttendanceHistory?page=') }}" + page,
+                type: 'GET',
+                data: {
+                    staff: staff,
+                    startDate: startDate,
+                    endDate: endDate
+                },
+                success: function(response) {
+                    console.log(response);
+                    $('#table-body').empty();
+                    response.data.forEach(data => {
+                        $('#table-body').append(`
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    ${data.user.first_name} ${data.user.last_name ?? ""}  
+                                </th>
+                                <td class="px-6 py-4">
+                                    ${data.clockInTime}
+                                </td>
+                                <td class="px-6 py-4">
+                                    ${data.clockOutTime != null ? data.clockOutTime : "In Progress"}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button type="button"
+                                        class="text-white flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                                        onclick="showAttendanceDetailsModal(${data.id})">Details</button>
+                                </td>
+                            </tr>
+                        `)
+                    })
+                    buttonPagination('#pagination-attendance', response.last_page,
+                        response.current_page, "getAttendanceHistory");
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        $('#staff').change(function() {
+            getAttendanceHistory();
+        });
+
+        $('#startDate').change(function() {
+            getAttendanceHistory();
+        });
+
+        $('#endDate').change(function() {
+            getAttendanceHistory();
+        });
+
+        $(document).ready(function() {
+            getAttendanceHistory();
+        });
+        
     </script>
 @endsection

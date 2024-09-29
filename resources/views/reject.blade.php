@@ -64,7 +64,7 @@
                         <th scope="col" class="px-6 py-3">
                             Total Overtime
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-6 py-3 w-1/4">
                             Location
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -160,6 +160,7 @@
                     endDate: endDate
                 },
                 success: function(response) {
+                    console.log(response);
                     totalOvertime = response.overtime.total;
                     $('#tableBody').empty();
                     response.overtime.data.forEach(overtime => {
@@ -185,10 +186,12 @@
                                 ${hours} Hours ${minutes} Minutes
                             </td>
                             <td class="px-6 py-4">
-                                ${overtime.location ?? 'Request Manual'}
+                                ${overtime.attendance != null ? `<div class="flex flex-col gap-2"><div><span class="text-green-500">IN : </span>${overtime.attendance.clockInLocation}</div><div><span class="text-red-500">OUT : </span>${overtime.attendance.clockOutLocation}</div></div>` : 'Request Manual'}
                             </td>
                             <td class="px-6 py-4">
-                                ${overtime.photo ? `<img src="${overtime.photo}" class="w-20 h-20 rounded-xl">` : `<img src="{{ url('no-selfie-taken.png') }}" class="w-20 h-20 rounded-xl">`}
+                                <div class="grid grid-cols-2 gap-2">
+                                    ${overtime.attendance != null ? `<img src="{{ asset('storage/photos/${overtime.attendance.clockInPhoto}') }}" class="w-25 h-20 rounded-xl"><img src="{{ asset('storage/photos/${overtime.attendance.clockOutPhoto}') }}" class="w-25 h-20 rounded-xl">` : `<div>Request Manual</div>`}
+                                </div>
                             </td>
                             <td class="px-6 py-4">
                                 <button type="button" onclick="rejectOvertime(${overtime.id})" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Reject</button>

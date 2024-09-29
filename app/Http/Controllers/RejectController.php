@@ -32,8 +32,8 @@ class RejectController extends Controller
                 return $query->where('overtimeEnd', '<=', $endDate);
             })
             ->where('rejectDate', null)
-            ->with('user')
-            ->paginate(2);
+            ->with('user', 'attendance')
+            ->paginate(10);
 
         // Get all overtime IDs matching the same criteria
         $overtimeIds = Overtime::when($staffId, function ($query, $staffId) {
