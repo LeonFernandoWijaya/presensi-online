@@ -35,8 +35,8 @@
                 </div>
             </div>
             <div>
-                <button type="button"
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Export</button>
+                <a type="button" href="{{ url('/downloadAttendanceHistory?staffId=&startDate=&endDate=') }}" target="_blank" id="exportButton"
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Export</a>
 
             </div>
         </div>
@@ -70,6 +70,11 @@
     @include('modal.attendance-details-modal')
 
     <script>
+        let staffId = '';
+        let startDate = '';
+        let endDate = '';
+        let url = "{{ url('/downloadAttendanceHistory') }}";
+
         function getAttendanceDetail(id) {
             $.ajax({
                 url: "{{ url('/getAttendanceDetail') }}",
@@ -156,14 +161,20 @@
 
         $('#staff').change(function() {
             getAttendanceHistory();
+            staffId = $('#staff').val();
+            $('#exportButton').attr('href', `${url}?staffId=${staffId}&startDate=${startDate}&endDate=${endDate}`);
         });
 
         $('#startDate').change(function() {
             getAttendanceHistory();
+            startDate = $('#startDate').val();
+            $('#exportButton').attr('href', `${url}?staffId=${staffId}&startDate=${startDate}&endDate=${endDate}`);
         });
 
         $('#endDate').change(function() {
             getAttendanceHistory();
+            endDate = $('#endDate').val();
+            $('#exportButton').attr('href', `${url}?staffId=${staffId}&startDate=${startDate}&endDate=${endDate}`);
         });
 
         $(document).ready(function() {

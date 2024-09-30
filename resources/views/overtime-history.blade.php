@@ -39,7 +39,7 @@
             </div>
         </div>
         <div>
-            <a type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" href="{{ url('/downloadOvertimeHistory') }}" target="_blank">Export</a>
+            <a type="button" id="exportButton" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" href="{{ url('/downloadOvertimeHistory?staffId=&startDate=&endDate=&status=0') }}" target="_blank">Export</a>
 
         </div>
     </div>
@@ -78,6 +78,13 @@
 @include('modal.overtime-details-modal')
 
 <script>
+    let staffId = '';
+    let startDate = '';
+    let endDate = '';
+    let status = 0;
+    let url = "{{ url('/downloadOvertimeHistory') }}";
+
+
     function getOvertimeDetail(id){
         $.ajax({
             url: "{{ url('/getOvertimeDetail') }}",
@@ -86,7 +93,6 @@
                 id: id
             },
             success: function(response) {
-                console.log(response);
                 if (response.attendance == null){
                     $('#overtimeDetailTitle').text('Overtime Details (Manual Request)');
                     $('.automatic-container').addClass('hidden');
@@ -141,7 +147,6 @@
                 status: status
             },
             success: function(response) {
-                console.log(response);
                 $('#table-body').empty();
                 response.data.forEach(function(data) {
                     let status = data.rejectDate != null ? 'Rejected' : 'Approved';
@@ -182,18 +187,26 @@
 
     $('#staff').change(function() {
         getOvertimeHistory();
+        staffId = $('#staff').val();
+        $('#exportButton').attr('href', `${url}?staffId=${staffId}&startDate=${startDate}&endDate=${endDate}&status=${status}`);
     });
 
     $('#startDate').change(function() {
         getOvertimeHistory();
+        startDate = $('#startDate').val();
+        $('#exportButton').attr('href', `${url}?staffId=${staffId}&startDate=${startDate}&endDate=${endDate}&status=${status}`);
     });
 
     $('#endDate').change(function() {
         getOvertimeHistory();
+        endDate = $('#endDate').val();
+        $('#exportButton').attr('href', `${url}?staffId=${staffId}&startDate=${startDate}&endDate=${endDate}&status=${status}`);
     });
 
     $('#status').change(function() {
         getOvertimeHistory();
+        status = $('#status').val();
+        $('#exportButton').attr('href', `${url}?staffId=${staffId}&startDate=${startDate}&endDate=${endDate}&status=${status}`);
     });
 
     $(document).ready(function() {

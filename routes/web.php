@@ -102,4 +102,5 @@ Route::middleware(['is_active', 'auth'])->group(function () {
     Route::get('/getOvertimeDetail', [OvertimeHistoryController::class, 'getOvertimeDetail']);
 
     Route::get('/downloadOvertimeHistory', [OvertimeHistoryController::class, 'downloadOvertimeHistory']);
+    Route::get('/downloadAttendanceHistory', [AttendanceHistoryController::class, 'downloadAttendanceHistory']);
 });

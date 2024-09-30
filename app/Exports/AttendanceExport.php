@@ -2,48 +2,41 @@
 
 namespace App\Exports;
 
-use App\Models\Overtime;
+use App\Models\Attendance;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 
-class OvertimeExport implements FromCollection, WithMapping, WithHeadings, WithColumnWidths
+class AttendanceExport implements FromCollection, WithMapping, WithHeadings, WithColumnWidths
 {
     protected $staffId;
     protected $startDate;
     protected $endDate;
-    protected $status;
 
-    public function __construct($staffId, $startDate, $endDate, $status)
+    public function __construct($staffId, $startDate, $endDate)
     {
         $this->staffId = $staffId;
         $this->startDate = $startDate;
         $this->endDate = $endDate;
-        $this->status = $status;
     }
-  
+
+
     /**
     * @return \Illuminate\Support\Collection
     */
     public function collection()
     {
-        return Overtime::when($this->staffId, function ($query, $staffId) {
+        return Attendance::when($this->staffId, function ($query, $staffId) {
             return $query->where('user_id', $staffId);
         })
         ->when($this->startDate, function ($query, $startDate) {
-            return $query->where('overtimeStart', '>=', $startDate);
+            return $query->where('clockInTime', '>=', $startDate);
         })
         ->when($this->endDate, function ($query, $endDate) {
-            return $query->where('overtimeEnd', '<=', $endDate);
+            return $query->where('clockOutTime', '<=', $endDate);
         })
-        ->when($this->status == 1, function ($query) {
-            return $query->whereNull('rejectDate');
-        })
-        ->when($this->status == 2, function ($query) {
-            return $query->whereNotNull('rejectDate');
-        })
-        ->with('user', 'attendance')
+        ->with('user')
         ->get();
     }
 
@@ -56,24 +49,20 @@ class OvertimeExport implements FromCollection, WithMapping, WithHeadings, WithC
             'A' => 25,
             'B' => 25,
             'C' => 25,
-            'D' => 20,
-            'E' => 20,
             // Add more columns as needed
         ];
     }
 
     /**
     * Memetakan kolom yang ingin diekspor
-    * @var Overtime $overtime
+    * @var Attendance $attendance
     */
-    public function map($overtime): array
+    public function map($attendance): array
     {
         return [
-            $overtime->user->first_name . ' ' . $overtime->user->last_name,
-            $overtime->overtimeStart,
-            $overtime->overtimeEnd,
-            $overtime->overtimeTotal . ' minutes',
-            $overtime->rejectDate ? 'Rejected' : 'Approved',
+            $attendance->user->first_name . ' ' . $attendance->user->last_name,
+            $attendance->clockInTime,
+            $attendance->clockOutTime,
             // Add more columns as needed
         ];
     }
@@ -85,10 +74,8 @@ class OvertimeExport implements FromCollection, WithMapping, WithHeadings, WithC
     {
         return [
             'Staff',
-            'Overtime Start',
-            'Overtime End',
-            'Total Overtime',
-            'Status',
+            'Clock In',
+            'Clock Out',
             // Add more headers as needed
         ];
     }

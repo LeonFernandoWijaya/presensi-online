@@ -6,6 +6,8 @@ use App\Models\Attendance;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AttendanceExport;
 
 class AttendanceHistoryController extends Controller
 {
@@ -33,27 +35,17 @@ class AttendanceHistoryController extends Controller
         $startDate = $request->startDate;
         $endDate = $request->endDate;
     
-        if ($staffId) {
-            $user = User::find($staffId);
-            $attendance = $user->presences()
-                ->with('user')
-                ->when($startDate, function ($query, $startDate) {
-                    return $query->where('date', '>=', $startDate);
-                })
-                ->when($endDate, function ($query, $endDate) {
-                    return $query->where('date', '<=', $endDate);
-                })
-                ->paginate(5);
-        } else {
-            $attendance = Attendance::with('user')
-                ->when($startDate, function ($query, $startDate) {
-                    return $query->where('date', '>=', $startDate);
-                })
-                ->when($endDate, function ($query, $endDate) {
-                    return $query->where('date', '<=', $endDate);
-                })
-                ->paginate(5);
-        }
+        $attendance = Attendance::when($staffId, function ($query, $staffId) {
+            return $query->where('user_id', $staffId);
+        })
+        ->when($startDate, function ($query, $startDate) {
+            return $query->where('clockInTime', '>=', $startDate);
+        })
+        ->when($endDate, function ($query, $endDate) {
+            return $query->where('clockOutTime', '<=', $endDate);
+        })
+        ->with('user')
+        ->paginate(5);
     
         return response()->json($attendance);
     }
@@ -64,5 +56,14 @@ class AttendanceHistoryController extends Controller
         $attendance = Attendance::with('user')->find($attendanceId);
     
         return response()->json($attendance);
+    }
+
+    public function downloadAttendanceHistory(Request $request)
+    {
+        $staffId = $request->staffId;
+        $startDate = $request->startDate;
+        $endDate = $request->endDate;
+    
+        return Excel::download(new AttendanceExport($staffId, $startDate, $endDate), 'attendance.xlsx');
     }
 }

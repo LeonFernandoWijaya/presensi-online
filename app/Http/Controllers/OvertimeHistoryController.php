@@ -62,10 +62,10 @@ class OvertimeHistoryController extends Controller
     }
 
     public function downloadOvertimeHistory(Request $request){
-        $staffId = null;
-        $startDate = null;
-        $endDate = null;
-        $status = 0;
+        $staffId = $request->staff;
+        $startDate = $request->startDate;
+        $endDate = $request->endDate;
+        $status = $request->status;
     
         return Excel::download(new OvertimeExport($staffId, $startDate, $endDate, $status), 'overtime.xlsx');
     }
