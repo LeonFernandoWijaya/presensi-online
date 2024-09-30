@@ -62,29 +62,11 @@ class OvertimeHistoryController extends Controller
     }
 
     public function downloadOvertimeHistory(Request $request){
-        $staffId = $request->staff;
-        $startDate = $request->startDate;
-        $endDate = $request->endDate;
-        $status = $request->status;
+        $staffId = null;
+        $startDate = null;
+        $endDate = null;
+        $status = 0;
     
-        $overtime = Overtime::when($staffId, function ($query, $staffId) {
-            return $query->where('user_id', $staffId);
-        })
-        ->when($startDate, function ($query, $startDate) {
-            return $query->where('overtimeStart', '>=', $startDate);
-        })
-        ->when($endDate, function ($query, $endDate) {
-            return $query->where('overtimeEnd', '<=', $endDate);
-        })
-        ->when($status == 1, function ($query) {
-            return $query->whereNull('rejectDate');
-        })
-        ->when($status == 2, function ($query) {
-            return $query->whereNotNull('rejectDate');
-        })
-        ->with('user', 'attendance')
-        ->get();
-    
-        return Excel::download(new OvertimeExport($overtime), 'overtime.xlsx');
+        return Excel::download(new OvertimeExport($staffId, $startDate, $endDate, $status), 'overtime.xlsx');
     }
 }
