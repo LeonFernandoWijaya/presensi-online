@@ -34,11 +34,14 @@
                         required="">
                 </div>
             </div>
+            @isManager()
             <div>
-                <a type="button" href="{{ url('/downloadAttendanceHistory?staffId=&startDate=&endDate=') }}" target="_blank" id="exportButton"
+                <a type="button" href="{{ url('/downloadAttendanceHistory?staffId=&startDate=&endDate=') }}"
+                    target="_blank" id="exportButton"
                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Export</a>
 
             </div>
+            @endisManager()
         </div>
         <div class="relative overflow-x-auto">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -59,8 +62,8 @@
                     </tr>
                 </thead>
                 <tbody id="table-body">
-                    
-                    
+
+
                 </tbody>
             </table>
             <ul id="pagination-attendance" class="mt-4 flex justify-center space-x-2 rtl:space-x-reverse text-sm">
@@ -85,16 +88,21 @@
                 success: function(response) {
                     console.log(response);
                     let photoOut = ``;
-                    if (response.clockOutPhoto != null){
-                        photoOut = `<img src="{{ asset('storage/photos/${response.clockOutPhoto}') }}" class="w-32 h-32 object-cover rounded-lg">`
+                    if (response.clockOutPhoto != null) {
+                        photoOut =
+                            `<img src="{{ asset('storage/photos/${response.clockOutPhoto}') }}" class="w-32 h-32 object-cover rounded-lg">`
                     } else {
-                        photoOut = `<img src="{{ url('in-progress.png') }}" class="w-32 h-32 object-cover rounded-lg">`
+                        photoOut =
+                            `<img src="{{ url('in-progress.png') }}" class="w-32 h-32 object-cover rounded-lg">`
                     }
-                    $('#staffName').val(response.user.first_name + ' ' + (response.user.last_name != null ? response.user.last_name : ''));
+                    $('#staffName').val(response.user.first_name + ' ' + (response.user.last_name != null ?
+                        response.user.last_name : ''));
                     $('#locationIn').val(response.clockInLocation);
-                    $('#locationOut').val(response.clockOutLocation != null ? response.clockOutLocation : "In Progress");
+                    $('#locationOut').val(response.clockOutLocation != null ? response.clockOutLocation :
+                        "In Progress");
                     $('#dateTimeIn').val(response.clockInTime);
-                    $('#dateTimeOut').val(response.clockOutTime != null ? response.clockOutTime : "In Progress");
+                    $('#dateTimeOut').val(response.clockOutTime != null ? response.clockOutTime :
+                        "In Progress");
                     $('#photoIn').empty();
                     $('#photoIn').append(`
                         <img src="{{ asset('storage/photos/${response.clockInPhoto}') }}" class="w-32 h-32 object-cover rounded-lg">
@@ -108,13 +116,13 @@
                 }
             });
         }
-        
+
         function showAttendanceDetailsModal(id) {
             showFlowBytesModal('attendance-details-modal');
             getAttendanceDetail(id);
         }
 
-        function getAttendanceHistory(page = 1){
+        function getAttendanceHistory(page = 1) {
             let staff = $('#staff').val();
             let startDate = $('#startDate').val();
             let endDate = $('#endDate').val();
@@ -134,7 +142,7 @@
                         $('#table-body').append(`
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    ${data.user.first_name} ${data.user.last_name ?? ""}  
+                                    ${data.user.first_name} ${data.user.last_name ?? ""}
                                 </th>
                                 <td class="px-6 py-4">
                                     ${data.clockInTime}
@@ -180,6 +188,5 @@
         $(document).ready(function() {
             getAttendanceHistory();
         });
-        
     </script>
 @endsection

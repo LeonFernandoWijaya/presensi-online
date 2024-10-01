@@ -106,22 +106,24 @@
                                 </ul>
                             </div>
                         </li>
-                        <li>
-                            <a href="{{ url('/reject') }}"
-                                class="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 dark:hover:bg-gray-700  md:dark:hover:bg-transparent dark:border-gray-700 {{ $navbar == 'reject' ? 'md:dark:text-blue-500 md:text-blue-700' : 'text-gray-900 hover:bg-gray-100 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:text-white' }}">Reject</a>
-                        </li>
-                        <li>
-                            <a href="{{ url('/user') }}"
-                                class="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 dark:hover:bg-gray-700  md:dark:hover:bg-transparent dark:border-gray-700 {{ $navbar == 'user' ? 'md:dark:text-blue-500 md:text-blue-700' : 'text-gray-900 hover:bg-gray-100 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:text-white' }}">User</a>
-                        </li>
-                        <li>
-                            <a href="{{ url('/holiday') }}"
-                                class="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 dark:hover:bg-gray-700  md:dark:hover:bg-transparent dark:border-gray-700 {{ $navbar == 'holiday' ? 'md:dark:text-blue-500 md:text-blue-700' : 'text-gray-900 hover:bg-gray-100 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:text-white' }}">Holiday</a>
-                        </li>
-                        <li>
-                            <a href="{{ url('/shift') }}"
-                                class="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 dark:hover:bg-gray-700  md:dark:hover:bg-transparent dark:border-gray-700 {{ $navbar == 'shift' ? 'md:dark:text-blue-500 md:text-blue-700' : 'text-gray-900 hover:bg-gray-100 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:text-white' }}">Shift</a>
-                        </li>
+                        @isManager()
+                            <li>
+                                <a href="{{ url('/reject') }}"
+                                    class="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 dark:hover:bg-gray-700  md:dark:hover:bg-transparent dark:border-gray-700 {{ $navbar == 'reject' ? 'md:dark:text-blue-500 md:text-blue-700' : 'text-gray-900 hover:bg-gray-100 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:text-white' }}">Reject</a>
+                            </li>
+                            <li>
+                                <a href="{{ url('/user') }}"
+                                    class="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 dark:hover:bg-gray-700  md:dark:hover:bg-transparent dark:border-gray-700 {{ $navbar == 'user' ? 'md:dark:text-blue-500 md:text-blue-700' : 'text-gray-900 hover:bg-gray-100 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:text-white' }}">User</a>
+                            </li>
+                            <li>
+                                <a href="{{ url('/holiday') }}"
+                                    class="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 dark:hover:bg-gray-700  md:dark:hover:bg-transparent dark:border-gray-700 {{ $navbar == 'holiday' ? 'md:dark:text-blue-500 md:text-blue-700' : 'text-gray-900 hover:bg-gray-100 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:text-white' }}">Holiday</a>
+                            </li>
+                            <li>
+                                <a href="{{ url('/shift') }}"
+                                    class="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 dark:hover:bg-gray-700  md:dark:hover:bg-transparent dark:border-gray-700 {{ $navbar == 'shift' ? 'md:dark:text-blue-500 md:text-blue-700' : 'text-gray-900 hover:bg-gray-100 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:text-white' }}">Shift</a>
+                            </li>
+                        @endisManager
                     </ul>
                 </div>
             </div>
