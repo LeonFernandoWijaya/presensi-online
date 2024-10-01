@@ -8,10 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\OvertimeExport;
+use Illuminate\Support\Facades\Gate;
 
 class OvertimeHistoryController extends Controller
 {
-    //
+    // done authotize
     public function index()
     {
         $navbar = 'history';
@@ -25,48 +26,67 @@ class OvertimeHistoryController extends Controller
             // Store all users in the result variable
             $userResults = User::all();
         }
-        
+
         return view('overtime-history', compact('navbar', 'userResults'));
     }
 
-    public function getOvertimeHistory(Request $request){
+    // done authotize
+    public function getOvertimeHistory(Request $request)
+    {
+        $user = Auth::user();
         $staffId = $request->staff;
         $startDate = $request->startDate;
         $endDate = $request->endDate;
         $status = $request->status;
-    
+
         $overtime = Overtime::when($staffId, function ($query, $staffId) {
             return $query->where('user_id', $staffId);
         })
-        ->when($startDate, function ($query, $startDate) {
-            return $query->where('overtimeStart', '>=', $startDate);
-        })
-        ->when($endDate, function ($query, $endDate) {
-            return $query->where('overtimeEnd', '<=', $endDate);
-        })
-        ->when($status == 1, function ($query) {
-            return $query->whereNull('rejectDate');
-        })
-        ->when($status == 2, function ($query) {
-            return $query->whereNotNull('rejectDate');
-        })
-        ->with('user', 'attendance')
-        ->paginate(10);
-    
+            ->when($startDate, function ($query, $startDate) {
+                return $query->where('overtimeStart', '>=', $startDate);
+            })
+            ->when($endDate, function ($query, $endDate) {
+                return $query->where('overtimeEnd', '<=', $endDate);
+            })
+            ->when($status == 1, function ($query) {
+                return $query->whereNull('rejectDate');
+            })
+            ->when($status == 2, function ($query) {
+                return $query->whereNotNull('rejectDate');
+            })
+            ->when($user->role->id == 1, function ($query) use ($user) {
+                return $query->where('user_id', $user->id);
+            })
+            ->with('user', 'attendance')
+            ->paginate(10);
+
         return response()->json($overtime);
     }
 
-    public function getOvertimeDetail(Request $request){
+    // done authotize
+    public function getOvertimeDetail(Request $request)
+    {
         $overtime = Overtime::where('id', $request->id)->with('user', 'attendance')->first();
-        return response()->json($overtime);
+
+        if (Gate::allows('viewOvertime', $overtime)) {
+            return response()->json($overtime);
+        } else {
+            abort(403);
+        }
     }
 
-    public function downloadOvertimeHistory(Request $request){
-        $staffId = $request->staff;
-        $startDate = $request->startDate;
-        $endDate = $request->endDate;
-        $status = $request->status;
-    
-        return Excel::download(new OvertimeExport($staffId, $startDate, $endDate, $status), 'overtime.xlsx');
+    //done authotize
+    public function downloadOvertimeHistory(Request $request)
+    {
+        if (Gate::allows('isManager')) {
+            $staffId = $request->staff;
+            $startDate = $request->startDate;
+            $endDate = $request->endDate;
+            $status = $request->status;
+
+            return Excel::download(new OvertimeExport($staffId, $startDate, $endDate, $status), 'overtime.xlsx');
+        } else {
+            abort(403);
+        }
     }
 }

@@ -8,10 +8,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\AttendanceExport;
+use Illuminate\Support\Facades\Gate;
 
 class AttendanceHistoryController extends Controller
 {
-    //
+    // done authotize
     public function index()
     {
         $navbar = 'history';
@@ -29,41 +30,56 @@ class AttendanceHistoryController extends Controller
         return view('attendance-history', compact('navbar', 'userResults'));
     }
 
+    // done authotize
     public function getAttendanceHistory(Request $request)
     {
+        $user = Auth::user();
         $staffId = $request->staff;
         $startDate = $request->startDate;
         $endDate = $request->endDate;
-    
+
         $attendance = Attendance::when($staffId, function ($query, $staffId) {
             return $query->where('user_id', $staffId);
         })
-        ->when($startDate, function ($query, $startDate) {
-            return $query->where('clockInTime', '>=', $startDate);
-        })
-        ->when($endDate, function ($query, $endDate) {
-            return $query->where('clockOutTime', '<=', $endDate);
-        })
-        ->with('user')
-        ->paginate(5);
-    
+            ->when($startDate, function ($query, $startDate) {
+                return $query->where('clockInTime', '>=', $startDate);
+            })
+            ->when($endDate, function ($query, $endDate) {
+                return $query->where('clockOutTime', '<=', $endDate);
+            })
+            ->when($user->role->id == 1, function ($query) use ($user) {
+                return $query->where('user_id', $user->id);
+            })
+            ->with('user')
+            ->paginate(5);
+
         return response()->json($attendance);
     }
 
+    // done authotize
     public function getAttendanceDetail(Request $request)
     {
         $attendanceId = $request->id;
         $attendance = Attendance::with('user')->find($attendanceId);
-    
-        return response()->json($attendance);
+
+        if (Gate::allows('viewAttendance', $attendance)) {
+            return response()->json($attendance);
+        } else {
+            abort(403);
+        }
     }
 
+    // done authotize
     public function downloadAttendanceHistory(Request $request)
     {
-        $staffId = $request->staffId;
-        $startDate = $request->startDate;
-        $endDate = $request->endDate;
-    
-        return Excel::download(new AttendanceExport($staffId, $startDate, $endDate), 'attendance.xlsx');
+        if (Gate::allows('isManager')) {
+            $staffId = $request->staffId;
+            $startDate = $request->startDate;
+            $endDate = $request->endDate;
+
+            return Excel::download(new AttendanceExport($staffId, $startDate, $endDate), 'attendance.xlsx');
+        } else {
+            abort(403);
+        }
     }
 }
