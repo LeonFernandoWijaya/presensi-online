@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use GuzzleHttp\Exception\ConnectException;
 
 class PresenceController extends Controller
 {
@@ -83,6 +84,21 @@ class PresenceController extends Controller
                         'format' => 'json',
                         'lat' => $request->sendLatitude,
                         'lon' => $request->sendLongitude,
+                    ],
+                    'timeout' => 10
+                ]
+            );
+        } catch (ConnectException $e) {
+            // Jika terjadi timeout, buat permintaan ke API alternatif
+            $response = $client->request(
+                'GET',
+                'https://us1.locationiq.com/v1/reverse',
+                [
+                    'query' => [
+                        'key' => 'pk.460d675996d878661445851022dd0fc9',
+                        'lat' => $request->sendLatitude,
+                        'lon' => $request->sendLongitude,
+                        'format' => 'json',
                     ]
                 ]
             );
@@ -184,8 +200,8 @@ class PresenceController extends Controller
     }
 
     private function isRemote($userLongitude, $userLatitude) {
-        $officeLongitude = -6.190348664144408; // Ganti dengan longitude kantor
-        $officeLatitude = 106.7977732049439; // Ganti dengan latitude kantor
+        $officeLongitude = 106.79771472565349; // Ganti dengan longitude kantor
+        $officeLatitude = -6.190439312874779; // Ganti dengan latitude kantor, 
 
         $earthRadius = 6371; // Radius bumi dalam kilometer
 
@@ -198,7 +214,7 @@ class PresenceController extends Controller
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
         $distance = $earthRadius * $c;
 
-        if ($distance <= 5) {
+        if ($distance <= 0.04) {
             return "On Site";
         } else {
             return "Remote";
