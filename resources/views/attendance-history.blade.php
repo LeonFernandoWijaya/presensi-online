@@ -100,8 +100,8 @@
                     $('#locationIn').val(response.clockInLocation);
                     $('#locationOut').val(response.clockOutLocation != null ? response.clockOutLocation :
                         "In Progress");
-                    $('#dateTimeIn').val(response.clockInTime);
-                    $('#dateTimeOut').val(response.clockOutTime != null ? response.clockOutTime :
+                    $('#dateTimeIn').val(response.clockInTime + " [" + response.clockInMode + "]");
+                    $('#dateTimeOut').val(response.clockOutTime != null ? response.clockOutTime + " [" + response.clockOutMode + "]" :
                         "In Progress");
                     $('#photoIn').empty();
                     $('#photoIn').append(`
@@ -139,16 +139,29 @@
                     console.log(response);
                     $('#table-body').empty();
                     response.data.forEach(data => {
+                        let badgeClockOut = '';
+                        if (data.clockOutMode == "Remote"){
+                            badgeClockOut = `<span class="bg-blue-100 text-blue-800 text-xs font-medium ms-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">${data.clockOutMode}</span>`
+                        } else {
+                            badgeClockOut = `<span class="bg-green-100 text-green-800 text-xs font-medium ms-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">${data.clockOutMode}</span>`
+                        }
+
+                        let badgeClockIn = '';
+                        if (data.clockInMode == "Remote"){
+                            badgeClockIn = `<span class="bg-blue-100 text-blue-800 text-xs font-medium ms-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">${data.clockInMode}</span>`
+                        } else {
+                            badgeClockIn = `<span class="bg-green-100 text-green-800 text-xs font-medium ms-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">${data.clockInMode}</span>`
+                        }
                         $('#table-body').append(`
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     ${data.user.first_name} ${data.user.last_name ?? ""}
                                 </th>
                                 <td class="px-6 py-4">
-                                    ${data.clockInTime}
+                                    ${data.clockInTime + `${badgeClockIn}`}     
                                 </td>
                                 <td class="px-6 py-4">
-                                    ${data.clockOutTime != null ? data.clockOutTime : "In Progress"}
+                                    ${data.clockOutTime != null ? data.clockOutTime + `${badgeClockOut}` : "In Progress"}
                                 </td>
                                 <td class="px-6 py-4">
                                     <button type="button"
