@@ -16,7 +16,7 @@ class UserController extends Controller
     public function index()
     {
         if (Gate::allows('isManager')) {
-            $navbar = 'user';
+            $navbar = 'settings';
             return view('user', compact('navbar'));
         } else {
             abort(403);

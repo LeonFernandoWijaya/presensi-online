@@ -130,26 +130,24 @@
     }
 
     $('#show-password').click(function() {
-        if ($(this).is(':checked')) {
-            $('#password').attr('type', 'text');
-            $(this).find('svg').toggleClass('hidden');
-            $(this).find('svg').toggleClass('block');
-        } else {
-            $('#password').attr('type', 'password');
-            $(this).find('svg').toggleClass('hidden');
-            $(this).find('svg').toggleClass('block');
-        }
+    var passwordField = $('#password');
+    if (passwordField.attr('type') === 'password') {
+        passwordField.attr('type', 'text');
+        $(this).find('svg').toggleClass('hidden block');
+    } else {
+        passwordField.attr('type', 'password');
+        $(this).find('svg').toggleClass('hidden block');
+    }
     });
 
     $('#show-confirm-password').click(function() {
-        if ($(this).is(':checked')) {
-            $('#confirmpassword').attr('type', 'text');
-            $(this).find('svg').toggleClass('hidden');
-            $(this).find('svg').toggleClass('block');
+        var confirmPasswordField = $('#confirmpassword');
+        if (confirmPasswordField.attr('type') === 'password') {
+            confirmPasswordField.attr('type', 'text');
+            $(this).find('svg').toggleClass('hidden block');
         } else {
-            $('#confirmpassword').attr('type', 'password');
-            $(this).find('svg').toggleClass('hidden');
-            $(this).find('svg').toggleClass('block');
+            confirmPasswordField.attr('type', 'password');
+            $(this).find('svg').toggleClass('hidden block');
         }
     });
 </script>

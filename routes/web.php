@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\AttendanceHistoryController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\HolidayController;
 use App\Http\Controllers\OvertimeHistoryController;
 use App\Http\Controllers\PresenceController;
@@ -54,6 +55,7 @@ Route::middleware(['is_active', 'auth'])->group(function () {
     Route::get('/overtime-history', [OvertimeHistoryController::class, 'index']);
     Route::get('/reject', [RejectController::class, 'index']);
     Route::get('/user', [UserController::class, 'index']);
+    Route::get('/department', [DepartmentController::class, 'index']);
     Route::get('/holiday', [HolidayController::class, 'index']);
 
     Route::get('shift', [ShiftController::class, 'index']);
@@ -65,6 +67,12 @@ Route::middleware(['is_active', 'auth'])->group(function () {
     Route::get('/getUserById', [UserController::class, 'getUserById']);
     Route::put('/saveChangesUser', [UserController::class, 'saveChangesUser']);
     Route::delete('/deleteUser', [UserController::class, 'deleteUser']);
+
+    Route::get('/getDepartments', [DepartmentController::class, 'getDepartments']);
+    Route::post('/createDepartment', [DepartmentController::class, 'createDepartment']);
+    Route::get('/getDepartmentDetail', [DepartmentController::class, 'getDepartmentDetail']);
+    Route::put('/updateDepartment', [DepartmentController::class, 'updateDepartment']);
+    Route::delete('/deleteDepartment', [DepartmentController::class, 'deleteDepartment']);
 
     Route::post('/createNewShift', [ShiftController::class, 'createNewShift']);
     Route::get('/getShifts', [ShiftController::class, 'getShifts']);

@@ -1,4 +1,4 @@
-@extends('layouts.layout')
+@extends('layouts.inactive-layout')
 
 @section('content')
 <section class="bg-white dark:bg-gray-900 min-h-screen">
