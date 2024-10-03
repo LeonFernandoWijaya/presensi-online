@@ -100,6 +100,7 @@ class PresenceController extends Controller
             $lastPresence->clockOutPhoto = $filename;
             $lastPresence->clockOutLocation = $locationName;
             $lastPresence->isOvertimeClockOut = $isOvertime;
+            $lastPresence->clockOutMode = $this->isRemote($request->sendLongitude, $request->sendLatitude);
             $lastPresence->save();
 
             $statusPresence = 'clockOut';
@@ -158,6 +159,7 @@ class PresenceController extends Controller
             $attendance->clockInPhoto = $filename;
             $attendance->clockInLocation = $locationName;
             $attendance->isOvertimeClockIn = $isOvertime;
+            $attendance->clockInMode = $this->isRemote($request->sendLongitude, $request->sendLatitude);
             $attendance->save();
 
             $statusPresence = 'clockIn';
@@ -179,6 +181,28 @@ class PresenceController extends Controller
         $overtime->overtimeEnd = $overtimeEnd;
         $overtime->overtimeTotal = $overtimeTotal;
         $overtime->save();
+    }
+
+    private function isRemote($userLongitude, $userLatitude) {
+        $officeLongitude = -6.190348664144408; // Ganti dengan longitude kantor
+        $officeLatitude = 106.7977732049439; // Ganti dengan latitude kantor
+
+        $earthRadius = 6371; // Radius bumi dalam kilometer
+
+        $dLatitude = deg2rad($officeLatitude - $userLatitude);
+        $dLongitude = deg2rad($officeLongitude - $userLongitude);
+
+        $a = sin($dLatitude / 2) * sin($dLatitude / 2) +
+            cos(deg2rad($userLatitude)) * cos(deg2rad($officeLatitude)) *
+            sin($dLongitude / 2) * sin($dLongitude / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        $distance = $earthRadius * $c;
+
+        if ($distance <= 5) {
+            return "On Site";
+        } else {
+            return "Remote";
+        }
     }
 }
 
