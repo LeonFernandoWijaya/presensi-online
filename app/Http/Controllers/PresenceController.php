@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Exception\ConnectException;
+use Illuminate\Support\Facades\Http;
 
 class PresenceController extends Controller
 {
@@ -138,8 +139,11 @@ class PresenceController extends Controller
         $locationName = $data['display_name'];
 
         $lastPresence = Attendance::where('user_id', Auth::user()->id)->latest()->first();
+        $timeNow = Http::get('http://worldtimeapi.org/api/Asia/Jakarta')->json()['datetime'];
+        $dateTimeNow = new \DateTime($timeNow);
+
         if ($lastPresence && $lastPresence->clockOutTime == null && $lastPresence->clockInTime != null) {
-            $lastPresence->clockOutTime = date('Y-m-d H:i:s');
+            $lastPresence->clockOutTime = $dateTimeNow->format('Y-m-d H:i:s');
             $lastPresence->clockOutPhoto = $filename;
             $lastPresence->clockOutLocation = $locationName;
             $lastPresence->activity_type_id = $request->activityTypes;
@@ -200,7 +204,7 @@ class PresenceController extends Controller
         } else {
             $attendance = new Attendance();
             $attendance->user_id = Auth::user()->id;
-            $attendance->clockInTime = date('Y-m-d H:i:s');
+            $attendance->clockInTime = $dateTimeNow->format('Y-m-d H:i:s');
             $attendance->clockInPhoto = $filename;
             $attendance->clockInLocation = $locationName;
             $attendance->activity_type_id = $request->activityTypes;

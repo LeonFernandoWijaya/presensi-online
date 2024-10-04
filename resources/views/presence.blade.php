@@ -60,16 +60,16 @@
         $(document).ready(function() {
             // Fetch the current time from the server once
             $.ajax({
-                url: "{{ url('/getCurrentTime') }}",
+                url: "http://worldtimeapi.org/api/Asia/Jakarta",
                 method: 'GET',
                 success: function(data) {
                     // Extract year, month, day, hours, minutes, and seconds
-                    let year = parseInt(data.substring(0, 4));
-                    let month = parseInt(data.substring(5, 7)) - 1; // JavaScript months are 0-11
-                    let date = parseInt(data.substring(8, 10));
-                    let hours = parseInt(data.substring(11, 13));
-                    let minutes = parseInt(data.substring(14, 16));
-                    let seconds = parseInt(data.substring(17, 19));
+                    let year = parseInt(data.datetime.substring(0, 4));
+                    let month = parseInt(data.datetime.substring(5, 7)) - 1; // JavaScript months are 0-11
+                    let date = parseInt(data.datetime.substring(8, 10));
+                    let hours = parseInt(data.datetime.substring(11, 13));
+                    let minutes = parseInt(data.datetime.substring(14, 16));
+                    let seconds = parseInt(data.datetime.substring(17, 19));
 
                     // Create a Date object with the fetched time
                     let currentTime = new Date(year, month, date, hours, minutes, seconds);
@@ -195,27 +195,28 @@
                     $('#customerName').val('');
                     $('#activityTypes option:first').prop('selected', true);
                     $('#activityCategories option:first').prop('selected', true);
+                    if (response.PresenceData != null){
+                        $('#customerName').val(response.PresenceData.customer != null ? response.PresenceData.customer : '');
 
-                    $('#customerName').val(response.PresenceData.customer);
+                        if (response.PresenceData.activity_type_id != null) {
+                            $('#activityTypes option').each(function() {
+                                if ($(this).val() == response.PresenceData.activity_type_id) {
+                                    $(this).prop('selected', true);
+                                }
+                            });
+                        } else {
+                            $('#activityTypes option:first').prop('selected', true);
+                        }
 
-                    if (response.PresenceData.activity_type_id != null) {
-                        $('#activityTypes option').each(function() {
-                            if ($(this).val() == response.PresenceData.activity_type_id) {
-                                $(this).prop('selected', true);
-                            }
-                        });
-                    } else {
-                        $('#activityTypes option:first').prop('selected', true);
-                    }
-
-                    if (response.PresenceData.activity_category_id != null) {
-                        $('#activityCategories option').each(function() {
-                            if ($(this).val() == response.PresenceData.activity_category_id) {
-                                $(this).prop('selected', true);
-                            }
-                        });
-                    } else {
-                        $('#activityCategories option:first').prop('selected', true);
+                        if (response.PresenceData.activity_category_id != null) {
+                            $('#activityCategories option').each(function() {
+                                if ($(this).val() == response.PresenceData.activity_category_id) {
+                                    $(this).prop('selected', true);
+                                }
+                            });
+                        } else {
+                            $('#activityCategories option:first').prop('selected', true);
+                        }
                     }
                 },
                 error: function(error) {

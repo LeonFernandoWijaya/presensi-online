@@ -164,13 +164,17 @@
                             $(this).prop('selected', true);
                         }
                     });
+                    let foundShift = false;
                     $('#shiftCategory option').each(function() {
                         if ($(this).val() == response.shift_id) {
                             $(this).prop('selected', true);
-                        } else {
-                            $('#shiftCategory option:first').prop('selected', true);
-                        }
+                            foundShift = true;
+                        } 
                     });
+                    if (!foundShift){
+                        $('#shiftCategory option:first').prop('selected', true);
+                    }
+
                     let foundHoliday = false;
                     $('#holidayCategory option').each(function() {
                         if ($(this).val() == response.holiday_id) {

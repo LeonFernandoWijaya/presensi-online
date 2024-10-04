@@ -50,7 +50,7 @@ class AttendanceHistoryController extends Controller
             ->when($user->role->id == 1, function ($query) use ($user) {
                 return $query->where('user_id', $user->id);
             })
-            ->with('user')
+            ->with('user', 'activitytype', 'activitycategory')
             ->paginate(5);
 
         return response()->json($attendance);

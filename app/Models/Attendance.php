@@ -21,11 +21,11 @@ class Attendance extends Model
 
     public function activitytype()
     {
-        return $this->belongsTo(ActivityType::class);
+        return $this->belongsTo(ActivityType::class, 'activity_type_id');
     }
 
     public function activitycategory()
     {
-        return $this->belongsTo(ActivityCategory::class);
+        return $this->belongsTo(ActivityCategory::class, 'activity_category_id');
     }
 }
