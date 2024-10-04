@@ -58,45 +58,47 @@
         let longitude = null;
         var mymap = null;
         let photo = null;
-
         $(document).ready(function() {
-            // Get the current date
-            let today = new Date();
-            let date = String(today.getDate()).padStart(2, '0');
-            let month = today.toLocaleString('default', {
-                month: 'long'
+            // Fetch the current time from the server once
+            $.ajax({
+                url: "{{ url('/getCurrentTime') }}",
+                method: 'GET',
+                success: function(data) {
+                    // Extract year, month, day, hours, minutes, and seconds
+                    let year = parseInt(data.substring(0, 4));
+                    let month = parseInt(data.substring(5, 7)) - 1; // JavaScript months are 0-11
+                    let date = parseInt(data.substring(8, 10));
+                    let hours = parseInt(data.substring(11, 13));
+                    let minutes = parseInt(data.substring(14, 16));
+                    let seconds = parseInt(data.substring(17, 19));
+
+                    // Create a Date object with the fetched time
+                    let currentTime = new Date(year, month, date, hours, minutes, seconds);
+
+                    // Update the clock every second
+                    setInterval(function() {
+                        // Increment the time by one second
+                        currentTime.setSeconds(currentTime.getSeconds() + 1);
+
+                        // Format the date
+                        let formattedDate = ('0' + currentTime.getDate()).slice(-2) + ' - ' +
+                            ('0' + (currentTime.getMonth() + 1)).slice(-2) + ' - ' +
+                            currentTime.getFullYear();
+                        $('#todayDate').text(formattedDate);
+
+                        // Format the time
+                        let time = ('0' + currentTime.getHours()).slice(-2) + ' : ' +
+                            ('0' + currentTime.getMinutes()).slice(-2) + ' : ' +
+                            ('0' + currentTime.getSeconds()).slice(-2);
+                        $('#nowClock').text(time);
+
+                        // Determine whether it's morning or afternoon
+                        let greeting = currentTime.getHours() < 12 ? 'Good Morning,' :
+                            'Good Afternoon,';
+                        $('#greeting').text(greeting);
+                    }, 1000);
+                }
             });
-            let year = today.getFullYear();
-
-            let formattedDate = date + ' - ' + month + ' - ' + year;
-            $('#todayDate').text(formattedDate);
-
-            // Update the clock
-            function updateClock() {
-                let now = new Date();
-                let hours = String(now.getHours()).padStart(2, '0');
-                let minutes = String(now.getMinutes()).padStart(2, '0');
-                let seconds = String(now.getSeconds()).padStart(2, '0');
-
-                let time = hours + ' : ' + minutes + ' : ' + seconds;
-                $('#nowClock').text(time);
-            }
-            updateClock(); // Update the clock immediately
-            setInterval(updateClock, 1000); // Update the clock every 1000 milliseconds (1 second)
-
-             // Get the current hour
-            let hour = new Date().getHours();
-
-            // Determine whether it's morning or afternoon
-            let greeting;
-            if (hour < 12) {
-                greeting = 'Good Morning,';
-            } else {
-                greeting = 'Good Afternoon,';
-            }
-
-            // Change the text of the #greeting div
-            $('#greeting').text(greeting);
         });
 
         function refreshLocation() {
@@ -319,19 +321,27 @@
                                     if (response.statusPresence == 'clockIn') {
                                         $('#clockInButton').attr('disabled', true);
                                         $('#clockInButton').addClass('bg-gray-400');
-                                        $('#clockInButton').removeClass('bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800');
+                                        $('#clockInButton').removeClass(
+                                            'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'
+                                        );
 
                                         $('#clockOutButton').attr('disabled', false);
                                         $('#clockOutButton').removeClass('bg-gray-400');
-                                        $('#clockOutButton').addClass('bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800');
+                                        $('#clockOutButton').addClass(
+                                            'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'
+                                        );
                                     } else {
                                         $('#clockInButton').attr('disabled', false);
                                         $('#clockInButton').removeClass('bg-gray-400');
-                                        $('#clockInButton').addClass('bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800');
+                                        $('#clockInButton').addClass(
+                                            'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'
+                                        );
 
                                         $('#clockOutButton').attr('disabled', true);
                                         $('#clockOutButton').addClass('bg-gray-400');
-                                        $('#clockOutButton').removeClass('bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800');
+                                        $('#clockOutButton').removeClass(
+                                            'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'
+                                        );
                                     }
                                 } else {
                                     Swal.fire({

@@ -14,6 +14,26 @@ class HolidayController extends Controller
     {
         if (Gate::allows('isManager')) {
             $navbar = 'holiday';
+            return view('holiday', compact('navbar'));
+        } else {
+            abort(403);
+        }
+    }
+
+    public function getAllHolidayCategory()
+    {
+        if (Gate::allows('isManager')) {
+            $holiday = Holiday::paginate(5);
+            return response()->json($holiday);
+        } else {
+            abort(403);
+        }
+    }
+
+    public function holidayDays()
+    {
+        if (Gate::allows('isManager')) {
+            $navbar = 'holiday';
             $years = Holiday::selectRaw('YEAR(holiday_date) as year')->distinct()->pluck('year')->toArray();
             return view('holiday', compact('navbar', 'years'));
         } else {

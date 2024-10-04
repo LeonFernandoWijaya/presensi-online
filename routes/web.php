@@ -60,6 +60,7 @@ Route::middleware(['is_active', 'auth'])->group(function () {
 
     Route::get('shift', [ShiftController::class, 'index']);
 
+    Route::get('/getCurrentTime', [PresenceController::class, 'getCurrentTime']);
 
     Route::get('/getInitialDataModal', [UserController::class, 'getInitialDataModal']);
 
@@ -102,7 +103,7 @@ Route::middleware(['is_active', 'auth'])->group(function () {
 
     Route::get('/checkSchedule', [PresenceController::class, 'checkSchedule']);
     Route::post('/presenceNow', [PresenceController::class, 'presenceNow']);
-    
+
 
     Route::get('/getAttendanceHistory', [AttendanceHistoryController::class, 'getAttendanceHistory']);
     Route::get('/getAttendanceDetail', [AttendanceHistoryController::class, 'getAttendanceDetail']);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\Holiday;
 use App\Models\Overtime;
+use Carbon\Carbon;
 use DateTime;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -26,6 +27,12 @@ class PresenceController extends Controller
             $isClockOut = true;
         }
         return view('presence', compact('navbar', 'isClockOut'));
+    }
+
+    public function getCurrentTime()
+    {
+        $currentTime = Carbon::now()->toDateTimeString();
+        return response()->json($currentTime);
     }
 
     public function checkSchedule()
@@ -128,35 +135,35 @@ class PresenceController extends Controller
 
             $clockInTime = \Carbon\Carbon::parse($lastPresence->clockInTime);
             $clockOutTime = \Carbon\Carbon::parse($lastPresence->clockOutTime);
-    
-            if($isShiftDay){
+
+            if ($isShiftDay) {
                 $dateTime = new DateTime($lastPresence->clockInTime);
                 $today = $dateTime->format('Y-m-d');
                 $shiftStart = $today . ' ' . $isShiftDay->startHour;
-                $shiftEnd = $today . ' ' . $isShiftDay->endHour;   
+                $shiftEnd = $today . ' ' . $isShiftDay->endHour;
                 $shiftStartTime = \Carbon\Carbon::parse($shiftStart);
                 $shiftEndTime = \Carbon\Carbon::parse($shiftEnd);
             }
-            
-            if($isHoliday){
+
+            if ($isHoliday) {
                 $totalOvertime = $clockInTime->diffInMinutes($clockOutTime);
                 $this->makeOvertime($lastPresence->id, $clockInTime, $clockOutTime, $totalOvertime);
             } else {
                 if ($lastPresence->isOvertimeClockIn == 1 || $lastPresence->isOvertimeClockOut == 1) {
-                    if ($isShiftDay != null) { 
+                    if ($isShiftDay != null) {
                         if ($clockInTime > $shiftEndTime && $lastPresence->isOvertimeClockIn == 1) {
                             $totalOvertime = $clockInTime->diffInMinutes($clockOutTime);
                         } else {
-                            if ($clockInTime < $shiftStartTime && $clockOutTime < $shiftStartTime){
+                            if ($clockInTime < $shiftStartTime && $clockOutTime < $shiftStartTime) {
                                 $totalOvertime = $clockInTime->diffInMinutes($clockOutTime);
                             } else if ($clockInTime < $shiftStartTime || $clockOutTime > $shiftEndTime) {
                                 // If clocked in early and it's considered overtime
-                                if ($clockInTime < $shiftStartTime && $lastPresence->isOvertimeClockIn == 1){
+                                if ($clockInTime < $shiftStartTime && $lastPresence->isOvertimeClockIn == 1) {
                                     $totalOvertime = $totalOvertime + $shiftStartTime->diffInMinutes($clockInTime);
                                 }
 
                                 // If clocked out late and it's considered overtime
-                                if($clockOutTime > $shiftEndTime && $lastPresence->isOvertimeClockOut == 1){
+                                if ($clockOutTime > $shiftEndTime && $lastPresence->isOvertimeClockOut == 1) {
                                     $totalOvertime = $totalOvertime + $clockOutTime->diffInMinutes($shiftEndTime);
                                 }
                             }
@@ -166,7 +173,7 @@ class PresenceController extends Controller
                         $totalOvertime = $clockInTime->diffInMinutes($clockOutTime);
                         $this->makeOvertime($lastPresence->id, $clockInTime, $clockOutTime, $totalOvertime);
                     }
-                }   
+                }
             }
         } else {
             $attendance = new Attendance();
@@ -199,9 +206,10 @@ class PresenceController extends Controller
         $overtime->save();
     }
 
-    private function isRemote($userLongitude, $userLatitude) {
+    private function isRemote($userLongitude, $userLatitude)
+    {
         $officeLongitude = 106.79771472565349; // Ganti dengan longitude kantor
-        $officeLatitude = -6.190439312874779; // Ganti dengan latitude kantor, 
+        $officeLatitude = -6.190439312874779; // Ganti dengan latitude kantor,
 
         $earthRadius = 6371; // Radius bumi dalam kilometer
 
@@ -221,4 +229,3 @@ class PresenceController extends Controller
         }
     }
 }
-
