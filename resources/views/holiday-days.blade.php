@@ -4,14 +4,13 @@
     <div class="p-4">
         <div class="mb-6">
             <div class="flex items-center gap-2 justify-between">
+                <input type="hidden" id="holidayTarget" value="{{ $holiday->id }}">
                 <select id="holidayYear"
                     class="bg-gray-50 max-w-xs border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                    @forelse ($years as $year)
+                    <option value="" selected>All Year</option>
+                    @foreach ($years as $year)
                         <option value="{{ $year }}">{{ $year }}</option>
-                    @empty
-                        <option value="" disabled selected>-</option>
-                    @endforelse
-
+                    @endforeach ()
                 </select>
 
                 <div class="flex items-center gap-2">
@@ -101,7 +100,7 @@
         }
 
         function getHolidays(page = 1) {
-            const year = $('#holidayYear').val() || new Date().getFullYear();
+            const year = $('#holidayYear').val();
             $.ajax({
                 url: "{{ url('getHolidays?page=') }}" + page,
                 type: 'GET',

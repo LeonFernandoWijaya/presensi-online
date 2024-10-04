@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Holiday;
+use App\Models\HolidayDay;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -20,22 +21,62 @@ class HolidayController extends Controller
         }
     }
 
-    public function getAllHolidayCategory()
+    public function getAllHolidayCategory(Request $request)
     {
         if (Gate::allows('isManager')) {
-            $holiday = Holiday::paginate(5);
+            $holiday = Holiday::where('holiday_name', 'like', '%' . $request->search . '%')
+                ->paginate(5);
             return response()->json($holiday);
         } else {
             abort(403);
         }
     }
 
-    public function holidayDays()
+    public function createNewHolidayCategory(Request $request)
+    {
+        if (Gate::allows('isManager')) {
+            $validator = Validator::make($request->all(), [
+                'holiday_name' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $validator->errors()->first(),
+                ]);
+            }
+
+            $holiday = new Holiday();
+            $holiday->holiday_name = $request->holiday_name;
+            $holiday->save();
+
+            return response()->json(['success' => true, 'message' => 'Holiday created successfully']);
+        } else {
+            abort(403);
+        }
+    }
+
+    public function deleteHolidayCategory(Request $request)
+    {
+        if (Gate::allows('isManager')) {
+            $holiday = Holiday::find($request->id);
+            $holiday->delete();
+            return response()->json(['success' => true, 'message' => 'Holiday deleted successfully']);
+        } else {
+            abort(403);
+        }
+    }
+
+    public function holidayDays($id)
     {
         if (Gate::allows('isManager')) {
             $navbar = 'holiday';
-            $years = Holiday::selectRaw('YEAR(holiday_date) as year')->distinct()->pluck('year')->toArray();
-            return view('holiday', compact('navbar', 'years'));
+            $holiday = Holiday::find($id);
+            $years = $holiday->holidayDays()->selectRaw('YEAR(holiday_date) as year')
+                ->groupBy('year')
+                ->pluck('year')
+                ->toArray();
+            return view('holiday-days', compact('navbar', 'years', 'holiday'));
         } else {
             abort(403);
         }
@@ -70,9 +111,7 @@ class HolidayController extends Controller
     public function getHolidays(Request $request)
     {
         if (Gate::allows('isManager')) {
-            $holidays = Holiday::whereYear('holiday_date', $request->year)
-                ->orderBy('holiday_date', 'asc')
-                ->paginate(10);
+            $holidays = HolidayDay::where('holiday_id', )
             return response()->json($holidays);
         } else {
             abort(403);

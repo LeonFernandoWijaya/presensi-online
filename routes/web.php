@@ -57,6 +57,7 @@ Route::middleware(['is_active', 'auth'])->group(function () {
     Route::get('/user', [UserController::class, 'index']);
     Route::get('/department', [DepartmentController::class, 'index']);
     Route::get('/holiday', [HolidayController::class, 'index']);
+    Route::get('/holiday-days/{id}', [HolidayController::class, 'holidayDays']);
 
     Route::get('shift', [ShiftController::class, 'index']);
 
@@ -86,6 +87,9 @@ Route::middleware(['is_active', 'auth'])->group(function () {
     Route::get('/getShiftDayById', [ShiftController::class, 'getShiftDayById']);
     Route::put('/updateShiftDay', [ShiftController::class, 'updateShiftDay']);
 
+    Route::get('/getAllHolidayCategory', [HolidayController::class, 'getAllHolidayCategory']);
+    Route::post('/createNewHolidayCategory', [HolidayController::class, 'createNewHolidayCategory']);
+    Route::delete('/deleteHolidayCategory', [HolidayController::class, 'deleteHolidayCategory']);
 
     Route::post('/saveNewHoliday', [HolidayController::class, 'saveNewHoliday']);
     Route::get('/getHolidayById', [HolidayController::class, 'getHolidayById']);

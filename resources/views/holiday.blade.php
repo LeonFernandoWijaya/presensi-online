@@ -44,7 +44,7 @@
                 <tbody id="tableBody">
                 </tbody>
             </table>
-            <ul id="pagination-holiday" class="mt-4 flex justify-center space-x-2 rtl:space-x-reverse text-sm">
+            <ul id="pagination-holiday-category" class="mt-4 flex justify-center space-x-2 rtl:space-x-reverse text-sm">
             </ul>
         </div>
     </div>
@@ -53,8 +53,121 @@
 
     <script>
         function showCreateHolidayCategoryModal() {
-            $('#holidayCategoryName').val('');
+            $('#holidayNameForCategory').val('');
             showFlowBytesModal('create-new-holiday-category-modal');
         }
+
+        function getAllHolidayCategories(page = 1) {
+            let holidayNameCategory = $('#holidayCategoryName').val();
+            $.ajax({
+                url: "{{ url('/getAllHolidayCategory?page=') }}" + page,
+                type: 'GET',
+                data: {
+                    search: holidayNameCategory
+                },
+                success: function(response) {
+                    $('#tableBody').empty();
+                    response.data.forEach(element => {
+                        $('#tableBody').append(`
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                   ${element.holiday_name}
+                                </th>
+                                <td class="px-6 py-4">
+                                    <a href="{{ url('/holiday-days/${element.id}') }}"
+                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3 me-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Edit
+                                    </a>
+                                    <button type="button" onclick="deleteHolidayCategory(${element.id})"
+                                        class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                    buttonPagination('#pagination-holiday-category', response.last_page,
+                        response
+                        .current_page, "getAllHolidayCategories");
+                }
+            });
+        }
+
+        function createNewHolidayCategory() {
+            let holidayNameForCategory = $('#holidayNameForCategory').val();
+            $.ajax({
+                url: "{{ url('/createNewHolidayCategory') }}",
+                type: 'POST',
+                data: {
+                    holiday_name: holidayNameForCategory,
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    if (response.success == true) {
+                        hideFlowBytesModal('create-new-holiday-category-modal');
+                        getAllHolidayCategories();
+                        swal.fire({
+                            title: 'Success',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'Ok'
+                        });
+                    } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: response.message,
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        });
+                    }
+                }
+            });
+        }
+
+        function deleteHolidayCategory(id) {
+            swal.fire({
+                title: 'Are you sure?',
+                text: 'You will not be able to recover this holiday category!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, keep it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ url('/deleteHolidayCategory') }}",
+                        type: 'DELETE',
+                        data: {
+                            id: id,
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            if (response.success == true) {
+                                getAllHolidayCategories();
+                                swal.fire({
+                                    title: 'Success',
+                                    text: response.message,
+                                    icon: 'success',
+                                    confirmButtonText: 'Ok'
+                                });
+                            } else {
+                                swal.fire({
+                                    title: 'Error',
+                                    text: response.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'Ok'
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        $('#holidayCategoryName').on('keyup', function() {
+            getAllHolidayCategories();
+        });
+
+        $(document).ready(function() {
+            getAllHolidayCategories();
+        });
     </script>
 @endsection

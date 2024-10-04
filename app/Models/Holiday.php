@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Holiday extends Model
 {
     use HasFactory;
+
+    public function holidayDays()
+    {
+        return $this->hasMany(HolidayDay::class);
+    }
 }
