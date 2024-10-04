@@ -62,6 +62,7 @@ Route::middleware(['is_active', 'auth'])->group(function () {
     Route::get('shift', [ShiftController::class, 'index']);
 
     Route::get('/getCurrentTime', [PresenceController::class, 'getCurrentTime']);
+    Route::get('/checkStatusPresence', [PresenceController::class, 'checkStatusPresence']);
 
     Route::get('/getInitialDataModal', [UserController::class, 'getInitialDataModal']);
 

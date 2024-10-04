@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityCategory;
+use App\Models\ActivityType;
 use App\Models\Attendance;
 use App\Models\Holiday;
 use App\Models\HolidayDay;
@@ -23,11 +25,27 @@ class PresenceController extends Controller
         $navbar = 'presence';
         $lastPresence = Auth::user()->presences->last();
         $isClockOut = false;
+        $activityTypes = ActivityType::all();
+        $activityCategories = ActivityCategory::all();
 
         if ($lastPresence && $lastPresence->clockOutTime == null && $lastPresence->clockInTime != null) {
             $isClockOut = true;
         }
-        return view('presence', compact('navbar', 'isClockOut'));
+        return view('presence', compact('navbar', 'isClockOut', 'activityTypes', 'activityCategories'));
+    }
+
+    public function checkStatusPresence()
+    {
+        $lastPresence = Auth::user()->presences->last();
+        $isClockOut = false;
+        $PresenceData = null;
+
+        if ($lastPresence && $lastPresence->clockOutTime == null && $lastPresence->clockInTime != null) {
+            $isClockOut = true;
+            $PresenceData = $lastPresence;
+        }
+
+        return response()->json(['isClockOut' => $isClockOut, 'PresenceData' => $PresenceData]);
     }
 
     public function getCurrentTime()
@@ -44,7 +62,6 @@ class PresenceController extends Controller
 
     public function presenceNow(Request $request)
     {
-        $isOvertime = $request->isOvertime == 'true' ? 1 : 0;
         $statusPresence = null;
         $validator = Validator::make($request->all(), [
             'photo' => 'required',
@@ -123,9 +140,8 @@ class PresenceController extends Controller
             $lastPresence->clockOutTime = date('Y-m-d H:i:s');
             $lastPresence->clockOutPhoto = $filename;
             $lastPresence->clockOutLocation = $locationName;
-            $lastPresence->isOvertimeClockOut = $isOvertime;
             $lastPresence->clockOutMode = $this->isRemote($request->sendLongitude, $request->sendLatitude);
-            // $lastPresence->save();
+            $lastPresence->save();
 
             $statusPresence = 'clockOut';
 
@@ -152,30 +168,28 @@ class PresenceController extends Controller
                 $totalOvertime = $clockInTime->diffInMinutes($clockOutTime);
                 $this->makeOvertime($lastPresence->id, $clockInTime, $clockOutTime, $totalOvertime);
             } else {
-                if ($lastPresence->isOvertimeClockIn == 1 || $lastPresence->isOvertimeClockOut == 1) {
-                    if ($isShiftDay != null) {
-                        if ($clockInTime > $shiftEndTime && $lastPresence->isOvertimeClockIn == 1) {
+                if ($isShiftDay != null) {
+                    if ($clockInTime > $shiftEndTime) {
+                        $totalOvertime = $clockInTime->diffInMinutes($clockOutTime);
+                    } else {
+                        if ($clockInTime < $shiftStartTime) {
                             $totalOvertime = $clockInTime->diffInMinutes($clockOutTime);
-                        } else {
-                            if ($clockInTime < $shiftStartTime && $clockOutTime < $shiftStartTime) {
-                                $totalOvertime = $clockInTime->diffInMinutes($clockOutTime);
-                            } else if ($clockInTime < $shiftStartTime || $clockOutTime > $shiftEndTime) {
-                                // If clocked in early and it's considered overtime
-                                if ($clockInTime < $shiftStartTime && $lastPresence->isOvertimeClockIn == 1) {
-                                    $totalOvertime = $totalOvertime + $shiftStartTime->diffInMinutes($clockInTime);
-                                }
+                        } else if ($clockInTime < $shiftStartTime || $clockOutTime > $shiftEndTime) {
+                            // If clocked in early and it's considered overtime
+                            if ($clockInTime < $shiftStartTime) {
+                                $totalOvertime = $totalOvertime + $shiftStartTime->diffInMinutes($clockInTime);
+                            }
 
-                                // If clocked out late and it's considered overtime
-                                if ($clockOutTime > $shiftEndTime && $lastPresence->isOvertimeClockOut == 1) {
-                                    $totalOvertime = $totalOvertime + $clockOutTime->diffInMinutes($shiftEndTime);
-                                }
+                            // If clocked out late and it's considered overtime
+                            if ($clockOutTime > $shiftEndTime) {
+                                $totalOvertime = $totalOvertime + $clockOutTime->diffInMinutes($shiftEndTime);
                             }
                         }
-                        $this->makeOvertime($lastPresence->id, $clockInTime, $clockOutTime, $totalOvertime);
-                    } else if ($isShiftDay == null  && $lastPresence->isOvertimeClockIn == 1) {
-                        $totalOvertime = $clockInTime->diffInMinutes($clockOutTime);
-                        $this->makeOvertime($lastPresence->id, $clockInTime, $clockOutTime, $totalOvertime);
                     }
+                    $this->makeOvertime($lastPresence->id, $clockInTime, $clockOutTime, $totalOvertime);
+                } else if ($isShiftDay == null) {
+                    $totalOvertime = $clockInTime->diffInMinutes($clockOutTime);
+                    $this->makeOvertime($lastPresence->id, $clockInTime, $clockOutTime, $totalOvertime);
                 }
             }
         } else {
@@ -184,7 +198,6 @@ class PresenceController extends Controller
             $attendance->clockInTime = date('Y-m-d H:i:s');
             $attendance->clockInPhoto = $filename;
             $attendance->clockInLocation = $locationName;
-            $attendance->isOvertimeClockIn = $isOvertime;
             $attendance->clockInMode = $this->isRemote($request->sendLongitude, $request->sendLatitude);
             $attendance->save();
 

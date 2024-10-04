@@ -34,17 +34,56 @@
 
                 </div>
 
-                <div class="grid grid-cols-2 gap-2 mb-5">
-                    <label for="location" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Location
-                        <span class="text-red-500">*</span></label>
-                    <textarea id="location" disabled rows="4"
-                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
+                <div class="grid grid-cols-2 gap-3 mb-5">
+                    <div class="col-span-2">
+                        <label for="customerName"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Customer</label>
+                        <input type="text" name="customerName" id="customerName"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Enter Customer">
+                    </div>
 
-                    <label for="photo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Photo
-                        <span class="text-red-500">*</span></label>
-                    <div class="h-32 w-32 border rounded-lg border-gray-400 flex items-center justify-center"
-                        id="previewPhoto">
-                        <span class="text-xs">No Photo</span>
+                    <div>
+                        <label for="activityTypes"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Activity Type<span
+                                class="text-red-500">*</span></label>
+                        <select id="activityTypes"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option selected value="" disabled>Select Activity Type</option>
+                            @foreach ($activityTypes as $activityType)
+                                <option value="{{ $activityType->id }}">{{ $activityType->name }}</option>
+                            @endforeach
+
+                        </select>
+                    </div>
+                    <div>
+                        <label for="activityCategories"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Activity Category<span
+                                class="text-red-500">*</span></label>
+                        <select id="activityCategories"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option selected value="" disabled>Select Activity Category</option>
+                            @foreach ($activityCategories as $activityCategory)
+                                <option value="{{ $activityCategory->id }}">{{ $activityCategory->name }}</option>
+                            @endforeach
+
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="location"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Location
+                            <span class="text-red-500">*</span></label>
+                        <textarea id="location" disabled rows="4"
+                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
+                    </div>
+                    <div>
+                        <label for="photo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Photo
+                            <span class="text-red-500">*</span></label>
+                        <div class="h-32 w-32 border rounded-lg border-gray-400 flex items-center justify-center"
+                            id="previewPhoto">
+                            <span class="text-xs">No Photo</span>
+                        </div>
                     </div>
                 </div>
 

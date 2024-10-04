@@ -27,12 +27,11 @@
                 <div class="text-6xl flex justify-center font-medium" id="nowClock">
 
                 </div>
-                <div class="flex items-center mt-16 ms-6">
-                    <input id="default-checkbox" type="checkbox" value=""
-                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                    <label for="default-checkbox"
-                        class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Overtime</label>
+
+                <div class="flex items-center mt-16 mx-6 gap-3">
+
                 </div>
+
                 <div class="flex items-center mt-2">
                     <button type="button" onclick="validateLocationSetting('Clock In')" id="clockInButton"
                         class="text-white font-semibold text-md px-5 py-2.5 w-full rounded-bl-2xl {{ $isClockOut ? 'bg-gray-400' : 'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' }}"
@@ -189,6 +188,11 @@
 
                 return;
             }
+            $.ajax({
+                url: "{{ url('/checkStatusPresence') }}",
+                type: "GET",
+
+            })
             showFlowBytesModal('location-and-photo-modal');
             $('#locationAndPhotoModalTitle').text(type);
             $('#locationAndPhotoModalSubmit').text(type + ' Now');
@@ -304,7 +308,6 @@
                             data: {
                                 sendLatitude: sendLatitude,
                                 sendLongitude: sendLongitude,
-                                isOvertime: $('#default-checkbox').is(':checked'),
                                 photo: photo,
                                 _token: '{{ csrf_token() }}'
                             },
@@ -317,7 +320,6 @@
                                         icon: "success"
                                     });
                                     hideFlowBytesModal('location-and-photo-modal');
-                                    $('#default-checkbox').prop('checked', false);
                                     if (response.statusPresence == 'clockIn') {
                                         $('#clockInButton').attr('disabled', true);
                                         $('#clockInButton').addClass('bg-gray-400');
