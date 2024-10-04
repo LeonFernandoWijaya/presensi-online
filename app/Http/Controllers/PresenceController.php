@@ -67,13 +67,15 @@ class PresenceController extends Controller
             'photo' => 'required',
             'sendLatitude' => 'required',
             'sendLongitude' => 'required',
+            'activityTypes' => 'required',
+            'activityCategories' => 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
                 'validationMessage' => $validator->errors()->toArray(),
-                'message' => 'Make sure you already take photo and allow location access',
+                'message' => 'Make sure you already take photo, allow location access, and fill all required fields',
             ]);
         }
 
@@ -140,6 +142,9 @@ class PresenceController extends Controller
             $lastPresence->clockOutTime = date('Y-m-d H:i:s');
             $lastPresence->clockOutPhoto = $filename;
             $lastPresence->clockOutLocation = $locationName;
+            $lastPresence->activity_type_id = $request->activityTypes;
+            $lastPresence->activity_category_id = $request->activityCategories;
+            $lastPresence->customer = $request->customerName;
             $lastPresence->clockOutMode = $this->isRemote($request->sendLongitude, $request->sendLatitude);
             $lastPresence->save();
 
@@ -198,6 +203,9 @@ class PresenceController extends Controller
             $attendance->clockInTime = date('Y-m-d H:i:s');
             $attendance->clockInPhoto = $filename;
             $attendance->clockInLocation = $locationName;
+            $attendance->activity_type_id = $request->activityTypes;
+            $attendance->activity_category_id = $request->activityCategories;
+            $attendance->customer = $request->customerName;
             $attendance->clockInMode = $this->isRemote($request->sendLongitude, $request->sendLatitude);
             $attendance->save();
 

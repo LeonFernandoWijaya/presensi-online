@@ -18,4 +18,14 @@ class Attendance extends Model
     {
         return $this->hasOne(Overtime::class);
     }
+
+    public function activitytype()
+    {
+        return $this->belongsTo(ActivityType::class);
+    }
+
+    public function activitycategory()
+    {
+        return $this->belongsTo(ActivityCategory::class);
+    }
 }

@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\RejectExport;
 
 class RejectController extends Controller
 {
@@ -97,5 +99,19 @@ class RejectController extends Controller
         }
 
         return response()->json(['success' => true, 'message' => 'Overtimes have been rejected']);
+    }
+
+    public function downloadReject(Request $request)
+    {
+        if (Gate::allows('isManager')) {
+            $staffId = $request->staff;
+            $startDate = $request->startDate;
+            $endDate = $request->endDate;
+            $departmentName = Auth::user()->department->department_name;
+
+            return Excel::download(new RejectExport($staffId, $startDate, $endDate, $departmentName), 'reject.xlsx');
+        } else {
+            abort(403);
+        }
     }
 }

@@ -191,7 +191,36 @@
             $.ajax({
                 url: "{{ url('/checkStatusPresence') }}",
                 type: "GET",
-                
+                success: function(response) {
+                    $('#customerName').val('');
+                    $('#activityTypes option:first').prop('selected', true);
+                    $('#activityCategories option:first').prop('selected', true);
+
+                    $('#customerName').val(response.PresenceData.customer);
+
+                    if (response.PresenceData.activity_type_id != null) {
+                        $('#activityTypes option').each(function() {
+                            if ($(this).val() == response.PresenceData.activity_type_id) {
+                                $(this).prop('selected', true);
+                            }
+                        });
+                    } else {
+                        $('#activityTypes option:first').prop('selected', true);
+                    }
+
+                    if (response.PresenceData.activity_category_id != null) {
+                        $('#activityCategories option').each(function() {
+                            if ($(this).val() == response.PresenceData.activity_category_id) {
+                                $(this).prop('selected', true);
+                            }
+                        });
+                    } else {
+                        $('#activityCategories option:first').prop('selected', true);
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
             })
             showFlowBytesModal('location-and-photo-modal');
             $('#locationAndPhotoModalTitle').text(type);
@@ -308,6 +337,9 @@
                             data: {
                                 sendLatitude: sendLatitude,
                                 sendLongitude: sendLongitude,
+                                customerName: $('#customerName').val(),
+                                activityTypes: $('#activityTypes').val(),
+                                activityCategories: $('#activityCategories').val(),
                                 photo: photo,
                                 _token: '{{ csrf_token() }}'
                             },
