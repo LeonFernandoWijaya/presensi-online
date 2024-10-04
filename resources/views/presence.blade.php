@@ -191,7 +191,7 @@
             $.ajax({
                 url: "{{ url('/checkStatusPresence') }}",
                 type: "GET",
-
+                
             })
             showFlowBytesModal('location-and-photo-modal');
             $('#locationAndPhotoModalTitle').text(type);
