@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\Holiday;
 use App\Models\Role;
 use App\Models\Shift;
 use App\Models\User;
@@ -29,10 +30,12 @@ class UserController extends Controller
             $departments = Department::all();
             $roles = Role::all();
             $shifts = Shift::all();
+            $holidays = Holiday::all();
             return response()->json([
                 'departments' => $departments,
                 'roles' => $roles,
-                'shifts' => $shifts
+                'shifts' => $shifts,
+                'holidays' => $holidays
             ]);
         } else {
             abort(403);
@@ -63,7 +66,7 @@ class UserController extends Controller
     {
         if (Gate::allows('isManager')) {
             $id = $request->id;
-            $user = User::with('department', 'role', 'shift')->find($id);
+            $user = User::with('department', 'role', 'shift', 'holiday')->find($id);
             return response()->json($user);
         } else {
             abort(403);
@@ -97,6 +100,7 @@ class UserController extends Controller
                 $user->last_name = $request->last_name;
                 $user->department_id = $request->department_id;
                 $user->role_id = $request->role_id;
+                $user->holiday_id = $request->holiday_id;
                 $user->shift_id = $request->shift_id;
                 $user->is_active = $request->is_active;
                 $user->save();

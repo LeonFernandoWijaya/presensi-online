@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use App\Models\Holiday;
+use App\Models\HolidayDay;
 use App\Models\Overtime;
 use Carbon\Carbon;
 use DateTime;
@@ -124,13 +125,15 @@ class PresenceController extends Controller
             $lastPresence->clockOutLocation = $locationName;
             $lastPresence->isOvertimeClockOut = $isOvertime;
             $lastPresence->clockOutMode = $this->isRemote($request->sendLongitude, $request->sendLatitude);
-            $lastPresence->save();
+            // $lastPresence->save();
 
             $statusPresence = 'clockOut';
 
             // check for overtime
             $totalOvertime = 0;
-            $isHoliday = Holiday::where('holiday_date', date('Y-m-d'))->first();
+            $findHolidayId = Auth::user()->holiday->id;
+            $getTodayDateForCheck = Carbon::parse($lastPresence->clockInTime)->format('Y-m-d');
+            $isHoliday = HolidayDay::where('holiday_id', $findHolidayId)->where('holiday_date', $getTodayDateForCheck)->first();
             $isShiftDay = Auth::user()->shift->shiftDays->where('dayName', date('l', strtotime($lastPresence->clockInTime)))->first();
 
             $clockInTime = \Carbon\Carbon::parse($lastPresence->clockInTime);

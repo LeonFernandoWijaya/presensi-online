@@ -131,6 +131,12 @@
                         <option value="${role.id}">${role.role_name}</option>
                     `)
                     });
+
+                    response.holidays.forEach(holiday => {
+                        $('#holidayCategory').append(`
+                        <option value="${holiday.id}">${holiday.holiday_name}</option>
+                    `)
+                    });
                 }
             })
         }
@@ -144,6 +150,7 @@
                     id: id
                 },
                 success: function(response) {
+                    console.log(response);
                     $('#userId').val(response.id);
                     $('#firstName').val(response.first_name);
                     $('#lastName').val(response.last_name);
@@ -164,6 +171,16 @@
                             $('#shiftCategory option:first').prop('selected', true);
                         }
                     });
+                    let foundHoliday = false;
+                    $('#holidayCategory option').each(function() {
+                        if ($(this).val() == response.holiday_id) {
+                            $(this).prop('selected', true);
+                            foundHoliday = true;
+                        }
+                    });
+                    if (!foundHoliday) {
+                        $('#holidayCategory option:first').prop('selected', true);
+                    }
                     $('input[name="default-radio"]').each(function() {
                         if ($(this).val() == response.is_active) {
                             $(this).prop('checked', true);
@@ -185,6 +202,7 @@
                     department_id: $('#department').val(),
                     role_id: $('#role').val(),
                     shift_id: $('#shiftCategory').val(),
+                    holiday_id: $('#holidayCategory').val(),
                     is_active: $('input[name="default-radio"]:checked').val(),
                     _token: "{{ csrf_token() }}",
                 },

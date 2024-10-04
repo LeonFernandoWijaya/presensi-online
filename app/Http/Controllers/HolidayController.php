@@ -87,7 +87,8 @@ class HolidayController extends Controller
         if (Gate::allows('isManager')) {
             $validator = Validator::make($request->all(), [
                 'holidayName' => 'required',
-                'holidayDate' => 'required|unique:holidays,holiday_date'
+                'holidayDate' => 'required',
+                'id' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -97,9 +98,21 @@ class HolidayController extends Controller
                 ]);
             }
 
-            $holiday = new Holiday();
+            $checkHolidayDay = HolidayDay::where('holiday_date', $request->holidayDate)
+                ->where('holiday_id', $request->id)
+                ->first();
+
+            if ($checkHolidayDay) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Holiday date already exists',
+                ]);
+            }
+
+            $holiday = new HolidayDay();
             $holiday->holiday_date = $request->holidayDate;
             $holiday->holiday_name = $request->holidayName;
+            $holiday->holiday_id = $request->id;
             $holiday->save();
 
             return response()->json(['success' => true, 'message' => 'Holiday created successfully']);
@@ -111,7 +124,14 @@ class HolidayController extends Controller
     public function getHolidays(Request $request)
     {
         if (Gate::allows('isManager')) {
-            $holidays = HolidayDay::where('holiday_id', )
+            $query = HolidayDay::where('holiday_id', $request->id);
+
+            if (!is_null($request->year)) {
+                $query->whereYear('holiday_date', $request->year);
+            }
+
+            $query->orderBy('holiday_date', 'asc');
+            $holidays = $query->paginate(5);
             return response()->json($holidays);
         } else {
             abort(403);
@@ -121,7 +141,7 @@ class HolidayController extends Controller
     public function deleteHoliday(Request $request)
     {
         if (Gate::allows('isManager')) {
-            $holiday = Holiday::find($request->id);
+            $holiday = HolidayDay::find($request->id);
             $holiday->delete();
             return response()->json(['success' => true, 'message' => 'Holiday deleted successfully']);
         } else {
@@ -156,9 +176,18 @@ class HolidayController extends Controller
             $totalNotStored = 0;
             $holidays = $request->nationalDayOffArray;
 
+            if ($holidays == null) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Please add at least 1 from national day off',
+                ]);
+            }
+
             foreach ($holidays as $holiday) {
                 // Check if the holiday date already exists in the database
-                $existingHoliday = Holiday::where('holiday_date', $holiday['tanggal'])->first();
+                $existingHoliday = HolidayDay::where('holiday_date', $holiday['tanggal'])
+                    ->where('holiday_id', $request->id)
+                    ->first();
 
                 if ($existingHoliday) {
                     // If the holiday date exists, push it to the array
@@ -166,9 +195,10 @@ class HolidayController extends Controller
                     $totalNotStored++;
                 } else {
                     // If the holiday date does not exist, create a new record
-                    $holidayModel = new Holiday();
+                    $holidayModel = new HolidayDay();
                     $holidayModel->holiday_date = $holiday['tanggal'];
                     $holidayModel->holiday_name = $holiday['keterangan'];
+                    $holidayModel->holiday_id = $request->id;
                     $holidayModel->save();
                     $totalSuccess++;
                 }
@@ -189,7 +219,7 @@ class HolidayController extends Controller
     public function getHolidayById(Request $request)
     {
         if (Gate::allows('isManager')) {
-            $holiday = Holiday::find($request->id);
+            $holiday = HolidayDay::find($request->id);
             return response()->json($holiday);
         } else {
             abort(403);
@@ -211,7 +241,7 @@ class HolidayController extends Controller
                 ]);
             }
 
-            $holiday = Holiday::find($request->id);
+            $holiday = HolidayDay::find($request->id);
             $holiday->holiday_name = $request->holidayName;
             $holiday->save();
 

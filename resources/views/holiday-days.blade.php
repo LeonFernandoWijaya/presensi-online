@@ -69,12 +69,14 @@
         function saveNewHoliday() {
             const holidayName = $('#holidayName').val();
             const holidayDate = $('#holidayDate').val();
+            const holidayTarget = $('#holidayTarget').val();
             $.ajax({
                 url: "{{ url('saveNewHoliday') }}",
                 type: 'POST',
                 data: {
                     holidayName: holidayName,
                     holidayDate: holidayDate,
+                    id: holidayTarget,
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
@@ -106,9 +108,10 @@
                 type: 'GET',
                 data: {
                     year: year,
-                    page: page
+                    id: $('#holidayTarget').val()
                 },
                 success: function(response) {
+                    console.log(response);
                     $('#tableBody').empty();
                     response.data.forEach(holiday => {
                         $('#tableBody').append(`
@@ -245,7 +248,8 @@
                 type: 'POST',
                 data: {
                     nationalDayOffArray: nationalDayOffArray,
-                    _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}',
+                    id: $('#holidayTarget').val()
                 },
                 success: function(response) {
                     if (response.success == true) {
