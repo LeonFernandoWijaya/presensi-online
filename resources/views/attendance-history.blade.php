@@ -100,8 +100,9 @@
                     $('#customerName').val(response.customer != null ? response.customer.name : '-');
                     $('#activityType').val(response.activitytype.name);
                     $('#activityCategory').val(response.activitycategory.name);
-                    $('#locationIn').val(response.clockInLocation);
-                    $('#locationOut').val(response.clockOutLocation != null ? response.clockOutLocation :
+                    $('#locationIn').val(response.clockInLocation + ' (' + response.clockinstatus.name +
+                        ')');
+                    $('#locationOut').val(response.clockOutLocation != null ? response.clockOutLocation + ' (' + response.clockoutstatus.name + ')' :
                         "In Progress");
                     $('#dateTimeIn').val(response.clockInTime);
                     $('#dateTimeOut').val(response.clockOutTime != null ? response.clockOutTime :
