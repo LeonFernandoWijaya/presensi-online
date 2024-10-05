@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\Session;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -78,7 +79,19 @@ class AuthController extends Controller
             ]);
         }
 
+        $user = User::where('email', $request->email)->first();
+
+        if ($user) {
+            // Delete existing session if exists
+            Session::where('user_id', $user->id)->delete();
+        }
+
         if (auth()->attempt($request->only('email', 'password'))) {
+            Session::create([
+                'user_id' => auth()->user()->id,
+                'session_id' => session()->getId(),
+            ]);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Login success',
@@ -93,7 +106,15 @@ class AuthController extends Controller
 
     public function logout()
     {
+        // Get user's id
+        $userId = auth()->user()->id;
+
+        // Delete the user's session from the database
+        Session::where('user_id', $userId)->delete();
+
+        // Logout the user
         auth()->logout();
+
         return redirect('/login');
     }
 }

@@ -48,7 +48,7 @@ Route::post('/logout', [AuthController::class, 'logout']);
 
 
 
-Route::middleware(['is_active', 'auth'])->group(function () {
+Route::middleware(['is_active', 'auth', 'check_session'])->group(function () {
     Route::get('/presence', [PresenceController::class, 'index']);
     Route::get('/request', [RequestController::class, 'index']);
     Route::get('/attendance-history', [AttendanceHistoryController::class, 'index']);
