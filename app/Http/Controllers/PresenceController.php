@@ -149,7 +149,7 @@ class PresenceController extends Controller
             $lastPresence->activity_type_id = $request->activityTypes;
             $lastPresence->activity_category_id = $request->activityCategories;
             $lastPresence->customer = $request->customerName;
-            $lastPresence->clockOutStatusId = $this->isRemote($request->sendLongitude, $request->sendLatitude);
+            $lastPresence->clockOutMode = $this->isRemote($request->sendLongitude, $request->sendLatitude);
             $lastPresence->save();
 
             $statusPresence = 'clockOut';
@@ -210,7 +210,7 @@ class PresenceController extends Controller
             $attendance->activity_type_id = $request->activityTypes;
             $attendance->activity_category_id = $request->activityCategories;
             $attendance->customer = $request->customerName;
-            $attendance->clockInStatusId = $this->isRemote($request->sendLongitude, $request->sendLatitude);
+            $attendance->clockInMode = $this->isRemote($request->sendLongitude, $request->sendLatitude);
             $attendance->save();
 
             $statusPresence = 'clockIn';
@@ -253,9 +253,9 @@ class PresenceController extends Controller
         $distance = $earthRadius * $c;
 
         if ($distance <= 0.04) {
-            return 1;
+            return "In Range";
         } else {
-            return 2;
+            return "Out Range";
         }
     }
 }

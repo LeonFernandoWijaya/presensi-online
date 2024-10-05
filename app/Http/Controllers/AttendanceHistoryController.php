@@ -60,7 +60,7 @@ class AttendanceHistoryController extends Controller
     public function getAttendanceDetail(Request $request)
     {
         $attendanceId = $request->id;
-        $attendance = Attendance::with('user', 'activitytype', 'activitycategory', 'clockinstatus', 'clockoutstatus')->find($attendanceId);
+        $attendance = Attendance::with('user', 'activitytype', 'activitycategory')->find($attendanceId);
 
         if (Gate::allows('viewAttendance', $attendance)) {
             return response()->json($attendance);

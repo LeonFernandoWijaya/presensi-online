@@ -28,14 +28,4 @@ class Attendance extends Model
     {
         return $this->belongsTo(ActivityCategory::class, 'activity_category_id');
     }
-
-    public function clockinstatus()
-    {
-        return $this->belongsTo(Status::class, 'clockInStatusId');
-    }
-
-    public function clockoutstatus()
-    {
-        return $this->belongsTo(Status::class, 'clockOutStatusId');
-    }
 }
