@@ -149,7 +149,7 @@ class PresenceController extends Controller
             $lastPresence->activity_type_id = $request->activityTypes;
             $lastPresence->activity_category_id = $request->activityCategories;
             $lastPresence->customer = $request->customerName;
-            $lastPresence->clockOutMode = $this->isRemote($request->sendLongitude, $request->sendLatitude);
+            $lastPresence->clockOutStatusId = $this->isRemote($request->sendLongitude, $request->sendLatitude);
             $lastPresence->save();
 
             $statusPresence = 'clockOut';
@@ -210,7 +210,7 @@ class PresenceController extends Controller
             $attendance->activity_type_id = $request->activityTypes;
             $attendance->activity_category_id = $request->activityCategories;
             $attendance->customer = $request->customerName;
-            $attendance->clockInMode = $this->isRemote($request->sendLongitude, $request->sendLatitude);
+            $attendance->clockInStatusId = $this->isRemote($request->sendLongitude, $request->sendLatitude);
             $attendance->save();
 
             $statusPresence = 'clockIn';
@@ -225,13 +225,15 @@ class PresenceController extends Controller
 
     private function makeOvertime($attendanceId, $overtimeStart, $overtimeEnd, $overtimeTotal)
     {
-        $overtime = new Overtime();
-        $overtime->user_id = Auth::user()->id;
-        $overtime->attendance_id = $attendanceId;
-        $overtime->overtimeStart = $overtimeStart;
-        $overtime->overtimeEnd = $overtimeEnd;
-        $overtime->overtimeTotal = $overtimeTotal;
-        $overtime->save();
+        if ($overtimeTotal > 0) {
+            $overtime = new Overtime();
+            $overtime->user_id = Auth::user()->id;
+            $overtime->attendance_id = $attendanceId;
+            $overtime->overtimeStart = $overtimeStart;
+            $overtime->overtimeEnd = $overtimeEnd;
+            $overtime->overtimeTotal = $overtimeTotal;
+            $overtime->save();
+        }
     }
 
     private function isRemote($userLongitude, $userLatitude)
@@ -251,9 +253,9 @@ class PresenceController extends Controller
         $distance = $earthRadius * $c;
 
         if ($distance <= 0.04) {
-            return "On Site";
+            return 1;
         } else {
-            return "Remote";
+            return 2;
         }
     }
 }
