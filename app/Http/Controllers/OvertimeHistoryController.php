@@ -66,7 +66,7 @@ class OvertimeHistoryController extends Controller
     // done authotize
     public function getOvertimeDetail(Request $request)
     {
-        $overtime = Overtime::where('id', $request->id)->with('user', 'attendance')->first();
+        $overtime = Overtime::where('id', $request->id)->with('user', 'attendance', 'attendance.activitytype', 'attendance.activitycategory')->first();
 
         if (Gate::allows('viewOvertime', $overtime)) {
             return response()->json($overtime);

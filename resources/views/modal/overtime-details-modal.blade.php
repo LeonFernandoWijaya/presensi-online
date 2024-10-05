@@ -18,17 +18,30 @@
             <!-- Modal body -->
             <div class="p-4 md:p-5">
                 <div class="grid gap-4 mb-4 grid-cols-2">
-                    <div class="col-span-2">
+                    <div class="col-span-2 sm:col-span-1">
                         <label for="staffName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Staff Name</label>
                         <input type="text" name="staffName" id="staffName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled value="">
                     </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="customer" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Customer</label>
+                        <input type="text" name="customer" id="customer" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled value="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1 automatic-container">
+                        <label for="activityType" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Activity Type</label>
+                        <input type="text" name="activityType" id="activityType" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled value="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1 automatic-container">
+                        <label for="activityCategory" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Activity Category</label>
+                        <input type="text" name="activityCategory" id="activityCategory" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled value="">
+                    </div>
+
                     <div class="col-span-2 sm:col-span-1 automatic-container">
                         <label for="locationIn" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Location In</label>
-                        <input type="text" name="locationIn" id="locationIn" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled value="">
+                        <textarea rows="4" name="locationIn" id="locationIn" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled></textarea>
                     </div>
                     <div class="col-span-2 sm:col-span-1 automatic-container">
                         <label for="locationOut" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Location Out</label>
-                        <input type="text" name="locationOut" id="locationOut" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled value="">
+                        <textarea rows="4" name="locationOut" id="locationOut" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled></textarea>
                     </div>
 
                     <div class="col-span-2 sm:col-span-1">
@@ -45,10 +58,6 @@
                         <label for="projectName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Project Name</label>
                         <input type="text" name="projectName" id="projectName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled value="">
                     </div>
-                    <div class="col-span-2 sm:col-span-1 manual-container">
-                        <label for="customer" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Customer</label>
-                        <input type="text" name="customer" id="customer" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled value="">
-                    </div>
 
                     <div class="col-span-2 sm:col-span-1">
                         <label for="totalOvertime" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Total Overtime</label>
@@ -59,7 +68,7 @@
                         <input type="text" name="statusDetail" id="statusDetail" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled value="">
                     </div>
 
-                    <div class="col-span-2 manual-container">
+                    <div class="col-span-2 sm:col-span-1 manual-container">
                         <label for="notes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Notes</label>
                         <textarea rows="2" name="notes" id="notes" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled></textarea>
                     </div>

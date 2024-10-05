@@ -104,20 +104,23 @@
                     id: id
                 },
                 success: function(response) {
+                    console.log(response)
                     if (response.attendance == null) {
                         $('#overtimeDetailTitle').text('Overtime Details (Manual Request)');
                         $('.automatic-container').addClass('hidden');
                         $('.manual-container').removeClass('hidden');
                         $('#projectName').val(response.projectName != null ? response.projectName : '-');
-                        $('#customer').val(response.customer != null ? response.customer : '-');
                         $('#notes').val(response.notes != null ? response.notes : '-');
-
+                        $('#customer').val(response.customer != null ? response.customer : '-');
                     } else {
                         $('#overtimeDetailTitle').text('Overtime Details (Automatic Request)');
                         $('.automatic-container').removeClass('hidden');
                         $('.manual-container').addClass('hidden');
                         $('#locationIn').val(response.attendance.clockInLocation);
                         $('#locationOut').val(response.attendance.clockOutLocation);
+                        $('#customer').val(response.attendance.customer != null ? response.attendance.customer : '-');
+                        $('#activityType').val(response.attendance.activitytype.name);
+                        $('#activityCategory').val(response.attendance.activitycategory.name);
                         $('#photoIn').empty();
                         $('#photoIn').append(
                             `<img src="{{ asset('storage/photos/${response.attendance.clockInPhoto}') }}" class="w-32 h-32 object-cover rounded-lg">`
@@ -129,8 +132,10 @@
                     }
                     $('#staffName').val(response.user.first_name + ' ' + (response.user.last_name != null ?
                         response.user.last_name : ''));
+                    
                     $('#overtimeStart').val(response.overtimeStart);
                     $('#overtimeEnd').val(response.overtimeEnd);
+                    $('#customer').val(response.customer != null ? response.customer : '-');
                     let hours = Math.floor(response.overtimeTotal / 60);
                     let minutes = response.overtimeTotal % 60;
                     $('#totalOvertime').val(`${hours} hours ${minutes} Minutes`);

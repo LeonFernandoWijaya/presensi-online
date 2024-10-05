@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Attendance;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -40,7 +41,8 @@ class AttendanceExport implements FromCollection, WithMapping, WithHeadings, Wit
             ->when($this->endDate, function ($query, $endDate) {
                 return $query->where('clockOutTime', '<=', $endDate);
             })
-            ->with('user')
+            ->whereNotNull('clockOutTime')
+            ->with('user', 'activitytype', 'activitycategory')
             ->get();
     }
 
@@ -53,8 +55,14 @@ class AttendanceExport implements FromCollection, WithMapping, WithHeadings, Wit
             'A' => 25,
             'B' => 25,
             'C' => 25,
-            'D' => 30,
-            'E' => 30,
+            'D' => 25,
+            'E' => 25,
+            'F' => 25,
+            'G' => 25,
+            'H' => 25,
+            'I' => 25,
+            'J' => 25,
+            'K' => 25,
             // Add more columns as needed
         ];
     }
@@ -65,10 +73,19 @@ class AttendanceExport implements FromCollection, WithMapping, WithHeadings, Wit
      */
     public function map($attendance): array
     {
+        $clockInTime = new Carbon($attendance->clockInTime);
+        $clockOutTime = new Carbon($attendance->clockOutTime);
+        $diffInMinutes = $clockInTime->diffInMinutes($clockOutTime);
         return [
             $attendance->user->first_name . ' ' . $attendance->user->last_name,
             $attendance->clockInTime,
             $attendance->clockOutTime,
+            $diffInMinutes,
+            $attendance->activitytype->name,
+            $attendance->activitycategory->name,
+            $attendance->customer,
+            $attendance->clockInLocation,
+            $attendance->clockOutLocation,
             // Add more columns as needed
         ];
     }
@@ -82,8 +99,15 @@ class AttendanceExport implements FromCollection, WithMapping, WithHeadings, Wit
             'Staff',
             'Clock In',
             'Clock Out',
+            'Total Attendance (Minutes)',
+            'Activity Type',
+            'Activity Category',
+            'Customer',
+            'Clock In Location',
+            'Clock Out Location',
             'Clock In Picture',
             'Clock Out Picture',
+            
             // Add more headers as needed
         ];
     }
@@ -103,7 +127,7 @@ class AttendanceExport implements FromCollection, WithMapping, WithHeadings, Wit
             $clockInDrawing->setDescription('Clock In Picture');
             $clockInDrawing->setPath(storage_path('app/public/photos/' . $attendance->clockInPhoto)); // Adjust the path as needed
             $clockInDrawing->setHeight(100);
-            $clockInDrawing->setCoordinates('D' . ($index + 2)); // Assuming the first row is the header
+            $clockInDrawing->setCoordinates('j' . ($index + 2)); // Assuming the first row is the header
             $clockInDrawing->setOffsetX(5);
             $clockInDrawing->setOffsetY(5);
 
@@ -113,7 +137,7 @@ class AttendanceExport implements FromCollection, WithMapping, WithHeadings, Wit
             $clockOutDrawing->setDescription('Clock Out Picture');
             $clockOutDrawing->setPath(storage_path('app/public/photos/' . $attendance->clockOutPhoto)); // Adjust the path as needed
             $clockOutDrawing->setHeight(100);
-            $clockOutDrawing->setCoordinates('E' . ($index + 2)); // Assuming the first row is the header
+            $clockOutDrawing->setCoordinates('K' . ($index + 2)); // Assuming the first row is the header
             $clockOutDrawing->setOffsetX(5);
             $clockOutDrawing->setOffsetY(5);
 
@@ -136,6 +160,9 @@ class AttendanceExport implements FromCollection, WithMapping, WithHeadings, Wit
                 foreach ($attendances as $index => $attendance) {
                     $sheet->getRowDimension($index + 2)->setRowHeight(100); // Set row height to match image height
                 }
+
+                $cellRange = 'A1:W5000'; // All cells
+                $sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
             },
         ];
     }

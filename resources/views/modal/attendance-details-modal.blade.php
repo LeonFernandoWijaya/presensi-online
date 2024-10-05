@@ -18,9 +18,21 @@
             <!-- Modal body -->
             <div class="p-4 md:p-5">
                 <div class="grid gap-4 mb-4 grid-cols-2">
-                    <div class="col-span-2">
+                    <div class="col-span-2 sm:col-span-1">
                         <label for="staffName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Staff Name</label>
                         <input type="text" name="staffName" id="staffName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled value="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="customerName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Customer</label>
+                        <input type="text" name="customerName" id="customerName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled value="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="activityType" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Activity Type</label>
+                        <input type="text" name="activityType" id="activityType" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled value="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="activityCategory" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Activity Category</label>
+                        <input type="text" name="activityCategory" id="activityCategory" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" disabled value="">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="locationIn" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Location In</label>

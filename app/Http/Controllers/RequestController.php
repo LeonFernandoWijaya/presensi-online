@@ -21,7 +21,6 @@ class RequestController extends Controller
 
         $validator = Validator::make($request->all(), [
             'customer' => 'required',
-            'projectName' => 'required',
             'overtimeStart' => 'required|date',
             'overtimeEnd' => [
                 'required',
