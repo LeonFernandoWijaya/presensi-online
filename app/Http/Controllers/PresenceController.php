@@ -181,7 +181,7 @@ class PresenceController extends Controller
                     if ($clockInTime > $shiftEndTime) {
                         $totalOvertime = $clockInTime->diffInMinutes($clockOutTime);
                     } else {
-                        if ($clockInTime < $shiftStartTime) {
+                        if ($clockInTime < $shiftStartTime && $clockOutTime <= $shiftStartTime) {
                             $totalOvertime = $clockInTime->diffInMinutes($clockOutTime);
                         } else if ($clockInTime < $shiftStartTime || $clockOutTime > $shiftEndTime) {
                             // If clocked in early and it's considered overtime
