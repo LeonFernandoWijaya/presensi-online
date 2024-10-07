@@ -8,6 +8,7 @@ use App\Models\Role;
 use App\Models\Shift;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 
@@ -138,6 +139,51 @@ class UserController extends Controller
             }
         } else {
             abort(403);
+        }
+    }
+
+    public function changepassword()
+    {
+        $navbar = null;
+        return view('change-password', compact('navbar'));
+    }
+
+    public function saveNewPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'old_password' => 'required',
+            'new_password' => 'required',
+            'confirm_password' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'validationMessage' => $validator->errors()->toArray(),
+                'message' => 'Please fill all required fields'
+            ]);
+        }
+
+        $user = Auth::user();
+        if (password_verify($request->old_password, $user->password)) {
+            if ($request->new_password === $request->confirm_password) {
+                $user->password = bcrypt($request->new_password);
+                $user->save();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Password has been changed'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'New password and confirm password must be the same'
+                ]);
+            }
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Old password is incorrect'
+            ]);
         }
     }
 }

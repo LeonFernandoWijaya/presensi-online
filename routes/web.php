@@ -58,6 +58,8 @@ Route::middleware(['is_active', 'auth', 'check_session'])->group(function () {
     Route::get('/department', [DepartmentController::class, 'index']);
     Route::get('/holiday', [HolidayController::class, 'index']);
     Route::get('/holiday-days/{id}', [HolidayController::class, 'holidayDays']);
+    Route::get('/change-password', [UserController::class, 'changePassword']);
+    Route::put('/saveNewPassword', [UserController::class, 'saveNewPassword']);
 
     Route::get('shift', [ShiftController::class, 'index']);
 
