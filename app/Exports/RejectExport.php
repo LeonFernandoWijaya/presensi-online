@@ -37,10 +37,10 @@ class RejectExport implements FromCollection, WithMapping, WithHeadings, WithCol
                 return $query->where('user_id', $staffId);
             })
             ->when($this->startDate, function ($query, $startDate) {
-                return $query->where('overtimeStart', '>=', $startDate);
+                return $query->where('overtimeStart', '>=', $startDate . ' 00:00:00');
             })
             ->when($this->endDate, function ($query, $endDate) {
-                return $query->where('overtimeEnd', '<=', $endDate);
+                return $query->where('overtimeEnd', '<=', $endDate . ' 23:59:59');
             })
             ->where('rejectDate', null)
             ->whereHas('user.department', function ($query) {
@@ -95,7 +95,7 @@ class RejectExport implements FromCollection, WithMapping, WithHeadings, WithCol
         } else {
             $data[] = 'Manual Request'; // Add a "-" if the image does not exist
         }
-    
+
         if ($overtime->attendance && file_exists(storage_path('app/public/photos/' . $overtime->attendance->clockOutPhoto))) {
             $data[] = null; // Add a placeholder for the image
         } else {
@@ -127,39 +127,39 @@ class RejectExport implements FromCollection, WithMapping, WithHeadings, WithCol
         ];
     }
 
-     /**
+    /**
      * @return array
      */
     public function drawings()
-{
-    $drawings = [];
-    $overtimes = $this->collection();
+    {
+        $drawings = [];
+        $overtimes = $this->collection();
 
-    foreach ($overtimes as $index => $overtime) {
-        if ($overtime->attendance && file_exists(storage_path('app/public/photos/' . $overtime->attendance->clockInPhoto))) {
-            $clockInDrawing = new Drawing();
-            $clockInDrawing->setName('Clock In Picture');
-            $clockInDrawing->setDescription('Clock In Picture');
-            $clockInDrawing->setPath(storage_path('app/public/photos/' . $overtime->attendance->clockInPhoto));
-            $clockInDrawing->setHeight(100);
-            $clockInDrawing->setCoordinates('K' . ($index + 2));
-            $clockInDrawing->setOffsetX(5);
-            $clockInDrawing->setOffsetY(5);
-            $drawings[] = $clockInDrawing;
-        }
+        foreach ($overtimes as $index => $overtime) {
+            if ($overtime->attendance && file_exists(storage_path('app/public/photos/' . $overtime->attendance->clockInPhoto))) {
+                $clockInDrawing = new Drawing();
+                $clockInDrawing->setName('Clock In Picture');
+                $clockInDrawing->setDescription('Clock In Picture');
+                $clockInDrawing->setPath(storage_path('app/public/photos/' . $overtime->attendance->clockInPhoto));
+                $clockInDrawing->setHeight(100);
+                $clockInDrawing->setCoordinates('K' . ($index + 2));
+                $clockInDrawing->setOffsetX(5);
+                $clockInDrawing->setOffsetY(5);
+                $drawings[] = $clockInDrawing;
+            }
 
-        if ($overtime->attendance && file_exists(storage_path('app/public/photos/' . $overtime->attendance->clockOutPhoto))) {
-            $clockOutDrawing = new Drawing();
-            $clockOutDrawing->setName('Clock Out Picture');
-            $clockOutDrawing->setDescription('Clock Out Picture');
-            $clockOutDrawing->setPath(storage_path('app/public/photos/' . $overtime->attendance->clockOutPhoto));
-            $clockOutDrawing->setHeight(100);
-            $clockOutDrawing->setCoordinates('L' . ($index + 2));
-            $clockOutDrawing->setOffsetX(5);
-            $clockOutDrawing->setOffsetY(5);
-            $drawings[] = $clockOutDrawing;
+            if ($overtime->attendance && file_exists(storage_path('app/public/photos/' . $overtime->attendance->clockOutPhoto))) {
+                $clockOutDrawing = new Drawing();
+                $clockOutDrawing->setName('Clock Out Picture');
+                $clockOutDrawing->setDescription('Clock Out Picture');
+                $clockOutDrawing->setPath(storage_path('app/public/photos/' . $overtime->attendance->clockOutPhoto));
+                $clockOutDrawing->setHeight(100);
+                $clockOutDrawing->setCoordinates('L' . ($index + 2));
+                $clockOutDrawing->setOffsetX(5);
+                $clockOutDrawing->setOffsetY(5);
+                $drawings[] = $clockOutDrawing;
+            }
         }
-    }
 
         return $drawings;
     }

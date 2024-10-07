@@ -38,10 +38,10 @@ class RejectController extends Controller
             return $query->where('user_id', $staffId);
         })
             ->when($startDate, function ($query, $startDate) {
-                return $query->where('overtimeStart', '>=', $startDate);
+                return $query->where('overtimeStart', '>=', $startDate . ' 00:00:00');
             })
             ->when($endDate, function ($query, $endDate) {
-                return $query->where('overtimeEnd', '<=', $endDate);
+                return $query->where('overtimeEnd', '<=', $endDate . ' 23:59:59');
             })
             ->where('rejectDate', null)
             ->whereHas('user.department', function ($query) use ($departmentName) {

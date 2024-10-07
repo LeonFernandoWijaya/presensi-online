@@ -42,10 +42,10 @@ class AttendanceHistoryController extends Controller
             return $query->where('user_id', $staffId);
         })
             ->when($startDate, function ($query, $startDate) {
-                return $query->where('clockInTime', '>=', $startDate);
+                return $query->where('clockInTime', '>=', $startDate . ' 00:00:00');
             })
             ->when($endDate, function ($query, $endDate) {
-                return $query->where('clockOutTime', '<=', $endDate);
+                return $query->where('clockOutTime', '<=', $endDate . ' 23:59:59');
             })
             ->when($user->role->id == 1, function ($query) use ($user) {
                 return $query->where('user_id', $user->id);

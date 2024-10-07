@@ -43,10 +43,10 @@ class OvertimeHistoryController extends Controller
             return $query->where('user_id', $staffId);
         })
             ->when($startDate, function ($query, $startDate) {
-                return $query->where('overtimeStart', '>=', $startDate);
+                return $query->where('overtimeStart', '>=', $startDate . ' 00:00:00');
             })
             ->when($endDate, function ($query, $endDate) {
-                return $query->where('overtimeEnd', '<=', $endDate);
+                return $query->where('overtimeEnd', '<=', $endDate . ' 23:59:59');
             })
             ->when($status == 1, function ($query) {
                 return $query->whereNull('rejectDate');

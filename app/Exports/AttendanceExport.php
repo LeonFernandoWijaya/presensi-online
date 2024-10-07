@@ -36,10 +36,10 @@ class AttendanceExport implements FromCollection, WithMapping, WithHeadings, Wit
             return $query->where('user_id', $staffId);
         })
             ->when($this->startDate, function ($query, $startDate) {
-                return $query->where('clockInTime', '>=', $startDate);
+                return $query->where('clockInTime', '>=', $startDate . ' 00:00:00');
             })
             ->when($this->endDate, function ($query, $endDate) {
-                return $query->where('clockOutTime', '<=', $endDate);
+                return $query->where('clockOutTime', '<=', $endDate . ' 23:59:59');
             })
             ->whereNotNull('clockOutTime')
             ->with('user', 'activitytype', 'activitycategory')
@@ -107,7 +107,7 @@ class AttendanceExport implements FromCollection, WithMapping, WithHeadings, Wit
             'Clock Out Location',
             'Clock In Picture',
             'Clock Out Picture',
-            
+
             // Add more headers as needed
         ];
     }
