@@ -21,7 +21,7 @@
                 </div>
                 <div class="flex justify-center mt-10">
                     <button type="button" onclick="checkSchedule()"
-                        class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-8 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">Check
+                        class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-8 py-2.5 mb-2">Check
                         Schedule</button>
                 </div>
                 <div class="text-6xl flex justify-center font-medium" id="nowClock">
@@ -34,11 +34,11 @@
 
                 <div class="flex items-center mt-2">
                     <button type="button" onclick="validateLocationSetting('Clock In')" id="clockInButton"
-                        class="text-white font-semibold text-md px-5 py-2.5 w-full rounded-bl-2xl {{ $isClockOut ? 'bg-gray-400' : 'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' }}"
+                        class="text-white font-semibold text-md px-5 py-2.5 w-full rounded-bl-2xl {{ $isClockOut ? 'bg-gray-400' : 'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none' }}"
                         {{ $isClockOut ? 'disabled' : '' }}>CLOCK
                         IN</button>
                     <button type="button" onclick="validateLocationSetting('Clock Out')" id="clockOutButton"
-                        class="text-white font-semibold text-md px-5 py-2.5 w-full rounded-br-2xl {{ $isClockOut ? 'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' : 'bg-gray-400' }}"
+                        class="text-white font-semibold text-md px-5 py-2.5 w-full rounded-br-2xl {{ $isClockOut ? 'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none' : 'bg-gray-400' }}"
                         {{ $isClockOut ? '' : 'disabled' }}>CLOCK
                         OUT</button>
                 </div>
@@ -65,7 +65,8 @@
                 success: function(data) {
                     // Extract year, month, day, hours, minutes, and seconds
                     let year = parseInt(data.datetime.substring(0, 4));
-                    let month = parseInt(data.datetime.substring(5, 7)) - 1; // JavaScript months are 0-11
+                    let month = parseInt(data.datetime.substring(5, 7)) -
+                        1; // JavaScript months are 0-11
                     let date = parseInt(data.datetime.substring(8, 10));
                     let hours = parseInt(data.datetime.substring(11, 13));
                     let minutes = parseInt(data.datetime.substring(14, 16));
@@ -195,8 +196,9 @@
                     $('#customerName').val('');
                     $('#activityTypes option:first').prop('selected', true);
                     $('#activityCategories option:first').prop('selected', true);
-                    if (response.PresenceData != null){
-                        $('#customerName').val(response.PresenceData.customer != null ? response.PresenceData.customer : '');
+                    if (response.PresenceData != null) {
+                        $('#customerName').val(response.PresenceData.customer != null ? response.PresenceData
+                            .customer : '');
 
                         if (response.PresenceData.activity_type_id != null) {
                             $('#activityTypes option').each(function() {
@@ -357,25 +359,25 @@
                                         $('#clockInButton').attr('disabled', true);
                                         $('#clockInButton').addClass('bg-gray-400');
                                         $('#clockInButton').removeClass(
-                                            'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'
+                                            'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300'
                                         );
 
                                         $('#clockOutButton').attr('disabled', false);
                                         $('#clockOutButton').removeClass('bg-gray-400');
                                         $('#clockOutButton').addClass(
-                                            'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'
+                                            'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300'
                                         );
                                     } else {
                                         $('#clockInButton').attr('disabled', false);
                                         $('#clockInButton').removeClass('bg-gray-400');
                                         $('#clockInButton').addClass(
-                                            'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'
+                                            'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300'
                                         );
 
                                         $('#clockOutButton').attr('disabled', true);
                                         $('#clockOutButton').addClass('bg-gray-400');
                                         $('#clockOutButton').removeClass(
-                                            'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'
+                                            'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300'
                                         );
                                     }
                                 } else {

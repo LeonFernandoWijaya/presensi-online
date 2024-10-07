@@ -3,17 +3,17 @@ function buttonPagination(selector, numberOfPage, currentPage, link) {
     let currentPageButton = `<li>
     <button aria-current="page"
     onclick="${link}({{page}})"
-        class="flex items-center justify-center mx-1 cursor-pointer rounded-lg px-3 h-8 text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">{{page}}</button>
+        class="flex items-center justify-center mx-1 cursor-pointer rounded-lg px-3 h-8 text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700">{{page}}</button>
 
     </li>`;
     // Other Page
     let otherPage = `<li>
     <a onclick="${link}({{page}})"
-        class="flex items-center justify-center me-1 px-3 h-8 leading-tight text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 cursor-pointer rounded-lg dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{page}}</a>
+        class="flex items-center justify-center me-1 px-3 h-8 leading-tight text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 cursor-pointer rounded-lg">{{page}}</a>
     </li>`;
     let button = `<li>
     <button type="button" onclick="${link}({{page}})"
-        class="flex items-center justify-center cursor-pointer px-3 h-8 leading-tight text-gray-500 bg-white rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{button-text}}</button>
+        class="flex items-center justify-center cursor-pointer px-3 h-8 leading-tight text-gray-500 bg-white rounded-lg hover:bg-gray-100 hover:text-gray-700">{{button-text}}</button>
     </li>`;
     let dots = `<li class="page-item disabled" aria-disabled="true"><span class="page-link">...</span></li>`;
     let previousButton = button.replace("{{button-text}}", "<");

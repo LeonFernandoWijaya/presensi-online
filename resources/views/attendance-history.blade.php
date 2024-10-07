@@ -8,9 +8,9 @@
         <div class="flex md:justify-between justify-start md:flex-row flex-col gap-5 md:items-end items-start mb-6">
             <div class="flex items-center gap-2">
                 <div>
-                    <label for="staff" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Staff</label>
+                    <label for="staff" class="block mb-2 text-sm font-medium text-gray-900">Staff</label>
                     <select id="staff"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
                         <option selected value="">All Staff</option>
                         @foreach ($userResults as $user)
                             <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>
@@ -19,18 +19,18 @@
                 </div>
 
                 <div>
-                    <label for="startDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start
+                    <label for="startDate" class="block mb-2 text-sm font-medium text-gray-900">Start
                         Date</label>
                     <input type="date" name="startDate" id="startDate"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                         required="">
                 </div>
 
                 <div>
-                    <label for="endDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End
+                    <label for="endDate" class="block mb-2 text-sm font-medium text-gray-900">End
                         Date</label>
                     <input type="date" name="endDate" id="endDate"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                         required="">
                 </div>
             </div>
@@ -38,14 +38,14 @@
             <div>
                 <a type="button" href="{{ url('/downloadAttendanceHistory?staffId=&startDate=&endDate=') }}"
                     target="_blank" id="exportButton"
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Export</a>
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none">Export</a>
 
             </div>
             @endisManager()
         </div>
         <div class="relative overflow-x-auto">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
                         <th scope="col" class="px-6 py-3">
                             Staff
@@ -102,7 +102,8 @@
                     $('#activityCategory').val(response.activitycategory.name);
                     $('#locationIn').val(response.clockInLocation + ' (' + response.clockInMode +
                         ')');
-                    $('#locationOut').val(response.clockOutLocation != null ? response.clockOutLocation + ' (' + response.clockOutMode + ')' :
+                    $('#locationOut').val(response.clockOutLocation != null ? response.clockOutLocation + ' (' +
+                        response.clockOutMode + ')' :
                         "In Progress");
                     $('#dateTimeIn').val(response.clockInTime);
                     $('#dateTimeOut').val(response.clockOutTime != null ? response.clockOutTime :
@@ -144,19 +145,19 @@
                     $('#table-body').empty();
                     response.data.forEach(data => {
                         $('#table-body').append(`
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <tr class="bg-white border-b">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                     ${data.user.first_name} ${data.user.last_name ?? ""}
                                 </th>
                                 <td class="px-6 py-4">
-                                    ${data.clockInTime}     
+                                    ${data.clockInTime}
                                 </td>
                                 <td class="px-6 py-4">
                                     ${data.clockOutTime != null ? data.clockOutTime : "In Progress"}
                                 </td>
                                 <td class="px-6 py-4">
                                     <button type="button"
-                                        class="text-white flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                                        class="text-white flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none"
                                         onclick="showAttendanceDetailsModal(${data.id})">Details</button>
                                 </td>
                             </tr>

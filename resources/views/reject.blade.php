@@ -5,9 +5,9 @@
         <div class="flex md:justify-between justify-start md:flex-row flex-col gap-5 md:items-end items-start mb-6">
             <div class="flex items-center gap-2">
                 <div>
-                    <label for="staff" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Staff</label>
+                    <label for="staff" class="block mb-2 text-sm font-medium text-gray-900">Staff</label>
                     <select id="staff"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5">
                         <option selected value="">All Staff</option>
                         @foreach ($users as $user)
                             <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>
@@ -16,25 +16,25 @@
                 </div>
 
                 <div>
-                    <label for="startDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start
+                    <label for="startDate" class="block mb-2 text-sm font-medium text-gray-900">Start
                         Date</label>
                     <input type="date" name="startDate" id="startDate"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                         required="">
                 </div>
 
                 <div>
-                    <label for="endDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End
+                    <label for="endDate" class="block mb-2 text-sm font-medium text-gray-900">End
                         Date</label>
                     <input type="date" name="endDate" id="endDate"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                         required="">
                 </div>
             </div>
 
             <div>
                 <a type="button" id="exportButton"
-                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
                     href="{{ url('/downloadReject?staffId=&startDate=&endDate=&status=0') }}" target="_blank">Export</a>
 
             </div>
@@ -43,21 +43,21 @@
         <div class="flex items-center justify-between mb-6">
             <div>
                 <input id="selectAll" type="checkbox" value=""
-                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                <label for="selectAll" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Select All</label>
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                <label for="selectAll" class="ms-2 text-sm font-medium text-gray-900">Select All</label>
             </div>
 
             <div>
                 <button type="button" onclick="rejectSelectedOvertime()" id="rejectSelected"
-                    class="hidden focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Reject
+                    class="hidden focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5">Reject
                     Selected</button>
 
             </div>
         </div>
 
         <div class="relative overflow-x-auto">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
                         <th scope="col" class="px-6 py-3">
                             Staff
@@ -179,10 +179,10 @@
                         let hours = Math.floor(overtime.overtimeTotal / 60);
                         let minutes = overtime.overtimeTotal % 60;
                         $('#tableBody').append(`
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <tr class="bg-white border-b">
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                 <div class="flex items-center gap-2">
-                                    <input id="checkbox-${overtime.id}" type="checkbox" value="${overtime.id}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <input id="checkbox-${overtime.id}" type="checkbox" value="${overtime.id}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
 
                                     <span>${overtime.user.first_name} ${overtime.user.last_name}</span>
                                 </div>
@@ -205,7 +205,7 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4">
-                                <button type="button" onclick="rejectOvertime(${overtime.id})" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Reject</button>
+                                <button type="button" onclick="rejectOvertime(${overtime.id})" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5">Reject</button>
                             </td>
                         </tr>
                     `);
