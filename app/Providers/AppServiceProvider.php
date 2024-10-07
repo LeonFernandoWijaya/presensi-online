@@ -23,23 +23,23 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Blade::if('isManager', function () {
-            return Auth()->user()->role->role_name === "Manager";
+            return Auth()->user()->role->role_name == "Manager";
         });
 
         Gate::define('isManager', function ($user) {
-            return $user->role->role_name === "Manager";
+            return $user->role->role_name == "Manager";
         });
 
         Gate::define('rejectOvertime', function ($user, $overtime) {
-            return $user->role->role_name === "Manager" && $user->department_id === $overtime->user->department_id;
+            return $user->role->role_name == "Manager" && $user->department_id == $overtime->user->department_id;
         });
 
         Gate::define('viewOvertime', function ($user, $overtime) {
-            return $user->role->role_name === "Manager" || $user->id === $overtime->user_id;
+            return $user->role->role_name == "Manager" || $user->id == $overtime->user_id;
         });
 
         Gate::define('viewAttendance', function ($user, $attendance) {
-            return $user->role->role_name === "Manager" || $user->id === $attendance->user_id;
+            return $user->role->role_name == "Manager" || $user->id == $attendance->user_id;
         });
     }
 }
