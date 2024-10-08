@@ -60,7 +60,7 @@
         $(document).ready(function() {
             // Fetch the current time from the server once
             $.ajax({
-                url: "http://worldtimeapi.org/api/Asia/Jakarta",
+                url: "https://worldtimeapi.org/api/Asia/Jakarta",
                 method: 'GET',
                 success: function(data) {
                     // Extract year, month, day, hours, minutes, and seconds
