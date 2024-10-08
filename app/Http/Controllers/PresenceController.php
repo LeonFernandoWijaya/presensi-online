@@ -260,8 +260,8 @@ class PresenceController extends Controller
 
     private function isRemote($userLongitude, $userLatitude)
     {
-        $officeLongitude = 106.79771472565349; // Ganti dengan longitude kantor
-        $officeLatitude = -6.190439312874779; // Ganti dengan latitude kantor,
+        $officeLongitude = 106.797804; // Ganti dengan longitude kantor
+        $officeLatitude = -6.1905954; // Ganti dengan latitude kantor,
 
         $earthRadius = 6371; // Radius bumi dalam kilometer
 
@@ -274,7 +274,7 @@ class PresenceController extends Controller
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
         $distance = $earthRadius * $c;
 
-        if ($distance <= 0.04) {
+        if ($distance <= 0.020) {
             return "In Range";
         } else {
             return "Out Range";
