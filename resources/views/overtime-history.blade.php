@@ -6,7 +6,7 @@
             <h1 class="text-3xl text-blue-800 font-medium">Overtime History</h1>
         </div>
         <div class="flex md:justify-between justify-start md:flex-row flex-col gap-5 md:items-end items-start mb-6">
-            <div class="flex items-center gap-2">
+            <div class="grid grid-cols-2 md:grid-cols-4 items-center gap-2">
                 <div>
                     <label for="staff" class="block mb-2 text-sm font-medium text-gray-900">Staff</label>
                     <select id="staff"
