@@ -324,6 +324,12 @@
         }
 
         async function presenceNow() {
+            $('#locationAndPhotoModalSubmit').prop('disabled', true);
+            setInterval(function() {
+                $('#locationAndPhotoModalSubmit').prop('disabled', false);
+            }, 3000);
+
+
             showFlowBytesModal('loading-modal');
             let sendLatitude = null;
             let sendLongitude = null;
