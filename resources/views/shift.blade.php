@@ -173,7 +173,7 @@
                 success: function(response) {
                     $('#editShiftName').val(response.shift_name);
                     $('#shiftDayContainer').empty();
-                    response.shift_days.forEach(day => {
+                    response.shiftDays.forEach(day => {
                         $('#shiftDayContainer').append(`
                     <div class="rounded-xl border border-gray-200 shadow-sm flex items-center justify-between px-4 py-2">
                         <div class="flex flex-col gap-2 font-medium">

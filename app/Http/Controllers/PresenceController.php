@@ -58,7 +58,29 @@ class PresenceController extends Controller
     public function checkSchedule()
     {
         $shiftDays = Auth::user()->shift->shiftDays;
-        return response()->json($shiftDays);
+
+        // Define the order of days from Monday to Sunday
+        $dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+        // Convert the collection to an array
+        $shiftDaysArray = $shiftDays->toArray();
+
+        // Sort the shiftDays based on the defined order and startHour
+        usort($shiftDaysArray, function ($a, $b) use ($dayOrder) {
+            $posA = array_search($a['dayName'], $dayOrder);
+            $posB = array_search($b['dayName'], $dayOrder);
+
+            if ($posA === $posB) {
+                return strcmp($a['startHour'], $b['startHour']);
+            }
+
+            return $posA - $posB;
+        });
+
+        // Convert the array back to a collection
+        $sortedShiftDays = collect($shiftDaysArray);
+
+        return response()->json($sortedShiftDays);
     }
 
     public function presenceNow(Request $request)
