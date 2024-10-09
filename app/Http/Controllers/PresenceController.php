@@ -274,7 +274,7 @@ class PresenceController extends Controller
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
         $distance = $earthRadius * $c;
 
-        if ($distance <= 0.020) {
+        if ($distance <= 0.04) {
             return 1;
         } else {
             return 0;
