@@ -87,6 +87,8 @@
                 },
                 success: function(response) {
                     console.log(response);
+                    let clockInMode = response.isClockInAtOffice ? 'In Office' : 'Out Office';
+                    let clockOutMode = response.isClockOutAtOffice ? 'In Office' : 'Out Office';
                     let photoOut = ``;
                     if (response.clockOutPhoto != null) {
                         photoOut =
@@ -97,13 +99,13 @@
                     }
                     $('#staffName').val(response.user.first_name + ' ' + (response.user.last_name != null ?
                         response.user.last_name : ''));
-                    $('#customerName').val(response.customer != null ? response.customer.name : '-');
+                    $('#customerName').val(response.customer != null ? response.customer : '-');
                     $('#activityType').val(response.activitytype.name);
                     $('#activityCategory').val(response.activitycategory.name);
-                    $('#locationIn').val(response.clockInLocation + ' (' + response.clockInMode +
+                    $('#locationIn').val(response.clockInLocation + ' (' + clockInMode +
                         ')');
                     $('#locationOut').val(response.clockOutLocation != null ? response.clockOutLocation + ' (' +
-                        response.clockOutMode + ')' :
+                        clockOutMode + ')' :
                         "In Progress");
                     $('#dateTimeIn').val(response.clockInTime);
                     $('#dateTimeOut').val(response.clockOutTime != null ? response.clockOutTime :
