@@ -86,9 +86,8 @@
                     id: id
                 },
                 success: function(response) {
-                    console.log(response);
-                    let clockInMode = response.isClockInAtOffice ? 'In Office' : 'Out Office';
-                    let clockOutMode = response.isClockOutAtOffice ? 'In Office' : 'Out Office';
+                    let clockInMode = response.isClockInAtOffice == 1 ? 'In Office' : 'Out Office';
+                    let clockOutMode = response.isClockOutAtOffice == 1 ? 'In Office' : 'Out Office';
                     let photoOut = ``;
                     if (response.clockOutPhoto != null) {
                         photoOut =
