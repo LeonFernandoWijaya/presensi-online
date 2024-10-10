@@ -346,6 +346,7 @@
                 success: function(response) {
                     $('#shiftDayId').val(response.id);
                     console.log(response);
+                    $('#editDayName option').removeAttr('selected');
                     $('#editDayName option').each(function() {
                         if ($(this).val() == response.dayName) {
                             $(this).attr('selected', 'selected');
