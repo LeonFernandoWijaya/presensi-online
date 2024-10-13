@@ -260,6 +260,8 @@ class PresenceController extends Controller
 
     private function isRemote($userLongitude, $userLatitude)
     {
+        $startTime = microtime(true); // Start time
+        // haversine formula
         $officeLongitude = 106.797804; // Ganti dengan longitude kantor
         $officeLatitude = -6.1905954; // Ganti dengan latitude kantor,
 
@@ -274,6 +276,61 @@ class PresenceController extends Controller
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
         $distance = $earthRadius * $c;
 
+        // vincenty formula
+        // $officeLongitude = 106.797804; // Ganti dengan longitude kantor
+        // $officeLatitude = -6.1905954; // Ganti dengan latitude kantor
+
+        // $a = 6378137.0; // WGS-84 ellipsoid parameters
+        // $f = 1 / 298.257223563;
+        // $b = 6356752.314245;
+
+        // $L = deg2rad($userLongitude - $officeLongitude);
+        // $U1 = atan((1 - $f) * tan(deg2rad($officeLatitude)));
+        // $U2 = atan((1 - $f) * tan(deg2rad($userLatitude)));
+
+        // $sinU1 = sin($U1);
+        // $cosU1 = cos($U1);
+        // $sinU2 = sin($U2);
+        // $cosU2 = cos($U2);
+
+        // $lambda = $L;
+        // $lambdaP = 2 * M_PI;
+        // $iterLimit = 100;
+        // while (abs($lambda - $lambdaP) > 1e-12 && --$iterLimit > 0) {
+        //     $sinLambda = sin($lambda);
+        //     $cosLambda = cos($lambda);
+        //     $sinSigma = sqrt(($cosU2 * $sinLambda) * ($cosU2 * $sinLambda) +
+        //         ($cosU1 * $sinU2 - $sinU1 * $cosU2 * $cosLambda) * ($cosU1 * $sinU2 - $sinU1 * $cosU2 * $cosLambda));
+        //     if ($sinSigma == 0) {
+        //         return 0; // co-incident points
+        //     }
+        //     $cosSigma = $sinU1 * $sinU2 + $cosU1 * $cosU2 * $cosLambda;
+        //     $sigma = atan2($sinSigma, $cosSigma);
+        //     $sinAlpha = $cosU1 * $cosU2 * $sinLambda / $sinSigma;
+        //     $cos2Alpha = 1 - $sinAlpha * $sinAlpha;
+        //     $cos2SigmaM = $cosSigma - 2 * $sinU1 * $sinU2 / $cos2Alpha;
+        //     $C = $f / 16 * $cos2Alpha * (4 + $f * (4 - 3 * $cos2Alpha));
+        //     $lambdaP = $lambda;
+        //     $lambda = $L + (1 - $C) * $f * $sinAlpha *
+        //         ($sigma + $C * $sinSigma * ($cos2SigmaM + $C * $cosSigma * (-1 + 2 * $cos2SigmaM * $cos2SigmaM)));
+        // }
+
+        // if ($iterLimit == 0) {
+        //     return 0; // formula failed to converge
+        // }
+
+        // $uSquared = $cos2Alpha * ($a * $a - $b * $b) / ($b * $b);
+        // $A = 1 + $uSquared / 16384 * (4096 + $uSquared * (-768 + $uSquared * (320 - 175 * $uSquared)));
+        // $B = $uSquared / 1024 * (256 + $uSquared * (-128 + $uSquared * (74 - 47 * $uSquared)));
+        // $deltaSigma = $B * $sinSigma * ($cos2SigmaM + $B / 4 * ($cosSigma * (-1 + 2 * $cos2SigmaM * $cos2SigmaM) -
+        //     $B / 6 * $cos2SigmaM * (-3 + 4 * $sinSigma * $sinSigma) * (-3 + 4 * $cos2SigmaM * $cos2SigmaM)));
+
+        // $distance = $b * $A * ($sigma - $deltaSigma) / 1000; // in kilometers
+
+
+        $endTime = microtime(true); // End time
+        $runtime = $endTime - $startTime; // Calculate runtime
+        dd($distance, $userLatitude, $userLongitude, $runtime);
         if ($distance <= 0.04) {
             return 1;
         } else {
