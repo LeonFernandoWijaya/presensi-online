@@ -274,16 +274,65 @@
             hideFlowBytesModal('camera-modal');
         }
 
-        function takePhoto() {
+        async function takePhoto() {
             const video = document.getElementById('video');
             const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Load the model.
+            const model = await blazeface.load();
+
+            // Pass in an image or video to the model. The 'returnTensors' option tells the model to return tensors.
+            const returnTensors = false; // Pass in `true` to get tensors back.
+            const predictions = await model.estimateFaces(video, returnTensors);
+
+            if (predictions.length === 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'No faces detected in the photo.',
+                });
+                return;
+            }
+
+            for (let i = 0; i < predictions.length; i++) {
+                const start = predictions[i].topLeft;
+                const end = predictions[i].bottomRight;
+                const size = [end[0] - start[0], end[1] - start[1]];
+
+                // Check if the face is too close to the camera.
+                if (size[0] > video.videoWidth * 0.6 || size[1] > video.videoHeight * 0.6) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'You are too close to the camera. Please move back.',
+                    });
+                    return;
+                }
+
+                // Check if the face is in the center of the video.
+                const centerX = start[0] + size[0] / 2;
+                const centerY = start[1] + size[1] / 2;
+                if (centerX < video.videoWidth / 2 - size[0] / 2 || centerX > video.videoWidth / 2 + size[0] / 2 ||
+                    centerY < video.videoHeight / 2 - size[1] / 2 || centerY > video.videoHeight / 2 + size[1] / 2) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Please position your face in the center of the video.',
+                    });
+                    return;
+                }
+
+                // Render a rectangle over each detected face.
+                context.rect(start[0], start[1], size[0], size[1]);
+                context.stroke();
+            }
 
             photo = canvas.toDataURL('image/png');
             const previewPhoto = document.getElementById('previewPhoto');
-            previewPhoto.innerHTML = ``;
             previewPhoto.innerHTML = `<img src="${photo}" class="h-full w-full object-cover rounded-lg">`;
             closeCameraModal();
         }

@@ -17,6 +17,9 @@
     <script src="{{ asset('javascripts/sweetalert2@11.js') }}"></script>
     <title>Attendance App</title>
 
+    <!-- TensorFlow.js and blazeface model -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
 </head>
 
 <body class="bg-blue-50">
