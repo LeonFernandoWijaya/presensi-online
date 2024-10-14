@@ -33,7 +33,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'firstname' => 'required',
             'lastname' => 'required',
-            'email' => 'required|email|unique:users,email',
+            'email' => ['required', 'email', 'unique:users,email', 'regex:/@password\.co\.id$/'],
             'password' => 'required|min:8',
             'confirmpassword' => 'required|same:password',
             'department' => 'required'
@@ -42,7 +42,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'validationMessage' => $validator->errors()->toArray(),
+                'message' => 'Make sure all fields are filled correctly',
             ]);
         }
 
