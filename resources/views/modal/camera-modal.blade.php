@@ -21,9 +21,12 @@
             </div>
             <!-- Modal body -->
             <form class="p-4 md:p-5">
-                <video class="w-full h-[31rem] rounded-xl mb-5" id="video" autoplay>
+                <div class="video-container">
+                    <video class="w-full h-[31rem] rounded-xl mb-5" id="video" autoplay>
 
-                </video>
+                    </video>
+                    <div class="dashed-outline"></div>
+                </div>
 
                 <div class="flex items-center justify-center">
                     <button type="button" onclick="takePhoto()"

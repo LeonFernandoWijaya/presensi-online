@@ -275,6 +275,7 @@
         }
 
         async function takePhoto() {
+            showFlowBytesModal('loading-modal');
             const video = document.getElementById('video');
             const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth;
@@ -304,12 +305,13 @@
                 const size = [end[0] - start[0], end[1] - start[1]];
 
                 // Check if the face is too close to the camera.
-                if (size[0] > video.videoWidth * 0.6 || size[1] > video.videoHeight * 0.6) {
+                if (size[0] > video.videoWidth * 0.4 || size[1] > video.videoHeight * 0.4) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
                         text: 'You are too close to the camera. Please move back.',
                     });
+                    hideFlowBytesModal('loading-modal');
                     return;
                 }
 
@@ -323,17 +325,18 @@
                         title: 'Oops...',
                         text: 'Please position your face in the center of the video.',
                     });
+                    hideFlowBytesModal('loading-modal');
                     return;
                 }
 
-                // Render a rectangle over each detected face.
-                context.rect(start[0], start[1], size[0], size[1]);
-                context.stroke();
+        
             }
-
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
             photo = canvas.toDataURL('image/png');
             const previewPhoto = document.getElementById('previewPhoto');
             previewPhoto.innerHTML = `<img src="${photo}" class="h-full w-full object-cover rounded-lg">`;
+            hideFlowBytesModal('loading-modal');
             closeCameraModal();
         }
 
