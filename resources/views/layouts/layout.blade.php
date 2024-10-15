@@ -20,23 +20,6 @@
     <!-- TensorFlow.js and blazeface model -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
-    <style>
-        .video-container {
-            display: flex;
-            justify-content: center; /* Center horizontally */
-            align-items: center;     /* Center vertically */
-            position: relative;
-        }
-
-        .dashed-outline {
-            width: 40%; /* Adjust based on desired size */
-            height: 60%; /* Adjust based on desired size */
-            border: 3px dashed white;
-            border-radius: 50%; /* To create an oval/rounded shape */
-            pointer-events: none; /* To make sure the div is not interactable */
-            position: absolute;
-        }
-    </style>
 </head>
 
 <body class="bg-blue-50">

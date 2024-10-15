@@ -296,6 +296,7 @@
                     title: 'Oops...',
                     text: 'No faces detected in the photo.',
                 });
+                hideFlowBytesModal('loading-modal');
                 return;
             }
 
@@ -329,7 +330,7 @@
                     return;
                 }
 
-        
+
             }
             context.clearRect(0, 0, canvas.width, canvas.height);
             context.drawImage(video, 0, 0, canvas.width, canvas.height);

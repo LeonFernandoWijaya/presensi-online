@@ -21,11 +21,13 @@
             </div>
             <!-- Modal body -->
             <form class="p-4 md:p-5">
-                <div class="video-container">
+                <div class="relative">
                     <video class="w-full h-[31rem] rounded-xl mb-5" id="video" autoplay>
 
                     </video>
-                    <div class="dashed-outline"></div>
+                    <div
+                        class="absolute md:w-64 md:h-64 w-32 h-32 border-2 border-dotted border-white rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    </div>
                 </div>
 
                 <div class="flex items-center justify-center">
