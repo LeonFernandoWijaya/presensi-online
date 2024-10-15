@@ -260,7 +260,6 @@ class PresenceController extends Controller
 
     private function isRemote($userLongitude, $userLatitude)
     {
-        $startTime = microtime(true); // Start time
         // haversine formula
         $officeLongitude = 106.797804; // Ganti dengan longitude kantor
         $officeLatitude = -6.1905954; // Ganti dengan latitude kantor,
@@ -328,9 +327,6 @@ class PresenceController extends Controller
         // $distance = $b * $A * ($sigma - $deltaSigma) / 1000; // in kilometers
 
 
-        $endTime = microtime(true); // End time
-        $runtime = $endTime - $startTime; // Calculate runtime
-        dd($distance, $userLatitude, $userLongitude, $runtime);
         if ($distance <= 0.04) {
             return 1;
         } else {
