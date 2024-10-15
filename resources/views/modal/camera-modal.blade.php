@@ -22,7 +22,8 @@
             <!-- Modal body -->
             <form class="p-4 md:p-5">
                 <div class="relative">
-                    <video class="w-full h-[31rem] rounded-xl mb-5" id="video" autoplay>
+                    <video disabledpictureinpicture playsinline webkit-playsinline
+                        class="w-full h-[31rem] rounded-xl mb-5" id="video" autoplay="">
 
                     </video>
                     <div
