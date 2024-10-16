@@ -103,30 +103,6 @@ class PresenceController extends Controller
             ]);
         }
 
-        $maxRetries = 20;
-        $retryCount = 0;
-        $successFetchTime = false;
-
-        while ($retryCount < $maxRetries && !$successFetchTime) {
-            try {
-                $clientTimeNow = new Client();
-                $responseTimeNow = $clientTimeNow->request('GET', 'http://worldtimeapi.org/api/Asia/Jakarta');
-                $dataTimeNow = json_decode($responseTimeNow->getBody(), true);
-                $timeNow = $dataTimeNow['datetime'];
-                $dateTimeNow = new \DateTime($timeNow);
-                $successFetchTime = true; // Exit the loop if the request is successful
-            } catch (RequestException $e) {
-                $retryCount++;
-                error_log('HTTP Request failed: ' . $e->getMessage() . ' - Retry ' . $retryCount);
-                if ($retryCount >= $maxRetries) {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Server error please try again',
-                    ]);
-                }
-            }
-        }
-
         $photo = $request->photo;
 
         // Remove the base64 prefix
@@ -186,6 +162,22 @@ class PresenceController extends Controller
         $locationName = $data['display_name'];
 
         $lastPresence = Attendance::where('user_id', Auth::user()->id)->latest()->first();
+
+        try {
+            $clientTimeNow = new Client();
+            $responseTimeNow = $clientTimeNow->request('GET', 'http://worldtimeapi.org/api/Asia/Jakarta');
+            $dataTimeNow = json_decode($responseTimeNow->getBody(), true);
+            $timeNow = $dataTimeNow['datetime'];
+            $dateTimeNow = new \DateTime($timeNow);
+        } catch (RequestException $e) {
+            // Handle the exception (e.g., log the error, return a default value, etc.)
+            error_log('HTTP Request failed: ' . $e->getMessage());
+            $clientTimeNow = new Client();
+            $responseTimeNow = $clientTimeNow->request('GET', 'https://timeapi.io/api/time/current/zone?timeZone=Asia%2FJakarta');
+            $dataTimeNow = json_decode($responseTimeNow->getBody(), true);
+            $timeNow = $dataTimeNow['dateTime'];
+            $dateTimeNow = new \DateTime($timeNow);
+        }
 
         if ($lastPresence && $lastPresence->clockOutTime == null && $lastPresence->clockInTime != null) {
             $lastPresence->clockOutTime = $dateTimeNow->format('Y-m-d H:i:s');
