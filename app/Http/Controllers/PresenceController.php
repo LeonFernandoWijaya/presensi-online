@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Exception\RequestException;
 
 class PresenceController extends Controller
 {
@@ -161,8 +162,17 @@ class PresenceController extends Controller
         $locationName = $data['display_name'];
 
         $lastPresence = Attendance::where('user_id', Auth::user()->id)->latest()->first();
-        $timeNow = Http::get('http://worldtimeapi.org/api/Asia/Jakarta')->json()['datetime'];
-        $dateTimeNow = new \DateTime($timeNow);
+
+        try {
+            $clientTimeNow = new Client();
+            $responseTimeNow = $clientTimeNow->request('GET', 'http://worldtimeapi.org/api/Asia/Jakarta');
+            $dataTimeNow = json_decode($responseTimeNow->getBody(), true);
+            $timeNow = $dataTimeNow['datetime'];
+            $dateTimeNow = new \DateTime($timeNow);
+        } catch (RequestException $e) {
+            // Handle the exception (e.g., log the error, return a default value, etc.)
+            error_log('HTTP Request failed: ' . $e->getMessage());
+        }
 
         if ($lastPresence && $lastPresence->clockOutTime == null && $lastPresence->clockInTime != null) {
             $lastPresence->clockOutTime = $dateTimeNow->format('Y-m-d H:i:s');
