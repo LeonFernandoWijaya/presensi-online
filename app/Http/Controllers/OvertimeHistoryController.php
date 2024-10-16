@@ -58,6 +58,7 @@ class OvertimeHistoryController extends Controller
                 return $query->where('user_id', $user->id);
             })
             ->with('user', 'attendance')
+            ->orderBy('overtimeStart', 'desc')
             ->paginate(10);
 
         return response()->json($overtime);

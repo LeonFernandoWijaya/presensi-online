@@ -48,6 +48,7 @@ class RejectController extends Controller
                 $query->where('department_name', $departmentName);
             })
             ->with('user', 'attendance')
+            ->orderBy('overtimeStart', 'desc')
             ->paginate(10);
 
         // Get all overtime IDs matching the same criteria

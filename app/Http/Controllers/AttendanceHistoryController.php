@@ -51,6 +51,7 @@ class AttendanceHistoryController extends Controller
                 return $query->where('user_id', $user->id);
             })
             ->with('user', 'activitytype', 'activitycategory')
+            ->orderBy('clockInTime', 'desc')
             ->paginate(5);
 
         return response()->json($attendance);
