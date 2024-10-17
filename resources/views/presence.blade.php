@@ -69,17 +69,17 @@
             console.log(distanceInKm);
             // Fetch the current time from the server once
             $.ajax({
-                url: "https://worldtimeapi.org/api/Asia/Jakarta",
+                url: "https://timeapi.io/api/time/current/zone?timeZone=Asia%2FJakarta",
                 method: 'GET',
                 success: function(data) {
                     // Extract year, month, day, hours, minutes, and seconds
-                    let year = parseInt(data.datetime.substring(0, 4));
-                    let month = parseInt(data.datetime.substring(5, 7)) -
+                    let year = parseInt(data.dateTime.substring(0, 4));
+                    let month = parseInt(data.dateTime.substring(5, 7)) -
                         1; // JavaScript months are 0-11
-                    let date = parseInt(data.datetime.substring(8, 10));
-                    let hours = parseInt(data.datetime.substring(11, 13));
-                    let minutes = parseInt(data.datetime.substring(14, 16));
-                    let seconds = parseInt(data.datetime.substring(17, 19));
+                    let date = parseInt(data.dateTime.substring(8, 10));
+                    let hours = parseInt(data.dateTime.substring(11, 13));
+                    let minutes = parseInt(data.dateTime.substring(14, 16));
+                    let seconds = parseInt(data.dateTime.substring(17, 19));
 
                     // Create a Date object with the fetched time
                     let currentTime = new Date(year, month, date, hours, minutes, seconds);
