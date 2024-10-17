@@ -165,17 +165,17 @@ class PresenceController extends Controller
 
         try {
             $clientTimeNow = new Client();
-            $responseTimeNow = $clientTimeNow->request('GET', 'http://worldtimeapi.org/api/Asia/Jakarta');
+            $responseTimeNow = $clientTimeNow->request('GET', 'https://timeapi.io/api/time/current/zone?timeZone=Asia%2FJakarta');
             $dataTimeNow = json_decode($responseTimeNow->getBody(), true);
-            $timeNow = $dataTimeNow['datetime'];
+            $timeNow = $dataTimeNow['dateTime'];
             $dateTimeNow = new \DateTime($timeNow);
         } catch (RequestException $e) {
             // Handle the exception (e.g., log the error, return a default value, etc.)
             error_log('HTTP Request failed: ' . $e->getMessage());
             $clientTimeNow = new Client();
-            $responseTimeNow = $clientTimeNow->request('GET', 'https://timeapi.io/api/time/current/zone?timeZone=Asia%2FJakarta');
+            $responseTimeNow = $clientTimeNow->request('GET', 'http://worldtimeapi.org/api/Asia/Jakarta');
             $dataTimeNow = json_decode($responseTimeNow->getBody(), true);
-            $timeNow = $dataTimeNow['dateTime'];
+            $timeNow = $dataTimeNow['datetime'];
             $dateTimeNow = new \DateTime($timeNow);
         }
 
@@ -276,10 +276,10 @@ class PresenceController extends Controller
     private function isRemote($userLongitude, $userLatitude)
     {
         // haversine formula
-        $userLatitude = -6.127283750349585;
-        $userLongitude = 106.79097658200845;
-        $officeLongitude = 106.797804; // Ganti dengan longitude kantor
-        $officeLatitude = -6.1905954; // Ganti dengan latitude kantor,
+        $userLatitude = -6.19058187063816;
+        $userLongitude = 106.79779495106814;
+        $officeLongitude = 106.78859045462738; // Ganti dengan longitude kantor
+        $officeLatitude = -6.169336170685656; // Ganti dengan latitude kantor,
 
         $earthRadius = 6371; // Radius bumi dalam kilometer
 
