@@ -52,12 +52,21 @@
     @include('modal.finding-location-modal')
     @include('modal.loading-modal')
 
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0B9tz9Dlg8juh3uBzaJnsUvd1TgsfgOo&libraries=geometry">
+    </script>
+
     <script>
         let latitude = null;
         let longitude = null;
         var mymap = null;
         let photo = null;
         $(document).ready(function() {
+            var point1 = new google.maps.LatLng(-6.127283750349585, 106.79097658200845);
+            var point2 = new google.maps.LatLng(-6.1905954, 106.797804);
+
+            var distance = google.maps.geometry.spherical.computeDistanceBetween(point1, point2);
+            var distanceInKm = distance / 1000;
+            console.log(distanceInKm);
             // Fetch the current time from the server once
             $.ajax({
                 url: "https://worldtimeapi.org/api/Asia/Jakarta",
