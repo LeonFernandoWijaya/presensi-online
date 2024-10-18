@@ -49,6 +49,7 @@ class UserController extends Controller
             $searchName = $request->name;
             $accountStatus = $request->statusAccount;
             $users = User::with('department', 'role', 'shift')
+                ->whereNotNull('email_verified_at')
                 ->where(function ($query) use ($searchName) {
                     $query->where('first_name', 'like', '%' . $searchName . '%')
                         ->orWhere('last_name', 'like', '%' . $searchName . '%');

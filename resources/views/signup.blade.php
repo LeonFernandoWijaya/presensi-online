@@ -88,8 +88,11 @@
             </div>
         </div>
     </div>
+    @include('modal.verify-email')
+    @include('modal.loading-modal')
     <script>
         function register() {
+            showFlowBytesModal('loading-modal');
             const firstname = $('#firstname').val();
             const lastname = $('#lastname').val();
             const email = $('#email').val();
@@ -109,19 +112,22 @@
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
+                    hideFlowBytesModal('loading-modal');
                     if (response.success == true) {
+                        swal.fire({
+                            title: 'Success',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'Ok'
+                        })
+                        showFlowBytesModal('verify-email-modal');
                         $('#firstname').val('');
                         $('#lastname').val('');
                         $('#email').val('');
                         $('#department').val('');
                         $('#password').val('');
                         $('#confirmpassword').val('');
-                        swal.fire({
-                            title: 'Success',
-                            text: response.message,
-                            icon: 'success',
-                            confirmButtonText: 'Ok'
-                        });
+                        $('#currentUserId').val(response.currentUserId);
                     } else {
                         swal.fire({
                             title: 'Error',
@@ -132,9 +138,42 @@
                     }
                 },
                 error: function(err) {
+                    hideFlowBytesModal('loading-modal');
                     console.log(err);
                 }
             });
+        }
+
+        function verifyEmail() {
+            const currentUserId = $('#currentUserId').val();
+            const OTP = $('#OTP').val();
+            $.ajax({
+                url: "{{ url('/verify-email') }}",
+                type: "PUT",
+                data: {
+                    currentUserId: currentUserId,
+                    otp: OTP,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    if (response.success == true) {
+                        swal.fire({
+                            title: 'Success',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'Ok'
+                        })
+                        hideFlowBytesModal('verify-email-modal');
+                    } else {
+                        swal.fire({
+                            title: 'Error',
+                            text: response.message,
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        });
+                    }
+                },
+            })
         }
 
         $('#show-password').click(function() {
@@ -157,6 +196,14 @@
                 confirmPasswordField.attr('type', 'password');
                 $(this).find('svg').toggleClass('hidden block');
             }
+        });
+
+        $(document).ready(function() {
+            $('#OTP').on('input', function() {
+                if (this.value.length > 6) {
+                    this.value = this.value.slice(0, 6);
+                }
+            });
         });
     </script>
 @endsection

@@ -42,6 +42,7 @@ Route::group(['middleware' => ['guest']], function () {
 
     Route::post('/store-sign-up', [AuthController::class, 'storeSignUp']);
     Route::post('/store-login', [AuthController::class, 'storeLogin']);
+    Route::put('/verify-email', [AuthController::class, 'verifyEmail']);
 });
 
 Route::post('/logout', [AuthController::class, 'logout']);

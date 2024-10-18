@@ -3,7 +3,7 @@
     <div class="relative p-4 w-full max-w-md max-h-full">
         <div class="relative bg-white rounded-lg shadow">
             <div class="p-4 md:p-5 text-center flex flex-col gap-4 items-center justify-center">
-                <h3 class="text-sm">Wait a minutes. We still processing your attendance record...</h3>
+                <h3 class="text-sm">Wait a minutes. We still processing your request...</h3>
                 <div role="status">
                     <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin fill-blue-600" viewBox="0 0 100 101"
                         fill="none" xmlns="http://www.w3.org/2000/svg">
