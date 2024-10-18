@@ -61,8 +61,8 @@
         var mymap = null;
         let photo = null;
         $(document).ready(function() {
-            var point1 = new google.maps.LatLng(-6.19058187063816, 106.79779495106814);
-            var point2 = new google.maps.LatLng(-6.169336170685656, 106.78859045462738);
+            var point1 = new google.maps.LatLng(-6.19058187063816, 106.79779495106800);
+            var point2 = new google.maps.LatLng(-6.16933617068565, 106.78859045462700);
 
             var distance = google.maps.geometry.spherical.computeDistanceBetween(point1, point2);
             var distanceInKm = distance / 1000;

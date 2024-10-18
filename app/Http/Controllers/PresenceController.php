@@ -277,9 +277,9 @@ class PresenceController extends Controller
     {
         // haversine formula
         $userLatitude = -6.19058187063816;
-        $userLongitude = 106.79779495106814;
-        $officeLongitude = 106.78859045462738; // Ganti dengan longitude kantor
-        $officeLatitude = -6.169336170685656; // Ganti dengan latitude kantor,
+        $userLongitude = 106.79779495106800;
+        $officeLongitude = 106.78859045462700; // Ganti dengan longitude kantor
+        $officeLatitude = -6.16933617068565; // Ganti dengan latitude kantor,
 
         $earthRadius = 6371; // Radius bumi dalam kilometer
 
