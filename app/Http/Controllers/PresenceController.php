@@ -276,10 +276,11 @@ class PresenceController extends Controller
     private function isRemote($userLongitude, $userLatitude)
     {
         // haversine formula
-        $userLatitude = -6.19058187063816;
-        $userLongitude = 106.79779495106800;
-        $officeLongitude = 106.78859045462700; // Ganti dengan longitude kantor
-        $officeLatitude = -6.16933617068565; // Ganti dengan latitude kantor,
+        $userLatitude = -6.17019594842749;
+        $userLongitude = 106.831384975091;
+
+        $officeLongitude = 106.797794951068; // Ganti dengan longitude kantor
+        $officeLatitude = -6.19058187063816; // Ganti dengan latitude kantor,
 
         $earthRadius = 6371; // Radius bumi dalam kilometer
 
