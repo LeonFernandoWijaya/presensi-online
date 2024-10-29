@@ -69,5 +69,11 @@
                 $('#password').attr('type', 'password');
             }
         });
+
+        $(document).keypress(function(event) {
+            if (event.which == 13) { // 13 adalah kode untuk tombol Enter
+                login();
+            }
+        });
     </script>
 @endsection
