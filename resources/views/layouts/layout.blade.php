@@ -134,6 +134,10 @@
                                             <a href="{{ url('/department') }}"
                                                 class="block px-4 py-2 hover:bg-gray-100">Department</a>
                                         </li>
+                                        <li>
+                                            <a href="{{ url('/shift-scheduling') }}"
+                                                class="block px-4 py-2 hover:bg-gray-100">Shift Scheduling</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>

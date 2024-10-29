@@ -10,6 +10,7 @@ use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\RejectController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\ShiftController;
+use App\Http\Controllers\ShiftSchedulingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -61,6 +62,7 @@ Route::middleware(['is_active', 'auth', 'check_session'])->group(function () {
     Route::get('/holiday-days/{id}', [HolidayController::class, 'holidayDays']);
     Route::get('/change-password', [UserController::class, 'changePassword']);
     Route::put('/saveNewPassword', [UserController::class, 'saveNewPassword']);
+    Route::get('/shift-scheduling', [ShiftSchedulingController::class, 'index']);
 
     Route::get('shift', [ShiftController::class, 'index']);
 
@@ -121,4 +123,10 @@ Route::middleware(['is_active', 'auth', 'check_session'])->group(function () {
 
     Route::get('/downloadOvertimeHistory', [OvertimeHistoryController::class, 'downloadOvertimeHistory']);
     Route::get('/downloadAttendanceHistory', [AttendanceHistoryController::class, 'downloadAttendanceHistory']);
+
+    Route::post('/saveNewSchedule', [ShiftSchedulingController::class, 'saveNewSchedule']);
+    Route::get('/getShiftSchedule', [ShiftSchedulingController::class, 'getShiftSchedule']);
+    Route::get('/getShiftScheduleDetail', [ShiftSchedulingController::class, 'getShiftScheduleDetail']);
+    Route::put('/updateSchedule', [ShiftSchedulingController::class, 'updateSchedule']);
+    Route::delete('/deleteSchedule', [ShiftSchedulingController::class, 'deleteSchedule']);
 });

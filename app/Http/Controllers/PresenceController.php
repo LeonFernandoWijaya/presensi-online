@@ -8,6 +8,7 @@ use App\Models\Attendance;
 use App\Models\Holiday;
 use App\Models\HolidayDay;
 use App\Models\Overtime;
+use App\Models\ShiftScheduling;
 use Carbon\Carbon;
 use DateTime;
 use GuzzleHttp\Client;
@@ -187,7 +188,7 @@ class PresenceController extends Controller
             $lastPresence->activity_category_id = $request->activityCategories;
             $lastPresence->customer = $request->customerName;
             $lastPresence->isClockOutAtOffice = $this->isRemote($request->sendLongitude, $request->sendLatitude);
-            $lastPresence->save();
+            // $lastPresence->save();
 
             $statusPresence = 'clockOut';
 
@@ -196,7 +197,18 @@ class PresenceController extends Controller
             $findHolidayId = Auth::user()->holiday->id;
             $getTodayDateForCheck = Carbon::parse($lastPresence->clockInTime)->format('Y-m-d');
             $isHoliday = HolidayDay::where('holiday_id', $findHolidayId)->where('holiday_date', $getTodayDateForCheck)->first();
-            $isShiftDay = Auth::user()->shift->shiftDays->where('dayName', date('l', strtotime($lastPresence->clockInTime)))->first();
+            // $isShiftDay = Auth::user()->shift->shiftDays->where('dayName', date('l', strtotime($lastPresence->clockInTime)))->first();
+            $findSchedule = ShiftScheduling::where('user_id', Auth::user()->id)
+                ->where('start_date', '<=', $getTodayDateForCheck)
+                ->where('end_date', '>=', $getTodayDateForCheck)
+                ->first();
+            if($findSchedule){
+                $isShiftDay = $findSchedule->shift->shiftDays->where('dayName', date('l', strtotime($lastPresence->clockInTime)))->first();
+            }else{
+                $isShiftDay = null;
+            }
+            
+            dd($isShiftDay);
 
             $clockInTime = \Carbon\Carbon::parse($lastPresence->clockInTime);
             $clockOutTime = \Carbon\Carbon::parse($lastPresence->clockOutTime);
