@@ -142,19 +142,40 @@
                     endDate: endDate
                 },
                 success: function(response) {
-                    console.log(response);
                     $('#table-body').empty();
                     response.data.forEach(data => {
+                        let isClockInAtOfficeLabel = "";
+                        if (data.isClockInAtOffice == 1){
+                            isClockInAtOfficeLabel = `<span class="text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">In Office</span>`;
+                        } else if (data.isClockInAtOffice == 0){
+                            isClockInAtOfficeLabel = `<span class="text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">Out Office</span>`;
+                        }
+                        let isClockOutAtOfficeLabel = "";
+                        if (data.isClockOutAtOffice == 1){
+                            isClockOutAtOfficeLabel = `<span class="text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">In Office</span>`;
+                        } else if (data.isClockOutAtOffice == 0){
+                            isClockOutAtOfficeLabel = `<span class="text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">Out Office</span>`;
+                        }
                         $('#table-body').append(`
                             <tr class="bg-white border-b">
                                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                     ${data.user.first_name} ${data.user.last_name ?? ""}
                                 </th>
                                 <td class="px-6 py-4">
-                                    ${data.clockInTime}
+                                    <div>
+                                        ${data.clockInTime}
+                                    </div>
+                                    <div>
+                                        ${isClockInAtOfficeLabel}
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4">
-                                    ${data.clockOutTime != null ? data.clockOutTime : "In Progress"}
+                                    <div>
+                                        ${data.clockOutTime != null ? data.clockOutTime : "In Progress"}
+                                    </div>
+                                    <div>
+                                        ${data.clockOutTime != null ? isClockOutAtOfficeLabel : ""}
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4">
                                     <button type="button"
