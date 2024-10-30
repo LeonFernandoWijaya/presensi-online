@@ -119,11 +119,11 @@
                         <option value="${department.id}">${department.department_name}</option>
                     `)
                     });
-                    response.shifts.forEach(shift => {
-                        $('#shiftCategory').append(`
-                        <option value="${shift.id}">${shift.shift_name}</option>
-                    `)
-                    });
+                    // response.shifts.forEach(shift => {
+                    //     $('#shiftCategory').append(`
+                //     <option value="${shift.id}">${shift.shift_name}</option>
+                // `)
+                    // });
 
                     response.roles.forEach(role => {
                         $('#role').append(`
@@ -164,15 +164,15 @@
                         }
                     });
                     let foundShift = false;
-                    $('#shiftCategory option').each(function() {
-                        if ($(this).val() == response.shift_id) {
-                            $(this).prop('selected', true);
-                            foundShift = true;
-                        }
-                    });
-                    if (!foundShift) {
-                        $('#shiftCategory option:first').prop('selected', true);
-                    }
+                    // $('#shiftCategory option').each(function() {
+                    //     if ($(this).val() == response.shift_id) {
+                    //         $(this).prop('selected', true);
+                    //         foundShift = true;
+                    //     }
+                    // });
+                    // if (!foundShift) {
+                    //     $('#shiftCategory option:first').prop('selected', true);
+                    // }
 
                     let foundHoliday = false;
                     $('#holidayCategory option').each(function() {
@@ -204,7 +204,7 @@
                     last_name: $('#lastName').val(),
                     department_id: $('#department').val(),
                     role_id: $('#role').val(),
-                    shift_id: $('#shiftCategory').val(),
+                    // shift_id: $('#shiftCategory').val(),
                     holiday_id: $('#holidayCategory').val(),
                     is_active: $('input[name="default-radio"]:checked').val(),
                     _token: "{{ csrf_token() }}",

@@ -30,12 +30,12 @@ class UserController extends Controller
         if (Gate::allows('isManager')) {
             $departments = Department::all();
             $roles = Role::all();
-            $shifts = Shift::all();
+            // $shifts = Shift::all();
             $holidays = Holiday::all();
             return response()->json([
                 'departments' => $departments,
                 'roles' => $roles,
-                'shifts' => $shifts,
+                // 'shifts' => $shifts,
                 'holidays' => $holidays
             ]);
         } else {
@@ -103,7 +103,7 @@ class UserController extends Controller
                 $user->department_id = $request->department_id;
                 $user->role_id = $request->role_id;
                 $user->holiday_id = $request->holiday_id;
-                $user->shift_id = $request->shift_id;
+                // $user->shift_id = $request->shift_id;
                 $user->is_active = $request->is_active;
                 $user->save();
                 return response()->json([

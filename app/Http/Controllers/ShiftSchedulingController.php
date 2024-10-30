@@ -7,6 +7,9 @@ use App\Models\ShiftScheduling;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ScheduleImport;
+
 
 class ShiftSchedulingController extends Controller
 {
@@ -132,4 +135,58 @@ class ShiftSchedulingController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Schedule deleted successfully'], 200);
     }
+
+    public function previewImport(Request $request)
+    {
+        $validImport = [];
+        $invalidImport = [];
+
+        $file = $request->file('file');
+        // Baca data dari file Excel
+        $data = Excel::toArray(new ScheduleImport, $file);
+        // Looping data Excel
+        foreach (array_slice($data[0], 1) as $key => $row) {
+            // Validasi data
+            $validator = Validator::make($row, [
+                '0' => 'required',
+                '1' => 'required',
+                '2' => 'required|date',
+                '3' => 'required|date',
+            ]);
+
+            // Jika validasi gagal
+            if ($validator->fails()) {
+                $invalidImport[] = [
+                    'row' => $key + 1,
+                    'data' => $row,
+                    'errors' => $validator->errors()->first()
+                ];
+            } else {
+                $findSchedule = ShiftScheduling::where('user_id', $row[0])
+                    ->where(function ($query) use ($row) {
+                        $query->whereBetween('start_date', [$row[2], $row[3]])
+                            ->orWhereBetween('end_date', [$row[2], $row[3]])
+                            ->orWhere(function ($query) use ($row) {
+                                $query->where('start_date', '<=', $row[2])
+                                    ->where('end_date', '>=', $row[3]);
+                            });
+                    })
+                    ->exists();
+                if ($findSchedule) {
+                    $invalidImport[] = [
+                        'row' => $key + 1,
+                        'data' => $row,
+                        'errors' => 'There is an overlapping schedule for this user'
+                    ];
+                } else {
+                    $validImport[] = $row;
+                }
+            }
+        }
+
+        // Kembalikan data dalam format JSON
+        return response()->json(['validImport' => $validImport, 'invalidImport' => $invalidImport]);
+    }
+
+    public function importNow(Request $request) {}
 }

@@ -12,7 +12,7 @@
                     @endforeach
                 </select>
                 <div class="flex items-center justify-between gap-2">
-                    <button type="button"
+                    <button type="button" onclick="showFlowBytesModal('import-schedule-modal')"
                         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 whitespace-nowrap">Import
                         Schedule</button>
                     <button onclick="showFlowBytesModal('create-new-schedule-modal')" type="button"
@@ -61,8 +61,10 @@
 
     @include('modal.create-shift-schedule-modal')
     @include('modal.edit-shift-schedule-modal')
+    @include('modal.import-schedule-modal')
 
     <script>
+        let tempImportArray = [];
         $('#startDate').on('change', function() {
             var startDate = $(this).val();
             var endDate = $('#endDate').val();
@@ -338,6 +340,95 @@
                                 text: 'An error occurred while deleting the schedule'
                             })
                         }
+                    })
+                }
+            })
+        }
+
+        function previewImport() {
+            tempImportArray = [];
+            var fileInput = document.getElementById('import-file');
+            var file = fileInput.files[0];
+            var formData = new FormData();
+            formData.append('file', file);
+
+            $.ajax({
+                url: "{{ url('previewImport') }}",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    console.log(response);
+                    tempImportArray = [...response.validImport];
+                    swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: `Total invalid row : ${response.invalidImport.length}`
+                    })
+                    $('#tbody-valid-import').empty();
+                    response.validImport.forEach((element) => {
+                        $('#tbody-valid-import').append(`
+                        <tr>
+                            <td class="px-6 py-3">${element[0]}</td>
+                            <td class="px-6 py-3">${element[1]}</td>
+                            <td class="px-6 py-3">${element[2]}</td>
+                            <td class="px-6 py-3">${element[3]}</td>
+                        </tr>
+                        `)
+                    });
+                    $('#tbody-invalid-import').empty();
+                    response.invalidImport.forEach((element) => {
+                        $('#tbody-invalid-import').append(`
+                        <tr>
+                            <td class="px-6 py-3">${element[0]}</td>
+                            <td class="px-6 py-3">${element[1]}</td>
+                            <td class="px-6 py-3">${element[2]}</td>
+                            <td class="px-6 py-3">${element[3]}</td>
+                            <td class="px-6 py-3">${element.errors}</td>
+                        </tr>
+                        `)
+                    });
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function importNow() {
+            $.ajax({
+                url: "{{ url('importNow') }}",
+                type: "POST",
+                data: {
+                    importArray: tempImportArray,
+                    "_token": "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    if (response.success == true) {
+                        hideFlowBytesModal('import-schedule-modal');
+                        getShiftSchedule();
+                        swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message
+                        })
+                    } else {
+                        swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message
+                        })
+                    }
+                },
+                error: function(error) {
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while importing the schedule'
                     })
                 }
             })
