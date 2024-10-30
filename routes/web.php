@@ -130,4 +130,5 @@ Route::middleware(['is_active', 'auth', 'check_session'])->group(function () {
     Route::put('/updateSchedule', [ShiftSchedulingController::class, 'updateSchedule']);
     Route::delete('/deleteSchedule', [ShiftSchedulingController::class, 'deleteSchedule']);
     Route::post('/importNow', [ShiftSchedulingController::class, 'importNow']);
+    Route::get('/exportNow', [ShiftSchedulingController::class, 'exportNow']);
 });

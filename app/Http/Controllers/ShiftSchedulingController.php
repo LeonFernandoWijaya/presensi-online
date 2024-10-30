@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ScheduleImport;
+use App\Exports\ShiftSchedulingExport;
 
 
 class ShiftSchedulingController extends Controller
@@ -153,6 +154,7 @@ class ShiftSchedulingController extends Controller
         }
         // Baca data dari file Excel
         $data = Excel::toArray(new ScheduleImport, $file);
+        ShiftScheduling::truncate();
         // Looping data Excel
         foreach (array_slice($data[0], 1) as $key => $row) {
             // Validasi data
@@ -215,6 +217,11 @@ class ShiftSchedulingController extends Controller
 
         // Kembalikan data dalam format JSON
         return response()->json(['success' => true, 'invalidImport' => $invalidImport, 'totalData' => $totalData, 'totalValid' => $totalValid, 'totalInvalid' => $totalInvalid]);
+    }
+
+    public function exportNow()
+    {
+        return Excel::download(new ShiftSchedulingExport, 'schedule.xlsx');
     }
 
 }
