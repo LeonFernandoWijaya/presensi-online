@@ -19,6 +19,13 @@
                 </div>
             </div>
             <div class="mb-4">
+                <label for="nik" class="block mb-2 text-sm font-medium text-gray-900">Nomor Induk Karyawan (NIK)<span
+                        class="text-red-500">*</span></label>
+                <input type="number" name="nik" id="nik"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    placeholder="Enter your nomor induk karyawan" required="">
+            </div>
+            <div class="mb-4">
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email<span
                         class="text-red-500">*</span></label>
                 <input type="email" name="email" id="email"
@@ -69,7 +76,8 @@
                             stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                         </svg>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6 hidden">
@@ -95,6 +103,7 @@
             showFlowBytesModal('loading-modal');
             const firstname = $('#firstname').val();
             const lastname = $('#lastname').val();
+            const nik = $('#nik').val();
             const email = $('#email').val();
             const department = $('#department').val();
             const password = $('#password').val();
@@ -105,6 +114,7 @@
                 data: {
                     firstname: firstname,
                     lastname: lastname,
+                    nik: nik,
                     email: email,
                     department: department,
                     password: password,
@@ -123,6 +133,7 @@
                         showFlowBytesModal('verify-email-modal');
                         $('#firstname').val('');
                         $('#lastname').val('');
+                        $('#nik').val('');
                         $('#email').val('');
                         $('#department').val('');
                         $('#password').val('');

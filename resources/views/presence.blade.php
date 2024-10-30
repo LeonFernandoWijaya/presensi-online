@@ -52,7 +52,7 @@
     @include('modal.finding-location-modal')
     @include('modal.loading-modal')
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0B9tz9Dlg8juh3uBzaJnsUvd1TgsfgOo&libraries=geometry">
+    {{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0B9tz9Dlg8juh3uBzaJnsUvd1TgsfgOo&libraries=geometry"> --}}
     </script>
 
     <script>
@@ -61,14 +61,14 @@
         var mymap = null;
         let photo = null;
         $(document).ready(function() {
-            var point1 = new google.maps.LatLng(-6.19058187063816, 106.797794951068); // my password location
+            // var point1 = new google.maps.LatLng(-6.19058187063816, 106.797794951068); // my password location
 
 
-            var point2 = new google.maps.LatLng(-6.17019594842749, 106.831384975091); // target location
+            // var point2 = new google.maps.LatLng(-6.17019594842749, 106.831384975091); // target location
 
-            var distance = google.maps.geometry.spherical.computeDistanceBetween(point1, point2);
-            var distanceInKm = distance / 1000;
-            console.log(distanceInKm);
+            // var distance = google.maps.geometry.spherical.computeDistanceBetween(point1, point2);
+            // var distanceInKm = distance / 1000;
+            // console.log(distanceInKm);
             // Fetch the current time from the server once
             $.ajax({
                 url: "https://timeapi.io/api/time/current/zone?timeZone=Asia%2FJakarta",

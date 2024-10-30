@@ -12,17 +12,24 @@
                     @endforeach
                 </select>
                 <div class="flex items-center justify-between gap-2">
-                    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 whitespace-nowrap">Import Schedule</button>
-                    <button onclick="showFlowBytesModal('create-new-schedule-modal')" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 whitespace-nowrap">Create New Schedule</button>
+                    <button type="button"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 whitespace-nowrap">Import
+                        Schedule</button>
+                    <button onclick="showFlowBytesModal('create-new-schedule-modal')" type="button"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 whitespace-nowrap">Create
+                        New Schedule</button>
                 </div>
             </div>
-            
+
         </div>
 
         <div class="relative overflow-x-auto">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
+                        <th scope="col" class="px-6 py-3">
+                            NIK
+                        </th>
                         <th scope="col" class="px-6 py-3">
                             Staff Name
                         </th>
@@ -31,6 +38,9 @@
                         </th>
                         <th scope="col" class="px-6 py-3">
                             End Date
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Shift Id
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Shift Name
@@ -127,7 +137,7 @@
             getShiftSchedule();
         });
 
-        function saveNewSchedule(){
+        function saveNewSchedule() {
             $.ajax({
                 url: "{{ url('saveNewSchedule') }}",
                 type: "POST",
@@ -138,7 +148,7 @@
                     endDate: $('#endDate').val(),
                     "_token": "{{ csrf_token() }}"
                 },
-                success: function(response){
+                success: function(response) {
                     if (response.success == true) {
                         hideFlowBytesModal('create-new-schedule-modal');
                         getShiftSchedule();
@@ -159,7 +169,7 @@
                         })
                     }
                 },
-                error: function(error){
+                error: function(error) {
                     swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -169,7 +179,7 @@
             })
         }
 
-        function getShiftSchedule(page = 1){
+        function getShiftSchedule(page = 1) {
             $.ajax({
                 url: "{{ url('getShiftSchedule?page=') }}" + page,
                 type: "GET",
@@ -181,7 +191,10 @@
                     response.data.forEach(schedule => {
                         $('#tableBody').append(`
                         <tr class="bg-white border-b">
-                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                ${schedule.user.nik}
+                            </th>
+                            <th class="px-6 py-4">
                                 ${schedule.user.first_name} ${schedule.user.last_name}
                             </th>
                             <td class="px-6 py-4">
@@ -189,6 +202,9 @@
                             </td>
                             <td class="px-6 py-4">
                                 ${schedule.end_date}
+                            </td>
+                            <td class="px-6 py-4">
+                                ${schedule.shift.id}
                             </td>
                             <td class="px-6 py-4">
                                 ${schedule.shift.shift_name}
@@ -205,7 +221,7 @@
                         response
                         .current_page, "getShiftSchedule");
                 },
-                error: function(error){
+                error: function(error) {
                     swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -215,14 +231,14 @@
             })
         }
 
-        function getShiftScheduleDetail(id){
+        function getShiftScheduleDetail(id) {
             $.ajax({
                 url: "{{ url('getShiftScheduleDetail') }}",
                 type: "GET",
                 data: {
                     id: id
                 },
-                success: function(response){
+                success: function(response) {
                     $('#editScheduleId').val(response.id);
                     $('#editUserId').val(response.user_id);
                     $('#editShiftId').val(response.shift_id);
@@ -231,7 +247,7 @@
                     $('#editScheduleId').val(response.id);
                     showFlowBytesModal('edit-schedule-modal');
                 },
-                error: function(error){
+                error: function(error) {
                     swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -241,7 +257,7 @@
             })
         }
 
-        function updateSchedule(){
+        function updateSchedule() {
             $.ajax({
                 url: "{{ url('updateSchedule') }}",
                 type: "PUT",
@@ -253,7 +269,7 @@
                     endDate: $('#editEndDate').val(),
                     "_token": "{{ csrf_token() }}"
                 },
-                success: function(response){
+                success: function(response) {
                     if (response.success == true) {
                         hideFlowBytesModal('edit-schedule-modal');
                         getShiftSchedule();
@@ -270,7 +286,7 @@
                         })
                     }
                 },
-                error: function(error){
+                error: function(error) {
                     swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -280,7 +296,7 @@
             })
         }
 
-        function deleteSchedule(id){
+        function deleteSchedule(id) {
             swal.fire({
                 title: 'Are you sure?',
                 text: 'You will not be able to recover this schedule!',
@@ -299,7 +315,7 @@
                             id: id,
                             "_token": "{{ csrf_token() }}"
                         },
-                        success: function(response){
+                        success: function(response) {
                             if (response.success == true) {
                                 getShiftSchedule();
                                 swal.fire({
@@ -315,7 +331,7 @@
                                 })
                             }
                         },
-                        error: function(error){
+                        error: function(error) {
                             swal.fire({
                                 icon: 'error',
                                 title: 'Error',

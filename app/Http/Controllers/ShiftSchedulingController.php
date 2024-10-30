@@ -11,14 +11,18 @@ use Illuminate\Support\Facades\Validator;
 class ShiftSchedulingController extends Controller
 {
     //
-    public function index(){
+    public function index()
+    {
         $navbar = 'settings';
-        $users = User::orderBy('role_id', 'asc')->get();
+        $users = User::whereNotNull('email_verified_at')
+            ->orderBy('role_id', 'asc')
+            ->get();
         $shifts = Shift::all();
         return view('shift-scheduling', ['navbar' => $navbar, 'users' => $users, 'shifts' => $shifts]);
     }
 
-    public function saveNewSchedule(Request $request){
+    public function saveNewSchedule(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'userId' => 'required|integer',
             'shiftId' => 'required|integer',
@@ -36,12 +40,12 @@ class ShiftSchedulingController extends Controller
 
         // Find overlapping schedule for the user
         $findSchedule = ShiftScheduling::where('user_id', $request->userId)
-            ->where(function($query) use ($request) {
+            ->where(function ($query) use ($request) {
                 $query->whereBetween('start_date', [$request->startDate, $request->endDate])
                     ->orWhereBetween('end_date', [$request->startDate, $request->endDate])
-                    ->orWhere(function($query) use ($request) {
+                    ->orWhere(function ($query) use ($request) {
                         $query->where('start_date', '<=', $request->startDate)
-                                ->where('end_date', '>=', $request->endDate);
+                            ->where('end_date', '>=', $request->endDate);
                     });
             })
             ->exists();
@@ -58,10 +62,10 @@ class ShiftSchedulingController extends Controller
         $shiftScheduling->save();
 
         return response()->json(['success' => true, 'message' => 'Schedule saved successfully'], 200);
-
     }
 
-    public function getShiftSchedule(Request $request){
+    public function getShiftSchedule(Request $request)
+    {
         if ($request->userId === null) {
             $shiftSchedules = ShiftScheduling::with('user', 'shift')->orderBy('user_id')->orderBy('start_date', 'asc')->paginate(10);
         } else {
@@ -71,12 +75,14 @@ class ShiftSchedulingController extends Controller
         return response()->json($shiftSchedules);
     }
 
-    public function getShiftScheduleDetail(Request $request){
+    public function getShiftScheduleDetail(Request $request)
+    {
         $shiftSchedule = ShiftScheduling::with('user', 'shift')->find($request->id);
         return response()->json($shiftSchedule);
     }
 
-    public function updateSchedule(Request $request){
+    public function updateSchedule(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'userId' => 'required|integer',
             'shiftId' => 'required|integer',
@@ -95,12 +101,12 @@ class ShiftSchedulingController extends Controller
         // Find overlapping schedule for the user
         $findSchedule = ShiftScheduling::where('user_id', $request->userId)
             ->where('id', '!=', $request->id)
-            ->where(function($query) use ($request) {
+            ->where(function ($query) use ($request) {
                 $query->whereBetween('start_date', [$request->startDate, $request->endDate])
                     ->orWhereBetween('end_date', [$request->startDate, $request->endDate])
-                    ->orWhere(function($query) use ($request) {
+                    ->orWhere(function ($query) use ($request) {
                         $query->where('start_date', '<=', $request->startDate)
-                                ->where('end_date', '>=', $request->endDate);
+                            ->where('end_date', '>=', $request->endDate);
                     });
             })
             ->exists();
@@ -119,7 +125,8 @@ class ShiftSchedulingController extends Controller
         return response()->json(['success' => true, 'message' => 'Schedule updated successfully'], 200);
     }
 
-    public function deleteSchedule(Request $request){
+    public function deleteSchedule(Request $request)
+    {
         $shiftScheduling = ShiftScheduling::find($request->id);
         $shiftScheduling->delete();
 

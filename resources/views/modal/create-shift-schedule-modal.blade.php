@@ -31,7 +31,8 @@
                             required="">
                             <option selected value="" disabled>Select Staff</option>
                             @foreach ($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>
+                                <option value="{{ $user->id }}">{{ $user->nik }} - {{ $user->first_name }}
+                                    {{ $user->last_name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -43,7 +44,8 @@
                             required="">
                             <option selected value="" disabled>Select Shift</option>
                             @foreach ($shifts as $shift)
-                                <option value="{{ $shift->id }}">{{ $shift->shift_name }}</option>
+                                <option value="{{ $shift->id }}">{{ $shift->id }} - {{ $shift->shift_name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
