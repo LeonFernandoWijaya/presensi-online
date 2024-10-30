@@ -136,28 +136,46 @@ class ShiftSchedulingController extends Controller
         return response()->json(['success' => true, 'message' => 'Schedule deleted successfully'], 200);
     }
 
-    public function previewImport(Request $request)
+    public function importNow(Request $request)
     {
-        $validImport = [];
+        $validImport = 0;
         $invalidImport = [];
 
         $file = $request->file('file');
+        if (!$file) {
+            return response()->json(['success' => false ,'message' => 'Please upload a file'], 200);
+        }
+
+        // check file format xlsx
+        $fileExtension = $file->getClientOriginalExtension();
+        if ($fileExtension != 'xlsx') {
+            return response()->json(['success' => false ,'message' => 'Please upload a file with xlsx format'], 200);
+        }
         // Baca data dari file Excel
         $data = Excel::toArray(new ScheduleImport, $file);
         // Looping data Excel
         foreach (array_slice($data[0], 1) as $key => $row) {
             // Validasi data
+            $messages = [
+                '0.required' => 'User ID field is required.',
+                '1.required' => 'Shift ID field is required.',
+                '2.required' => 'Start date field is required.',
+                '2.date' => 'Start date must be a valid date.',
+                '3.required' => 'End date field is required.',
+                '3.date' => 'End date must be a valid date.',
+            ];
+
             $validator = Validator::make($row, [
                 '0' => 'required',
                 '1' => 'required',
                 '2' => 'required|date',
                 '3' => 'required|date',
-            ]);
+            ], $messages);
 
             // Jika validasi gagal
             if ($validator->fails()) {
                 $invalidImport[] = [
-                    'row' => $key + 1,
+                    'row' => $key + 2,
                     'data' => $row,
                     'errors' => $validator->errors()->first()
                 ];
@@ -174,19 +192,29 @@ class ShiftSchedulingController extends Controller
                     ->exists();
                 if ($findSchedule) {
                     $invalidImport[] = [
-                        'row' => $key + 1,
+                        'row' => $key + 2,
                         'data' => $row,
                         'errors' => 'There is an overlapping schedule for this user'
                     ];
                 } else {
-                    $validImport[] = $row;
+                    $shiftScheduling = new ShiftScheduling();
+                    $shiftScheduling->user_id = $row[0];
+                    $shiftScheduling->shift_id = $row[1];
+                    $shiftScheduling->start_date = $row[2];
+                    $shiftScheduling->end_date = $row[3];
+                    $shiftScheduling->save();
+                    $validImport++;
                 }
             }
         }
+    
+
+        $totalData = count($data[0]) - 1;
+        $totalValid = $validImport;
+        $totalInvalid = count($invalidImport);
 
         // Kembalikan data dalam format JSON
-        return response()->json(['validImport' => $validImport, 'invalidImport' => $invalidImport]);
+        return response()->json(['success' => true, 'invalidImport' => $invalidImport, 'totalData' => $totalData, 'totalValid' => $totalValid, 'totalInvalid' => $totalInvalid]);
     }
 
-    public function importNow(Request $request) {}
 }

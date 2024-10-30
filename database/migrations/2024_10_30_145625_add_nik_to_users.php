@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->integer('nik')->after('last_name')->unique();
+            $table->string('NIK')->after('last_name')->unique();
         });
     }
 
@@ -24,7 +24,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             //
-            $table->dropColumn('nik');
+            $table->dropColumn('NIK');
         });
     }
 };

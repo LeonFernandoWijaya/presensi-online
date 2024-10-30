@@ -50,7 +50,7 @@ class AuthController extends Controller
             ]);
         }
 
-        $isNIKAlreadyUsed = User::where('nik', $request->nik)->first();
+        $isNIKAlreadyUsed = User::where('NIK', $request->nik)->first();
         if ($isNIKAlreadyUsed && $isNIKAlreadyUsed->email_verified_at) {
             return response()->json([
                 'success' => false,
@@ -66,7 +66,7 @@ class AuthController extends Controller
             ]);
         } else if ($isEmailAlreadyExist && !$isEmailAlreadyExist->email_verified_at) {
             $isEmailAlreadyExist->OTP = rand(100000, 999999);
-            $isEmailAlreadyExist->nik = $request->nik;
+            $isEmailAlreadyExist->NIK = $request->nik;
             $isEmailAlreadyExist->first_name = $request->firstname;
             $isEmailAlreadyExist->last_name = $request->lastname;
             $isEmailAlreadyExist->password = bcrypt($request->password);
@@ -85,7 +85,7 @@ class AuthController extends Controller
             $user->first_name = $request->firstname;
             $user->last_name = $request->lastname;
             $user->email = $request->email;
-            $user->nik = $request->nik;
+            $user->NIK = $request->nik;
             $user->password = bcrypt($request->password);
             $user->role_id = 1;
             $user->department_id = $request->department;

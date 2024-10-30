@@ -31,7 +31,7 @@
                             required="">
                             <option selected value="" disabled>Select Staff</option>
                             @foreach ($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->nik }} - {{ $user->first_name }}
+                                <option value="{{ $user->id }}">{{ $user->id }} - {{ $user->first_name }}
                                     {{ $user->last_name }}</option>
                             @endforeach
                         </select>

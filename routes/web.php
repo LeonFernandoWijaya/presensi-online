@@ -129,6 +129,5 @@ Route::middleware(['is_active', 'auth', 'check_session'])->group(function () {
     Route::get('/getShiftScheduleDetail', [ShiftSchedulingController::class, 'getShiftScheduleDetail']);
     Route::put('/updateSchedule', [ShiftSchedulingController::class, 'updateSchedule']);
     Route::delete('/deleteSchedule', [ShiftSchedulingController::class, 'deleteSchedule']);
-    Route::post('/previewImport', [ShiftSchedulingController::class, 'previewImport']);
     Route::post('/importNow', [ShiftSchedulingController::class, 'importNow']);
 });
