@@ -195,12 +195,12 @@
                     response.data.forEach(schedule => {
                         $('#tableBody').append(`
                         <tr class="bg-white border-b">
-                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                             <td class="px-6 py-4">
                                 ${schedule.user.id}
-                            </th>
-                            <th class="px-6 py-4">
+                            </td>
+                            <td class="px-6 py-4">
                                 ${schedule.user.first_name} ${schedule.user.last_name}
-                            </th>
+                            </td>
                             <td class="px-6 py-4">
                                 ${schedule.start_date}
                             </td>

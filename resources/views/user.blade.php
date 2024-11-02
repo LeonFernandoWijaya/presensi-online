@@ -33,6 +33,9 @@
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
                         <th scope="col" class="px-6 py-3">
+                            User Id
+                        </th>
+                        <th scope="col" class="px-6 py-3">
                             Name
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -82,8 +85,11 @@
                         $('#tableBody').append(`
                         <tr class="bg-white border-b">
                             <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                ${user.first_name} ${user.last_name}
+                                ${user.id}
                             </th>
+                            <td class="px-6 py-4">
+                                ${user.first_name} ${user.last_name}
+                            </td>
                             <td class="px-6 py-4">
                                 ${user.is_active ? 'Active' : 'Inactive'}
                             </td>

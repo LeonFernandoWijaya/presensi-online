@@ -34,6 +34,9 @@
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
                         <th scope="col" class="px-6 py-3">
+                            Shift Id
+                        </th>
+                        <th scope="col" class="px-6 py-3">
                             Shift Name
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -72,6 +75,9 @@
                     response.data.forEach(shift => {
                         $('#tableBody').append(`
                     <tr class="bg-white border-b">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                        ${shift.id}
+                    </th>
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                         ${shift.shift_name}
                     </th>

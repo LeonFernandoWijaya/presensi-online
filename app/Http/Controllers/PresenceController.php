@@ -8,6 +8,7 @@ use App\Models\Attendance;
 use App\Models\Holiday;
 use App\Models\HolidayDay;
 use App\Models\Overtime;
+use App\Models\Shift;
 use App\Models\ShiftScheduling;
 use Carbon\Carbon;
 use DateTime;
@@ -59,7 +60,26 @@ class PresenceController extends Controller
 
     public function checkSchedule()
     {
-        $shiftDays = Auth::user()->shift->shiftDays;
+        $clientTimeNow = new Client();
+        $responseTimeNow = $clientTimeNow->request('GET', 'https://timeapi.io/api/time/current/zone?timeZone=Asia%2FJakarta');
+        $dataTimeNow = json_decode($responseTimeNow->getBody(), true);
+        $timeNow = $dataTimeNow['dateTime'];
+        $dateTimeNow = new \DateTime($timeNow);
+        $findShiftScheduling = ShiftScheduling::where('user_id', Auth::user()->id)
+            ->where('start_date', '<=', $dateTimeNow->format('Y-m-d'))
+            ->where('end_date', '>=', $dateTimeNow->format('Y-m-d'))
+            ->first();
+        if ($findShiftScheduling) {
+            $shiftId = $findShiftScheduling->shift_id;
+            $shift = Shift::find($shiftId);
+            if ($shift) {
+                $shiftDays = $shift->shiftDays;      
+            } else {
+                $shiftDays = null;
+            }
+        } else {
+            $shiftDays = null;
+        }
 
         // Define the order of days from Monday to Sunday
         $dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
