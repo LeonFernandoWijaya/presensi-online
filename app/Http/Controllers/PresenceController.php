@@ -228,7 +228,6 @@ class PresenceController extends Controller
                 $isShiftDay = null;
             }
             
-            dd($isShiftDay);
 
             $clockInTime = \Carbon\Carbon::parse($lastPresence->clockInTime);
             $clockOutTime = \Carbon\Carbon::parse($lastPresence->clockOutTime);

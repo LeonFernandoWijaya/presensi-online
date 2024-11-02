@@ -121,6 +121,22 @@ class ShiftController extends Controller
             }
 
             $shift = Shift::find($request->shiftId);
+
+            //check for overlapping
+            $shiftDays = $shift->shiftDays;
+            foreach ($shiftDays as $shiftDay) {
+                if ($request->dayName == $shiftDay->dayName) {
+                    $requestStart = strtotime($request->startHour);
+                    $requestEnd = strtotime($request->endHour);
+                    $shiftStart = strtotime($shiftDay->startHour);
+                    $shiftEnd = strtotime($shiftDay->endHour);
+
+                    if (($requestStart < $shiftEnd && $requestEnd > $shiftStart)) {
+                        return response()->json(['success' => false, 'message' => 'Shift day overlaps with another day']);
+                    }
+                }
+            }
+
             $shift->shiftDays()->create([
                 'dayName' => $request->dayName,
                 'startHour' => $request->startHour,
@@ -198,6 +214,23 @@ class ShiftController extends Controller
             }
 
             $shiftDay = ShiftDay::find($request->id);
+
+            // check overlapping for update
+            $shift = Shift::find($shiftDay->shift_id);
+            $shiftDays = $shift->shiftDays;
+            foreach ($shiftDays as $shiftDay) {
+                if ($request->dayName == $shiftDay->dayName && $shiftDay->id != $request->id) {
+                    $requestStart = strtotime($request->startHour);
+                    $requestEnd = strtotime($request->endHour);
+                    $shiftStart = strtotime($shiftDay->startHour);
+                    $shiftEnd = strtotime($shiftDay->endHour);
+
+                    if (($requestStart < $shiftEnd && $requestEnd > $shiftStart)) {
+                        return response()->json(['success' => false, 'message' => 'Shift day overlaps with another day']);
+                    }
+                }
+            }
+
             $shiftDay->dayName = $request->dayName;
             $shiftDay->startHour = $request->startHour;
             $shiftDay->endHour = $request->endHour;

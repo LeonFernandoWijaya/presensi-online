@@ -48,7 +48,7 @@ class UserController extends Controller
         if (Gate::allows('isManager')) {
             $searchName = $request->name;
             $accountStatus = $request->statusAccount;
-            $users = User::with('department', 'role', 'shift')
+            $users = User::with('department', 'role')
                 ->whereNotNull('email_verified_at')
                 ->where(function ($query) use ($searchName) {
                     $query->where('first_name', 'like', '%' . $searchName . '%')
@@ -68,7 +68,7 @@ class UserController extends Controller
     {
         if (Gate::allows('isManager')) {
             $id = $request->id;
-            $user = User::with('department', 'role', 'shift', 'holiday')->find($id);
+            $user = User::with('department', 'role', 'holiday')->find($id);
             return response()->json($user);
         } else {
             abort(403);

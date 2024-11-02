@@ -42,9 +42,6 @@
                             Status
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Shift
-                        </th>
-                        <th scope="col" class="px-6 py-3">
                             Role
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -92,9 +89,6 @@
                             </td>
                             <td class="px-6 py-4">
                                 ${user.is_active ? 'Active' : 'Inactive'}
-                            </td>
-                            <td class="px-6 py-4">
-                                ${user.shift ? user.shift.shift_name : 'No Shift'}
                             </td>
                             <td class="px-6 py-4">
                                 ${user.role ? user.role.role_name : 'No Position'}
