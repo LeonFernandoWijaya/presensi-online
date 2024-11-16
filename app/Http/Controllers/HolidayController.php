@@ -229,9 +229,10 @@ class HolidayController extends Controller
     public function saveChangesHoliday(Request $request)
     {
         if (Gate::allows('isManager')) {
-            $request->only('id', 'holidayName');
+            $request->only('id', 'holidayName', 'holidayDate');
             $validator = Validator::make($request->all(), [
                 'holidayName' => 'required',
+                'holidayDate' => 'required|date',
             ]);
 
             if ($validator->fails()) {
@@ -242,7 +243,21 @@ class HolidayController extends Controller
             }
 
             $holiday = HolidayDay::find($request->id);
+
+            $findOverlapHoliday = HolidayDay::where('holiday_date', $request->holidayDate)
+                ->where('holiday_id', $holiday->holiday_id)
+                ->where('id', '!=', $request->id)
+                ->first();
+
+            if ($findOverlapHoliday) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Holiday date already exists',
+                ]);
+            }
+
             $holiday->holiday_name = $request->holidayName;
+            $holiday->holiday_date = $request->holidayDate;
             $holiday->save();
 
             return response()->json(['success' => true, 'message' => 'Holiday updated successfully']);

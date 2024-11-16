@@ -295,12 +295,14 @@
         function saveChangesHoliday() {
             const holidayName = $('#editHolidayName').val();
             const id = $('#editHolidayId').val();
+            const holidayDate = $('#editHolidayDate').val();
             $.ajax({
                 url: "{{ url('saveChangesHoliday') }}",
                 type: 'PUT',
                 data: {
                     holidayName: holidayName,
                     id: id,
+                    holidayDate: holidayDate,
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
