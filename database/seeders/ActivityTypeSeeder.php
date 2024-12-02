@@ -17,7 +17,8 @@ class ActivityTypeSeeder extends Seeder
         DB::table('activity_types')->insert([
             ['name' => 'WFO'],
             ['name' => 'WFH'],
-            ['name' => 'Remote']
+            ['name' => 'Remote'],
+            ['name' => 'On Site'],
         ]);
     }
 }

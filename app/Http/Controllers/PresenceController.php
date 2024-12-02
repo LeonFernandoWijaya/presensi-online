@@ -73,7 +73,7 @@ class PresenceController extends Controller
             $shiftId = $findShiftScheduling->shift_id;
             $shift = Shift::find($shiftId);
             if ($shift) {
-                $shiftDays = $shift->shiftDays;      
+                $shiftDays = $shift->shiftDays;
             } else {
                 $shiftDays = null;
             }
@@ -204,11 +204,11 @@ class PresenceController extends Controller
             $lastPresence->clockOutTime = $dateTimeNow->format('Y-m-d H:i:s');
             $lastPresence->clockOutPhoto = $filename;
             $lastPresence->clockOutLocation = $locationName;
-            $lastPresence->activity_type_id = $request->activityTypes;
-            $lastPresence->activity_category_id = $request->activityCategories;
-            $lastPresence->customer = $request->customerName;
+            $lastPresence->clock_out_activity_type_id = $request->activityTypes;
+            $lastPresence->clock_out_activity_category_id = $request->activityCategories;
+            $lastPresence->clock_out_customer = $request->customerName;
             $lastPresence->isClockOutAtOffice = $this->isRemote($request->sendLongitude, $request->sendLatitude);
-            // $lastPresence->save();
+
 
             $statusPresence = 'clockOut';
 
@@ -222,12 +222,12 @@ class PresenceController extends Controller
                 ->where('start_date', '<=', $getTodayDateForCheck)
                 ->where('end_date', '>=', $getTodayDateForCheck)
                 ->first();
-            if($findSchedule){
+            if ($findSchedule) {
                 $isShiftDay = $findSchedule->shift->shiftDays->where('dayName', date('l', strtotime($lastPresence->clockInTime)))->first();
-            }else{
+            } else {
                 $isShiftDay = null;
             }
-            
+
 
             $clockInTime = \Carbon\Carbon::parse($lastPresence->clockInTime);
             $clockOutTime = \Carbon\Carbon::parse($lastPresence->clockOutTime);
@@ -269,15 +269,24 @@ class PresenceController extends Controller
                     $this->makeOvertime($lastPresence->id, $clockInTime, $clockOutTime, $totalOvertime);
                 }
             }
+
+            $shiftLabel = "No Shift";
+            if ($isHoliday) {
+                $shiftLabel = "Holiday";
+            } else if ($isShiftDay) {
+                $shiftLabel = $isShiftDay->dayName . ' ' . $isShiftDay->startHour . ' - ' . $isShiftDay->endHour;
+            }
+            $lastPresence->shift = $shiftLabel;
+            $lastPresence->save();
         } else {
             $attendance = new Attendance();
             $attendance->user_id = Auth::user()->id;
             $attendance->clockInTime = $dateTimeNow->format('Y-m-d H:i:s');
             $attendance->clockInPhoto = $filename;
             $attendance->clockInLocation = $locationName;
-            $attendance->activity_type_id = $request->activityTypes;
-            $attendance->activity_category_id = $request->activityCategories;
-            $attendance->customer = $request->customerName;
+            $attendance->clock_in_activity_type_id = $request->activityTypes;
+            $attendance->clock_in_activity_category_id = $request->activityCategories;
+            $attendance->clock_in_customer = $request->customerName;
             $attendance->isClockInAtOffice = $this->isRemote($request->sendLongitude, $request->sendLatitude);
             $attendance->save();
 

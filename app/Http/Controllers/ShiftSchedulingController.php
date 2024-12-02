@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ScheduleImport;
 use Illuminate\Support\Facades\Gate;
 use App\Exports\ShiftSchedulingExport;
-
+use App\Models\ShiftSchedulingLog;
 
 class ShiftSchedulingController extends Controller
 {
@@ -70,6 +70,11 @@ class ShiftSchedulingController extends Controller
             $shiftScheduling->start_date = $request->startDate;
             $shiftScheduling->end_date = $request->endDate;
             $shiftScheduling->save();
+
+            $shiftSchedulingLog = new ShiftSchedulingLog();
+            $shiftSchedulingLog->user_id = auth()->user()->id;
+            $shiftSchedulingLog->notes = 'Created New Schedule At ' . now() . ' For User ID ' . $request->userId . ' With Shift ID ' . $request->shiftId . ' Start Date ' . $request->startDate . ' End Date ' . $request->endDate;
+            $shiftSchedulingLog->save();
 
             return response()->json(['success' => true, 'message' => 'Schedule saved successfully'], 200);
         } else {
@@ -144,6 +149,11 @@ class ShiftSchedulingController extends Controller
             $shiftScheduling->end_date = $request->endDate;
             $shiftScheduling->save();
 
+            $shiftSchedulingLog = new ShiftSchedulingLog();
+            $shiftSchedulingLog->user_id = auth()->user()->id;
+            $shiftSchedulingLog->notes = 'Updated Schedule At ' . now() . ' For User ID ' . $request->userId . ' With Shift ID ' . $request->shiftId . ' Start Date ' . $request->startDate . ' End Date ' . $request->endDate;
+            $shiftSchedulingLog->save();
+
             return response()->json(['success' => true, 'message' => 'Schedule updated successfully'], 200);
         } else {
             abort(403);
@@ -155,6 +165,11 @@ class ShiftSchedulingController extends Controller
         if (Gate::allows('isManager')) {
             $shiftScheduling = ShiftScheduling::find($request->id);
             $shiftScheduling->delete();
+
+            $shiftSchedulingLog = new ShiftSchedulingLog();
+            $shiftSchedulingLog->user_id = auth()->user()->id;
+            $shiftSchedulingLog->notes = 'Deleted Schedule At ' . now() . ' For User ID ' . $shiftScheduling->user_id . ' With Shift ID ' . $shiftScheduling->shift_id . ' Start Date ' . $shiftScheduling->start_date . ' End Date ' . $shiftScheduling->end_date;
+            $shiftSchedulingLog->save();
 
             return response()->json(['success' => true, 'message' => 'Schedule deleted successfully'], 200);
         } else {
@@ -170,13 +185,13 @@ class ShiftSchedulingController extends Controller
 
             $file = $request->file('file');
             if (!$file) {
-                return response()->json(['success' => false ,'message' => 'Please upload a file'], 200);
+                return response()->json(['success' => false, 'message' => 'Please upload a file'], 200);
             }
 
             // check file format xlsx
             $fileExtension = $file->getClientOriginalExtension();
             if ($fileExtension != 'xlsx') {
-                return response()->json(['success' => false ,'message' => 'Please upload a file with xlsx format'], 200);
+                return response()->json(['success' => false, 'message' => 'Please upload a file with xlsx format'], 200);
             }
             // Baca data dari file Excel
             $data = Excel::toArray(new ScheduleImport, $file);
@@ -255,11 +270,16 @@ class ShiftSchedulingController extends Controller
                     }
                 }
             }
-        
+
 
             $totalData = count($data[0]) - 1;
             $totalValid = $validImport;
             $totalInvalid = count($invalidImport);
+
+            $shiftSchedulingLog = new ShiftSchedulingLog();
+            $shiftSchedulingLog->user_id = auth()->user()->id;
+            $shiftSchedulingLog->notes = 'Imported Schedule At ' . now() . ' Total Data ' . $totalData . ' Total Valid ' . $totalValid . ' Total Invalid ' . $totalInvalid;
+            $shiftSchedulingLog->save();
 
             // Kembalikan data dalam format JSON
             return response()->json(['success' => true, 'invalidImport' => $invalidImport, 'totalData' => $totalData, 'totalValid' => $totalValid, 'totalInvalid' => $totalInvalid]);
@@ -276,5 +296,4 @@ class ShiftSchedulingController extends Controller
             abort(403);
         }
     }
-
 }

@@ -15,11 +15,13 @@ class ActivityCategorySeeder extends Seeder
     {
         //
         DB::table('activity_categories')->insert([
-            ['name' => 'No Activity'],
+            ['name' => 'Daily Activity'],
             ['name' => 'PM'],
             ['name' => 'CM'],
             ['name' => 'Instalasi'],
-            ['name' => 'Other'],
+            ['name' => 'Meeting'],
+            ['name' => 'POC'],
+            ['name' => 'Presales'],
         ]);
     }
 }

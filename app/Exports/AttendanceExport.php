@@ -42,7 +42,7 @@ class AttendanceExport implements FromCollection, WithMapping, WithHeadings, Wit
                 return $query->where('clockOutTime', '<=', $endDate . ' 23:59:59');
             })
             ->whereNotNull('clockOutTime')
-            ->with('user', 'activitytype', 'activitycategory')
+            ->with('user', 'activitytypeclockin', 'activitycategoryclockin', 'activitytypeclockout', 'activitycategoryclockout', 'overtime')
             ->get();
     }
 
@@ -63,6 +63,12 @@ class AttendanceExport implements FromCollection, WithMapping, WithHeadings, Wit
             'I' => 25,
             'J' => 25,
             'K' => 25,
+            'L' => 25,
+            'M' => 25,
+            'N' => 25,
+            'O' => 25,
+            'P' => 25,
+            'Q' => 25,
             // Add more columns as needed
         ];
     }
@@ -79,13 +85,21 @@ class AttendanceExport implements FromCollection, WithMapping, WithHeadings, Wit
         return [
             $attendance->user->first_name . ' ' . $attendance->user->last_name,
             $attendance->clockInTime,
-            $attendance->clockOutTime,
-            $diffInMinutes,
-            $attendance->activitytype->name,
-            $attendance->activitycategory->name,
-            $attendance->customer,
             $attendance->clockInLocation,
+            $attendance->activitytypeclockin->name,
+            $attendance->activitycategoryclockin->name,
+            $attendance->clock_in_customer,
+            $attendance->clockOutTime,
             $attendance->clockOutLocation,
+            $attendance->activitytypeclockout->name,
+            $attendance->activitycategoryclockout->name,
+            $attendance->clock_out_customer,
+            $diffInMinutes,
+            $attendance->overtime->overtimeTotal ?? 0,
+            $attendance->overtime ? ($attendance->overtime->rejectDate == null ? 'Approved' : 'Approved') : "Not Overtime",
+            $attendance->shift,
+
+
             // Add more columns as needed
         ];
     }
@@ -97,14 +111,20 @@ class AttendanceExport implements FromCollection, WithMapping, WithHeadings, Wit
     {
         return [
             'Staff',
-            'Clock In',
-            'Clock Out',
-            'Total Attendance (Minutes)',
-            'Activity Type',
-            'Activity Category',
-            'Customer',
+            'Clock In Time',
             'Clock In Location',
+            'Clock In Activity Type',
+            'Clock In Activity Category',
+            'Clock In Customer',
+            'Clock Out Time',
             'Clock Out Location',
+            'Clock Out Activity Type',
+            'Clock Out Activity Category',
+            'Clock Out Customer',
+            'Total Attendance (Minutes)',
+            'Total Overtime (Minutes)',
+            'Overtime Approval Status',
+            'Shift',
             'Clock In Picture',
             'Clock Out Picture',
 
@@ -127,7 +147,7 @@ class AttendanceExport implements FromCollection, WithMapping, WithHeadings, Wit
             $clockInDrawing->setDescription('Clock In Picture');
             $clockInDrawing->setPath(storage_path('app/public/photos/' . $attendance->clockInPhoto)); // Adjust the path as needed
             $clockInDrawing->setHeight(100);
-            $clockInDrawing->setCoordinates('j' . ($index + 2)); // Assuming the first row is the header
+            $clockInDrawing->setCoordinates('P' . ($index + 2)); // Assuming the first row is the header
             $clockInDrawing->setOffsetX(5);
             $clockInDrawing->setOffsetY(5);
 
@@ -137,7 +157,7 @@ class AttendanceExport implements FromCollection, WithMapping, WithHeadings, Wit
             $clockOutDrawing->setDescription('Clock Out Picture');
             $clockOutDrawing->setPath(storage_path('app/public/photos/' . $attendance->clockOutPhoto)); // Adjust the path as needed
             $clockOutDrawing->setHeight(100);
-            $clockOutDrawing->setCoordinates('K' . ($index + 2)); // Assuming the first row is the header
+            $clockOutDrawing->setCoordinates('Q' . ($index + 2)); // Assuming the first row is the header
             $clockOutDrawing->setOffsetX(5);
             $clockOutDrawing->setOffsetY(5);
 

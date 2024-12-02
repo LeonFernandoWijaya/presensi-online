@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Overtime;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -18,13 +19,15 @@ class OvertimeExport implements FromCollection, WithMapping, WithHeadings, WithC
     protected $startDate;
     protected $endDate;
     protected $status;
+    protected $overtimeType;
 
-    public function __construct($staffId, $startDate, $endDate, $status)
+    public function __construct($staffId, $startDate, $endDate, $status, $overtimeType)
     {
         $this->staffId = $staffId;
         $this->startDate = $startDate;
         $this->endDate = $endDate;
         $this->status = $status;
+        $this->overtimeType = $overtimeType;
     }
 
     /**
@@ -32,7 +35,7 @@ class OvertimeExport implements FromCollection, WithMapping, WithHeadings, WithC
      */
     public function collection()
     {
-        return Overtime::with('user', 'attendance.activitytype', 'attendance.activitycategory')
+        return Overtime::with('user', 'attendance', 'attendance.activitytypeclockin', 'attendance.activitycategoryclockin', 'attendance.activitytypeclockout', 'attendance.activitycategoryclockout')
             ->when($this->staffId, function ($query, $staffId) {
                 return $query->where('user_id', $staffId);
             })
@@ -47,6 +50,12 @@ class OvertimeExport implements FromCollection, WithMapping, WithHeadings, WithC
             })
             ->when($this->status == 2, function ($query) {
                 return $query->whereNotNull('rejectDate');
+            })
+            ->when($this->overtimeType == 1, function ($query) {
+                return $query->whereNotNull('attendance_id');
+            })
+            ->when($this->overtimeType == 2, function ($query) {
+                return $query->whereNull('attendance_id');
             })
             ->get();
     }
@@ -69,6 +78,11 @@ class OvertimeExport implements FromCollection, WithMapping, WithHeadings, WithC
             'J' => 30,
             'K' => 30,
             'L' => 30,
+            'M' => 20,
+            'N' => 20,
+            'O' => 20,
+            'P' => 20,
+            'Q' => 20,
             // Add more columns as needed
         ];
     }
@@ -82,14 +96,20 @@ class OvertimeExport implements FromCollection, WithMapping, WithHeadings, WithC
         $data = [
             $overtime->user->first_name . ' ' . $overtime->user->last_name,
             $overtime->overtimeStart,
+            $overtime->attendance->clockInLocation ?? 'Manual Request',
+            $overtime->attendance->activitytypeclockin->name ?? '-',
+            $overtime->attendance->activitycategoryclockin->name ?? '-',
+            $overtime->attendance->clock_in_customer ?? $overtime->customer ?? '-',
             $overtime->overtimeEnd,
+            $overtime->attendance->clockOutLocation ?? 'Manual Request',
+            $overtime->attendance->activitytypeclockout->name ?? '-',
+            $overtime->attendance->activitycategoryclockout->name ?? '-',
+            $overtime->attendance->clock_out_customer ?? $overtime->customer ?? '-',
             $overtime->overtimeTotal,
+            $overtime->attendance ? (new Carbon($overtime->attendance->clockInTime))->diffInMinutes(new Carbon($overtime->attendance->clockOutTime)) : "Request Manual",
+            $overtime->attendance ? ($overtime->attendance->shift ?? "Manual Request") : 'Manual Request',
             $overtime->rejectDate ? 'Rejected' : 'Approved',
-            $overtime->attendance->activitytype->name ?? '-',
-            $overtime->attendance->activitycategory->name ?? '-',
-            $overtime->attendance->customer ?? $overtime->customer ?? '-',
-            $overtime->attendance->clockInLocation ?? 'Request Manual',
-            $overtime->attendance->clockOutLocation ?? 'Request Manual',
+
         ];
 
         if ($overtime->attendance && file_exists(storage_path('app/public/photos/' . $overtime->attendance->clockInPhoto))) {
@@ -115,14 +135,19 @@ class OvertimeExport implements FromCollection, WithMapping, WithHeadings, WithC
         return [
             'Staff',
             'Overtime Start',
-            'Overtime End',
-            'Total Overtime (Minutes)',
-            'Status',
-            'Activity Type',
-            'Activity Category',
-            'Customer',
             'Clock In Location',
+            'Clock In Activity Type',
+            'Clock In Activity Category',
+            'Clock In Customer',
+            'Overtime End',
             'Clock Out Location',
+            'Clock Out Activity Type',
+            'Clock Out Activity Category',
+            'Clock Out Customer',
+            'Total Overtime (Minutes)',
+            'Total Attendance (Minutes)',
+            'Shift',
+            'Status',
             'Clock In Picture',
             'Clock Out Picture',
             // Add more headers as needed
@@ -144,7 +169,7 @@ class OvertimeExport implements FromCollection, WithMapping, WithHeadings, WithC
                 $clockInDrawing->setDescription('Clock In Picture');
                 $clockInDrawing->setPath(storage_path('app/public/photos/' . $overtime->attendance->clockInPhoto));
                 $clockInDrawing->setHeight(100);
-                $clockInDrawing->setCoordinates('K' . ($index + 2));
+                $clockInDrawing->setCoordinates('P' . ($index + 2));
                 $clockInDrawing->setOffsetX(5);
                 $clockInDrawing->setOffsetY(5);
                 $drawings[] = $clockInDrawing;
@@ -156,7 +181,7 @@ class OvertimeExport implements FromCollection, WithMapping, WithHeadings, WithC
                 $clockOutDrawing->setDescription('Clock Out Picture');
                 $clockOutDrawing->setPath(storage_path('app/public/photos/' . $overtime->attendance->clockOutPhoto));
                 $clockOutDrawing->setHeight(100);
-                $clockOutDrawing->setCoordinates('L' . ($index + 2));
+                $clockOutDrawing->setCoordinates('Q' . ($index + 2));
                 $clockOutDrawing->setOffsetX(5);
                 $clockOutDrawing->setOffsetY(5);
                 $drawings[] = $clockOutDrawing;

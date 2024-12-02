@@ -57,6 +57,12 @@
                             Date Out
                         </th>
                         <th scope="col" class="px-6 py-3">
+                            Total Overtime
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Total Attendance
+                        </th>
+                        <th scope="col" class="px-6 py-3">
                             Action
                         </th>
                     </tr>
@@ -86,6 +92,23 @@
                     id: id
                 },
                 success: function(response) {
+                    let totalAttendance = 'Presence In Progress';
+                    if (response.clockOutTime != null) {
+                        let clockInTime = new Date(response.clockInTime);
+                        let clockOutTime = new Date(response.clockOutTime);
+                        let diffTime = clockOutTime - clockInTime;
+                        let diffInHours = Math.floor(diffTime / (1000 * 60 * 60));
+                        let diffInMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
+                        totalAttendance = `${diffInHours} hours ${diffInMinutes} Minutes`;
+                    }
+                    let totalOvertime = '0 Hours 0 Minutes';
+                    if (response.overtime != null) {
+                        // convert minutes to hours and minutes
+                        let newTotalOvertime = response.overtime.overtimeTotal;
+                        let hours = Math.floor(newTotalOvertime / 60);
+                        let minutes = newTotalOvertime % 60;
+                        totalOvertime = `${hours} Hours ${minutes} Minutes`;
+                    }
                     let clockInMode = response.isClockInAtOffice == 1 ? 'In Office' : 'Out Office';
                     let clockOutMode = response.isClockOutAtOffice == 1 ? 'In Office' : 'Out Office';
                     let photoOut = ``;
@@ -98,17 +121,31 @@
                     }
                     $('#staffName').val(response.user.first_name + ' ' + (response.user.last_name != null ?
                         response.user.last_name : ''));
-                    $('#customerName').val(response.customer != null ? response.customer : '-');
-                    $('#activityType').val(response.activitytype.name);
-                    $('#activityCategory').val(response.activitycategory.name);
+                    $('#clockInCustomerName').val(response.clock_in_customer !=
+                        null ? response.clock_in_customer :
+                        '-');
+                    $('#clockOutCustomerName').val(response.clock_out_customer !=
+                        null ? response.clock_out_customer :
+                        '-');
+                    $('#shiftStatus').val(response.shift != null ? response.shift : 'Presence In Progress');
+                    $('#totalAttendance').val(totalAttendance);
+                    $('#totalOvertime').val(totalOvertime);
+                    $('#clockInActivityType').val(response.activitytypeclockin != null ?
+                        response.activitytypeclockin.name : 'Presence In Progress');
+                    $('#clockOutActivityType').val(response.activitytypeclockout != null ?
+                        response.activitytypeclockout.name : 'Presence In Progress');
+                    $('#clockInActivityCategory').val(response.activitycategoryclockin != null ?
+                        response.activitycategoryclockin.name : 'Presence In Progress');
+                    $('#clockOutActivityCategory').val(response.activitycategoryclockout != null ?
+                        response.activitycategoryclockout.name : 'Presence In Progress');
                     $('#locationIn').val(response.clockInLocation + ' (' + clockInMode +
                         ')');
                     $('#locationOut').val(response.clockOutLocation != null ? response.clockOutLocation + ' (' +
                         clockOutMode + ')' :
-                        "In Progress");
+                        "Presence In Progress");
                     $('#dateTimeIn').val(response.clockInTime);
                     $('#dateTimeOut').val(response.clockOutTime != null ? response.clockOutTime :
-                        "In Progress");
+                        "Presence In Progress");
                     $('#photoIn').empty();
                     $('#photoIn').append(`
                         <img src="{{ asset('storage/photos/${response.clockInPhoto}') }}" class="w-32 h-32 object-cover rounded-lg">
@@ -144,17 +181,38 @@
                 success: function(response) {
                     $('#table-body').empty();
                     response.data.forEach(data => {
+                        let totalAttendance = "In Progress";
+                        if (data.clockOutTime != null) {
+                            let clockInTime = new Date(data.clockInTime);
+                            let clockOutTime = new Date(data.clockOutTime);
+                            let diffTime = clockOutTime - clockInTime;
+                            let diffInHours = Math.floor(diffTime / (1000 * 60 * 60));
+                            let diffInMinutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
+                            totalAttendance = `${diffInHours} hours ${diffInMinutes} Minutes`;
+                        }
+                        let totalOvertime = '0 Hours 0 Minutes';
+                        if (data.overtime != null) {
+                            // convert minutes to hours and minutes
+                            let newTotalOvertime = data.overtime.overtimeTotal;
+                            let hours = Math.floor(newTotalOvertime / 60);
+                            let minutes = newTotalOvertime % 60;
+                            totalOvertime = `${hours} Hours ${minutes} Minutes`;
+                        }
                         let isClockInAtOfficeLabel = "";
-                        if (data.isClockInAtOffice == 1){
-                            isClockInAtOfficeLabel = `<span class="text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">In Office</span>`;
-                        } else if (data.isClockInAtOffice == 0){
-                            isClockInAtOfficeLabel = `<span class="text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">Out Office</span>`;
+                        if (data.isClockInAtOffice == 1) {
+                            isClockInAtOfficeLabel =
+                                `<span class="text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">In Office</span>`;
+                        } else if (data.isClockInAtOffice == 0) {
+                            isClockInAtOfficeLabel =
+                                `<span class="text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">Out Office</span>`;
                         }
                         let isClockOutAtOfficeLabel = "";
-                        if (data.isClockOutAtOffice == 1){
-                            isClockOutAtOfficeLabel = `<span class="text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">In Office</span>`;
-                        } else if (data.isClockOutAtOffice == 0){
-                            isClockOutAtOfficeLabel = `<span class="text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">Out Office</span>`;
+                        if (data.isClockOutAtOffice == 1) {
+                            isClockOutAtOfficeLabel =
+                                `<span class="text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">In Office</span>`;
+                        } else if (data.isClockOutAtOffice == 0) {
+                            isClockOutAtOfficeLabel =
+                                `<span class="text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">Out Office</span>`;
                         }
                         $('#table-body').append(`
                             <tr class="bg-white border-b">
@@ -176,6 +234,12 @@
                                     <div>
                                         ${data.clockOutTime != null ? isClockOutAtOfficeLabel : ""}
                                     </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    ${totalOvertime}
+                                </td>
+                                 <td class="px-6 py-4">
+                                    ${totalAttendance}
                                 </td>
                                 <td class="px-6 py-4">
                                     <button type="button"

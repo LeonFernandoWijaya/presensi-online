@@ -19,13 +19,23 @@ class Attendance extends Model
         return $this->hasOne(Overtime::class);
     }
 
-    public function activitytype()
+    public function activitytypeclockin()
     {
-        return $this->belongsTo(ActivityType::class, 'activity_type_id');
+        return $this->belongsTo(ActivityType::class, 'clock_in_activity_type_id');
     }
 
-    public function activitycategory()
+    public function activitycategoryclockin()
     {
-        return $this->belongsTo(ActivityCategory::class, 'activity_category_id');
+        return $this->belongsTo(ActivityCategory::class, 'clock_in_activity_category_id');
+    }
+
+    public function activitytypeclockout()
+    {
+        return $this->belongsTo(ActivityType::class, 'clock_out_activity_type_id');
+    }
+
+    public function activitycategoryclockout()
+    {
+        return $this->belongsTo(ActivityCategory::class, 'clock_out_activity_category_id');
     }
 }

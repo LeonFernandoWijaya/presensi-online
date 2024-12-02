@@ -50,7 +50,7 @@ class AttendanceHistoryController extends Controller
             ->when($user->role->id == 1, function ($query) use ($user) {
                 return $query->where('user_id', $user->id);
             })
-            ->with('user', 'activitytype', 'activitycategory')
+            ->with('user', 'activitytypeclockin', 'activitycategoryclockin', 'activitytypeclockout', 'activitycategoryclockout', 'overtime')
             ->orderBy('clockInTime', 'desc')
             ->paginate(5);
 
@@ -61,7 +61,7 @@ class AttendanceHistoryController extends Controller
     public function getAttendanceDetail(Request $request)
     {
         $attendanceId = $request->id;
-        $attendance = Attendance::with('user', 'activitytype', 'activitycategory')->find($attendanceId);
+        $attendance = Attendance::with('user', 'activitytypeclockin', 'activitycategoryclockin', 'activitytypeclockout', 'activitycategoryclockout', 'overtime')->find($attendanceId);
 
         if (Gate::allows('viewAttendance', $attendance)) {
             return response()->json($attendance);

@@ -30,22 +30,66 @@
                             disabled value="">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
-                        <label for="customer" class="block mb-2 text-sm font-medium text-gray-900">Customer</label>
-                        <input type="text" name="customer" id="customer"
+                        <label for="statusDetail" class="block mb-2 text-sm font-medium text-gray-900">Status</label>
+                        <input type="text" name="statusDetail" id="statusDetail"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                            disabled value="">
+                    </div>
+
+                    <div class="col-span-2 automatic-container">
+                        <label for="shiftStatus" class="block mb-2 text-sm font-medium text-gray-900">Shift</label>
+                        <input type="text" name="shiftStatus" id="shiftStatus"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                            disabled value="">
+                    </div>
+
+
+                    <div class="col-span-2 sm:col-span-1 automatic-container">
+                        <label for="customerClockIn" class="block mb-2 text-sm font-medium text-gray-900">Clock
+                            In Customer
+                        </label>
+                        <input type="text" name="customerClockIn" id="customerClockIn"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                             disabled value="">
                     </div>
                     <div class="col-span-2 sm:col-span-1 automatic-container">
-                        <label for="activityType" class="block mb-2 text-sm font-medium text-gray-900">Activity
+                        <label for="customerClockOut" class="block mb-2 text-sm font-medium text-gray-900">Clock
+                            Out Customer
+                        </label>
+                        <input type="text" name="customerClockOut" id="customerClockOut"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                            disabled value="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1 automatic-container">
+                        <label for="activityTypeClockIn" class="block mb-2 text-sm font-medium text-gray-900">Clock In
+                            Activity
                             Type</label>
-                        <input type="text" name="activityType" id="activityType"
+                        <input type="text" name="activityTypeClockIn" id="activityTypeClockIn"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                             disabled value="">
                     </div>
                     <div class="col-span-2 sm:col-span-1 automatic-container">
-                        <label for="activityCategory" class="block mb-2 text-sm font-medium text-gray-900">Activity
+                        <label for="activityCategoryClockIn" class="block mb-2 text-sm font-medium text-gray-900">Clock
+                            In Activity
                             Category</label>
-                        <input type="text" name="activityCategory" id="activityCategory"
+                        <input type="text" name="activityCategoryClockIn" id="activityCategoryClockIn"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                            disabled value="">
+                    </div>
+
+                    <div class="col-span-2 sm:col-span-1 automatic-container">
+                        <label for="activityTypeClockOut" class="block mb-2 text-sm font-medium text-gray-900">Clock Out
+                            Activity
+                            Type</label>
+                        <input type="text" name="activityTypeClockOut" id="activityTypeClockOut"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                            disabled value="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1 automatic-container">
+                        <label for="activityCategoryClockOut" class="block mb-2 text-sm font-medium text-gray-900">Clock
+                            Out Activity
+                            Category</label>
+                        <input type="text" name="activityCategoryClockOut" id="activityCategoryClockOut"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                             disabled value="">
                     </div>
@@ -79,6 +123,13 @@
                             disabled value="">
                     </div>
 
+                    <div class="col-span-2 sm:col-span-1 manual-container">
+                        <label for="customerManual"
+                            class="block mb-2 text-sm font-medium text-gray-900">Customer</label>
+                        <input type="text" name="customerManual" id="customerManual"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                            disabled value="">
+                    </div>
 
                     <div class="col-span-2 sm:col-span-1 manual-container">
                         <label for="projectName" class="block mb-2 text-sm font-medium text-gray-900">Project
@@ -88,16 +139,17 @@
                             disabled value="">
                     </div>
 
-                    <div class="col-span-2 sm:col-span-1">
-                        <label for="totalOvertime" class="block mb-2 text-sm font-medium text-gray-900">Total
-                            Overtime</label>
-                        <input type="text" name="totalOvertime" id="totalOvertime"
+                    <div class="col-span-2 sm:col-span-1 automatic-container">
+                        <label for="totalAttendance" class="block mb-2 text-sm font-medium text-gray-900">Total
+                            Attendance</label>
+                        <input type="text" name="totalAttendance" id="totalAttendance"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                             disabled value="">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
-                        <label for="statusDetail" class="block mb-2 text-sm font-medium text-gray-900">Status</label>
-                        <input type="text" name="statusDetail" id="statusDetail"
+                        <label for="totalOvertime" class="block mb-2 text-sm font-medium text-gray-900">Total
+                            Overtime</label>
+                        <input type="text" name="totalOvertime" id="totalOvertime"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                             disabled value="">
                     </div>

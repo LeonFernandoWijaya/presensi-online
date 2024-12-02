@@ -8,5 +8,9 @@
         "axios": "^1.1.2",
         "laravel-vite-plugin": "^0.7.2",
         "vite": "^4.0.0"
+    },
+    "dependencies": {
+        "@tensorflow-models/blazeface": "^0.1.0",
+        "@tensorflow/tfjs": "^4.22.0"
     }
 }

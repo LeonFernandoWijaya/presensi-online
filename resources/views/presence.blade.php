@@ -200,42 +200,45 @@
 
                 return;
             }
-            $.ajax({
-                url: "{{ url('/checkStatusPresence') }}",
-                type: "GET",
-                success: function(response) {
-                    $('#customerName').val('');
-                    $('#activityTypes option:first').prop('selected', true);
-                    $('#activityCategories option:first').prop('selected', true);
-                    if (response.PresenceData != null) {
-                        $('#customerName').val(response.PresenceData.customer != null ? response.PresenceData
-                            .customer : '');
+            $('#customerName').val('');
+            $('#activityTypes option:first').prop('selected', true);
+            $('#activityCategories option:first').prop('selected', true);
+            // $.ajax({
+            //     url: "{{ url('/checkStatusPresence') }}",
+            //     type: "GET",
+            //     success: function(response) {
+            //         $('#customerName').val('');
+            //         $('#activityTypes option:first').prop('selected', true);
+            //         $('#activityCategories option:first').prop('selected', true);
+            //         if (response.PresenceData != null) {
+            //             $('#customerName').val(response.PresenceData.customer != null ? response.PresenceData
+            //                 .customer : '');
 
-                        if (response.PresenceData.activity_type_id != null) {
-                            $('#activityTypes option').each(function() {
-                                if ($(this).val() == response.PresenceData.activity_type_id) {
-                                    $(this).prop('selected', true);
-                                }
-                            });
-                        } else {
-                            $('#activityTypes option:first').prop('selected', true);
-                        }
+            //             if (response.PresenceData.activity_type_id != null) {
+            //                 $('#activityTypes option').each(function() {
+            //                     if ($(this).val() == response.PresenceData.activity_type_id) {
+            //                         $(this).prop('selected', true);
+            //                     }
+            //                 });
+            //             } else {
+            //                 $('#activityTypes option:first').prop('selected', true);
+            //             }
 
-                        if (response.PresenceData.activity_category_id != null) {
-                            $('#activityCategories option').each(function() {
-                                if ($(this).val() == response.PresenceData.activity_category_id) {
-                                    $(this).prop('selected', true);
-                                }
-                            });
-                        } else {
-                            $('#activityCategories option:first').prop('selected', true);
-                        }
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            })
+            //             if (response.PresenceData.activity_category_id != null) {
+            //                 $('#activityCategories option').each(function() {
+            //                     if ($(this).val() == response.PresenceData.activity_category_id) {
+            //                         $(this).prop('selected', true);
+            //                     }
+            //                 });
+            //             } else {
+            //                 $('#activityCategories option:first').prop('selected', true);
+            //             }
+            //         }
+            //     },
+            //     error: function(error) {
+            //         console.log(error);
+            //     }
+            // })
             showFlowBytesModal('location-and-photo-modal');
             $('#locationAndPhotoModalTitle').text(type);
             $('#locationAndPhotoModalSubmit').text(type + ' Now');
@@ -296,6 +299,7 @@
 
             // Load the model.
             const model = await blazeface.load();
+            console.log(model);
 
             // Pass in an image or video to the model. The 'returnTensors' option tells the model to return tensors.
             const returnTensors = false; // Pass in `true` to get tensors back.
@@ -330,8 +334,10 @@
                 // Check if the face is in the center of the video.
                 const centerX = start[0] + size[0] / 2;
                 const centerY = start[1] + size[1] / 2;
-                if (centerX < video.videoWidth / 2 - size[0] / 2 || centerX > video.videoWidth / 2 + size[0] / 2 ||
-                    centerY < video.videoHeight / 2 - size[1] / 2 || centerY > video.videoHeight / 2 + size[1] / 2) {
+                if (centerX < video.videoWidth / 2 - size[0] / 2 || centerX > video.videoWidth / 2 + size[0] /
+                    2 ||
+                    centerY < video.videoHeight / 2 - size[1] / 2 || centerY > video.videoHeight / 2 + size[1] /
+                    2) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
@@ -344,11 +350,14 @@
 
             }
             context.clearRect(0, 0, canvas.width, canvas.height);
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            context.drawImage(video, 0, 0, canvas.width,
+                canvas.height);
             photo = canvas.toDataURL('image/png');
             const previewPhoto = document.getElementById('previewPhoto');
-            previewPhoto.innerHTML = `<img src="${photo}" class="h-full w-full object-cover rounded-lg">`;
-            hideFlowBytesModal('loading-modal');
+            previewPhoto.innerHTML =
+                `<img src="${photo}" class="h-full w-full object-cover rounded-lg">`;
+            hideFlowBytesModal(
+                'loading-modal');
             closeCameraModal();
         }
 

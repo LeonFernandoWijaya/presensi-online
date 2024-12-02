@@ -5,13 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-   
+
     <script src="{{ url('javascripts/app.js') }}"></script>
     <link rel="icon" href="{{ url('mypassword.png') }}" type="image/x-icon">
 
@@ -85,6 +85,11 @@
                             <a href="{{ url('/request') }}"
                                 class="block py-2 px-3 rounded md:hover:bg-transparent md:p-0 {{ $navbar == 'request' ? 'md:text-blue-700' : 'text-gray-900 hover:bg-gray-100 md:hover:text-blue-700' }}">Request</a>
                         </li>
+
+                        {{-- <li>
+                            <a href="{{ url('/overtime-history') }}"
+                                class="flex items-center justify-between w-full md:w-auto py-2 px-3 rounded md:hover:bg-transparent md:p-0 {{ $navbar == 'history' ? 'md:text-blue-700' : 'text-gray-900 hover:bg-gray-100 md:hover:text-blue-700' }}">History</a>
+                        </li> --}}
                         <li>
                             <button id="dropdownNavbarLink" data-dropdown-toggle="dropdownNavbar"
                                 class="flex items-center justify-between w-full md:w-auto py-2 px-3 rounded md:hover:bg-transparent md:p-0 {{ $navbar == 'history' ? 'md:text-blue-700' : 'text-gray-900 hover:bg-gray-100 md:hover:text-blue-700' }}">History

@@ -38,6 +38,7 @@ class OvertimeHistoryController extends Controller
         $startDate = $request->startDate;
         $endDate = $request->endDate;
         $status = $request->status;
+        $overtimeType = $request->overtimeType;
 
         $overtime = Overtime::when($staffId, function ($query, $staffId) {
             return $query->where('user_id', $staffId);
@@ -57,6 +58,12 @@ class OvertimeHistoryController extends Controller
             ->when($user->role->id == 1, function ($query) use ($user) {
                 return $query->where('user_id', $user->id);
             })
+            ->when($overtimeType == 1, function ($query) {
+                return $query->whereNotNull('attendance_id');
+            })
+            ->when($overtimeType == 2, function ($query) {
+                return $query->whereNull('attendance_id');
+            })
             ->with('user', 'attendance')
             ->orderBy('overtimeStart', 'desc')
             ->paginate(10);
@@ -67,7 +74,7 @@ class OvertimeHistoryController extends Controller
     // done authotize
     public function getOvertimeDetail(Request $request)
     {
-        $overtime = Overtime::where('id', $request->id)->with('user', 'attendance', 'attendance.activitytype', 'attendance.activitycategory')->first();
+        $overtime = Overtime::where('id', $request->id)->with('user', 'attendance', 'attendance.activitytypeclockin', 'attendance.activitycategoryclockin', 'attendance.activitytypeclockout', 'attendance.activitycategoryclockout')->first();
 
         if (Gate::allows('viewOvertime', $overtime)) {
             return response()->json($overtime);
@@ -84,8 +91,9 @@ class OvertimeHistoryController extends Controller
             $startDate = $request->startDate;
             $endDate = $request->endDate;
             $status = $request->status;
+            $overtimeType = $request->overtimeType;
 
-            return Excel::download(new OvertimeExport($staffId, $startDate, $endDate, $status), 'overtime.xlsx');
+            return Excel::download(new OvertimeExport($staffId, $startDate, $endDate, $status, $overtimeType), 'overtime.xlsx');
         } else {
             abort(403);
         }
