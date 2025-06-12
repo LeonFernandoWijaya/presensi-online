@@ -52,7 +52,7 @@
     @include('modal.finding-location-modal')
     @include('modal.loading-modal')
 
-    {{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0B9tz9Dlg8juh3uBzaJnsUvd1TgsfgOo&libraries=geometry"> --}}
+    {{-- <script src="https://maps.googleapis.com/maps/api/js?key=&libraries=geometry"> --}}
     </script>
 
     <script>
